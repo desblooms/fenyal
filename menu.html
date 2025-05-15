@@ -55,6 +55,9 @@
         .menu-item {
             transition: transform 0.2s ease;
         }
+        .menu-item:active {
+            transform: scale(0.98);
+        }
         .shimmer {
             background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
             background-size: 200% 100%;
@@ -66,38 +69,6 @@
         }
         .scale-button:active {
             transform: scale(0.97);
-        }
-        .view-toggle-btn {
-            transition: all 0.2s ease;
-        }
-        .view-toggle-btn.active {
-            background-color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        .grid-view .menu-item-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        .grid-view .menu-item {
-            flex-direction: column;
-            height: 220px;
-        }
-        .grid-view .menu-item-image {
-            width: 100%;
-            height: 120px;
-        }
-        .list-view .menu-item-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-        .list-view .menu-item {
-            flex-direction: row;
-        }
-        .list-view .menu-item-image {
-            width: 90px;
-            height: 90px;
         }
     </style>
 </head>
@@ -117,20 +88,10 @@
                 </a>
             </div>
             
-            <!-- Search bar with view toggle -->
-            <div class="flex space-x-2 mb-4">
-                <div class="relative flex-1">
-                    <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-100 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
-                    <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
-                </div>
-                <div class="flex bg-gray-100 rounded-xl overflow-hidden">
-                    <button id="list-view-btn" class="view-toggle-btn active px-3 py-2 text-primary" aria-label="List View">
-                        <i data-feather="list" class="h-5 w-5"></i>
-                    </button>
-                    <button id="grid-view-btn" class="view-toggle-btn px-3 py-2 text-gray-400" aria-label="Grid View">
-                        <i data-feather="grid" class="h-5 w-5"></i>
-                    </button>
-                </div>
+            <!-- Search bar -->
+            <div class="relative mb-4">
+                <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-100 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
             </div>
             
             <!-- Categories -->
@@ -154,8 +115,8 @@
             <div class="mb-6" id="popular-section">
                 <h2 class="text-lg font-semibold mb-3">Popular Items</h2>
                 <div id="popular-items-container">
-                <!-- Loading placeholders -->
-                    <div class="menu-item-grid list-view">
+                    <!-- Loading placeholders -->
+                    <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
                                 <div class="w-24 h-24 shimmer"></div>
@@ -184,8 +145,8 @@
             <div id="all-menu-section">
                 <h2 class="text-lg font-semibold mb-3">All Menu</h2>
                 <div id="menu-items-container">
-                <!-- Loading placeholders -->
-                    <div class="menu-item-grid list-view">
+                    <!-- Loading placeholders -->
+                    <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
                                 <div class="w-24 h-24 shimmer"></div>
@@ -429,17 +390,12 @@
             }
             
             const itemsGrid = document.createElement('div');
-            itemsGrid.className = 'menu-item-grid';
-            
-            // Check the current view mode
-            const isGridView = document.body.classList.contains('grid-view');
+            itemsGrid.className = 'grid grid-cols-1 gap-4';
             
             items.forEach(item => {
                 const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex scale-button';
-                menuItem.onclick = (e) => {
-                    // Don't navigate if clicking on add-to-cart button
-                    if (e.target.closest('.add-to-cart-btn')) return;
+                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex';
+                menuItem.onclick = () => {
                     pageTransition(`menu-item-details.html?id=${item.id}`);
                 };
                 
@@ -451,45 +407,23 @@
                     priceDisplay = formatPrice(item.price);
                 }
                 
-                if (isGridView) {
-                    // Grid view template
-                    menuItem.innerHTML = `
-                        <div class="menu-item-image w-full">
-                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                menuItem.innerHTML = `
+                    <div class="w-24 h-24 flex-shrink-0">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
+                            <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
                         </div>
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
-                                <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
-                            </div>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-primary font-semibold">${priceDisplay}</span>
-                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                </button>
-                            </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-primary font-semibold">${priceDisplay}</span>
+                            <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center scale-button" data-id="${item.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
                         </div>
-                    `;
-                } else {
-                    // List view template
-                    menuItem.innerHTML = `
-                        <div class="menu-item-image">
-                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
-                                <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
-                            </div>
-                            <div class="flex justify-between items-center mt-1">
-                                <span class="text-primary font-semibold">${priceDisplay}</span>
-                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
+                    </div>
+                `;
                 
                 itemsGrid.appendChild(menuItem);
             });
@@ -627,94 +561,6 @@
             });
         }
         
-        // Setup view toggle
-        function setupViewToggle() {
-            const listViewBtn = document.getElementById('list-view-btn');
-            const gridViewBtn = document.getElementById('grid-view-btn');
-            
-            listViewBtn.addEventListener('click', function() {
-                if (!this.classList.contains('active')) {
-                    // Update button states
-                    this.classList.add('active');
-                    this.classList.add('text-primary');
-                    this.classList.remove('text-gray-400');
-                    gridViewBtn.classList.remove('active');
-                    gridViewBtn.classList.remove('text-primary');
-                    gridViewBtn.classList.add('text-gray-400');
-                    
-                    // Update view mode
-                    document.body.classList.remove('grid-view');
-                    document.body.classList.add('list-view');
-                    
-                    // Save preference
-                    localStorage.setItem('menuViewMode', 'list');
-                    
-                    // Re-render current items
-                    rerenderCurrentView();
-                }
-            });
-            
-            gridViewBtn.addEventListener('click', function() {
-                if (!this.classList.contains('active')) {
-                    // Update button states
-                    this.classList.add('active');
-                    this.classList.add('text-primary');
-                    this.classList.remove('text-gray-400');
-                    listViewBtn.classList.remove('active');
-                    listViewBtn.classList.remove('text-primary');
-                    listViewBtn.classList.add('text-gray-400');
-                    
-                    // Update view mode
-                    document.body.classList.remove('list-view');
-                    document.body.classList.add('grid-view');
-                    
-                    // Save preference
-                    localStorage.setItem('menuViewMode', 'grid');
-                    
-                    // Re-render current items
-                    rerenderCurrentView();
-                }
-            });
-            
-            // Load saved preference
-            const savedViewMode = localStorage.getItem('menuViewMode');
-            if (savedViewMode === 'grid') {
-                gridViewBtn.click();
-            }
-        }
-        
-        // Re-render current view
-        function rerenderCurrentView() {
-            const activeCategory = document.querySelector('.category-btn.active');
-            const searchInput = document.getElementById('search-input');
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (searchTerm !== '') {
-                // Re-run search
-                const filteredItems = menuManager.menuData.filter(item => {
-                    return (
-                        item.name.toLowerCase().includes(searchTerm) ||
-                        item.description.toLowerCase().includes(searchTerm) ||
-                        item.category.toLowerCase().includes(searchTerm)
-                    );
-                });
-                
-                // Hide popular section when searching
-                document.getElementById('popular-section').classList.add('hidden');
-                
-                // Render filtered items
-                renderMenuItems(filteredItems, 'menu-items-container');
-                
-                // Show no results if needed
-                toggleNoResults(filteredItems.length === 0);
-            } else if (activeCategory.textContent === 'All') {
-                renderPopularItems();
-                renderAllMenuItems();
-            } else {
-                filterByCategory(activeCategory.textContent);
-            }
-        }
-        
         // Debounce function for search input
         function debounce(func, wait) {
             let timeout;
@@ -728,340 +574,20 @@
             };
         }
         
-        // iOS active state for buttons
-        function setupScaleButtons() {
-            const buttons = document.querySelectorAll('.scale-button');
-            buttons.forEach(button => {
-                button.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.97)';
-                });
-                
-                button.addEventListener('touchend', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-        }
+        // Initialize menu on page load
+        document.addEventListener('DOMContentLoaded', initializeMenu);
         
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set default view mode
-            document.body.classList.add('list-view');
+        // iOS active state for buttons
+        const buttons = document.querySelectorAll('.scale-button');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.97)';
+            });
             
-            // Setup view toggle buttons
-            setupViewToggle();
-            
-            // Initialize menu
-            initializeMenu();
-            
-            // Setup scale buttons
-            setupScaleButtons();
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
         });
-    </script> mt-2">
-                                <span class="text-primary font-semibold">${priceDisplay}</span>
-                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    // List view template
-                    menuItem.innerHTML = `
-                        <div class="menu-item-image">
-                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
-                                <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
-                            </div>
-                            <div class="flex justify-between items-center mt-1">
-                                <span class="text-primary font-semibold">${priceDisplay}</span>
-                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                itemsGrid.appendChild(menuItem);
-            });
-            
-            container.appendChild(itemsGrid);
-            
-            // Add event listeners to add-to-cart buttons
-            setupAddToCartButtons();
-        }
-        
-        // Setup add to cart buttons
-        function setupAddToCartButtons() {
-            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-            
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // Prevent propagation to parent (which navigates to details)
-                    e.stopPropagation();
-                    
-                    const itemId = this.getAttribute('data-id');
-                    const item = menuManager.getItemById(itemId);
-                    
-                    if (item) {
-                        // For half/full items, default to half
-                        let variants = {};
-                        if (item.isHalfFull) {
-                            variants.size = 'half';
-                        }
-                        
-                        // Add to cart
-                        cartManager.addToCart(item, 1, variants);
-                        
-                        // Show toast
-                        showAddToCartToast();
-                        
-                        // Update cart badges
-                        updateCartNavBadge();
-                    }
-                });
-            });
-        }
-        
-        // Setup search functionality
-        function setupSearch() {
-            const searchInput = document.getElementById('search-input');
-            const resetButton = document.getElementById('reset-search');
-            
-            searchInput.addEventListener('input', debounce(function() {
-                const searchTerm = this.value.toLowerCase().trim();
-                
-                if (searchTerm === '') {
-                    // Reset to default view if search is cleared
-                    const activeCategory = document.querySelector('.category-btn.active');
-                    if (activeCategory.textContent === 'All') {
-                        renderPopularItems();
-                        renderAllMenuItems();
-                    } else {
-                        filterByCategory(activeCategory.textContent);
-                    }
-                    return;
-                }
-                
-                // Filter menu items by search term
-                const filteredItems = menuManager.menuData.filter(item => {
-                    return (
-                        item.name.toLowerCase().includes(searchTerm) ||
-                        item.description.toLowerCase().includes(searchTerm) ||
-                        item.category.toLowerCase().includes(searchTerm)
-                    );
-                });
-                
-                // Hide popular section when searching
-                document.getElementById('popular-section').classList.add('hidden');
-                
-                // Update section title
-                const sectionTitle = document.querySelector('#all-menu-section h2');
-                sectionTitle.textContent = 'Search Results';
-                
-                // Render filtered items
-                renderMenuItems(filteredItems, 'menu-items-container');
-                
-                // Show no results if needed
-                toggleNoResults(filteredItems.length === 0);
-            }, 300));
-            
-            // Reset search button
-            resetButton.addEventListener('click', function() {
-                searchInput.value = '';
-                
-                // Reset to default view
-                const activeCategory = document.querySelector('.category-btn.active');
-                if (activeCategory.textContent === 'All') {
-                    renderPopularItems();
-                    renderAllMenuItems();
-                } else {
-                    filterByCategory(activeCategory.textContent);
-                }
-            });
-        }
-        
-        // Toggle no results message
-        function toggleNoResults(show) {
-            const noResultsElement = document.getElementById('no-results');
-            const menuItemsContainer = document.getElementById('all-menu-section');
-            
-            if (show) {
-                noResultsElement.classList.remove('hidden');
-                menuItemsContainer.classList.add('hidden');
-            } else {
-                noResultsElement.classList.add('hidden');
-                menuItemsContainer.classList.remove('hidden');
-            }
-        }
-        
-        // Show add to cart toast notification
-        function showAddToCartToast() {
-            const toast = document.getElementById('add-cart-toast');
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2000);
-        }
-        
-        // Update cart badge in nav
-        function updateCartNavBadge() {
-            const cartBadges = document.querySelectorAll('#cart-badge, .cart-nav-badge');
-            const itemCount = cartManager.getItemCount();
-            
-            cartBadges.forEach(badge => {
-                badge.textContent = itemCount;
-                badge.style.display = itemCount > 0 ? 'flex' : 'none';
-            });
-        }
-        
-        // Debounce function for search input
-        function debounce(func, wait) {
-            let timeout;
-            return function() {
-                const context = this;
-                const args = arguments;
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    func.apply(context, args);
-                }, wait);
-            };
-        }
-        
-        // iOS active state for buttons
-        function setupScaleButtons() {
-            const buttons = document.querySelectorAll('.scale-button');
-            buttons.forEach(button => {
-                button.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.97)';
-                });
-                
-                button.addEventListener('touchend', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-        }
-        
-        // Re-render current view
-        function rerenderCurrentView() {
-            const activeCategory = document.querySelector('.category-btn.active');
-            const searchInput = document.getElementById('search-input');
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (searchTerm !== '') {
-                // Re-run search
-                const filteredItems = menuManager.menuData.filter(item => {
-                    return (
-                        item.name.toLowerCase().includes(searchTerm) ||
-                        item.description.toLowerCase().includes(searchTerm) ||
-                        item.category.toLowerCase().includes(searchTerm)
-                    );
-                });
-                
-                // Hide popular section when searching
-                document.getElementById('popular-section').classList.add('hidden');
-                
-                // Render filtered items
-                renderMenuItems(filteredItems, 'menu-items-container');
-                
-                // Show no results if needed
-                toggleNoResults(filteredItems.length === 0);
-            } else if (activeCategory.textContent === 'All') {
-                renderPopularItems();
-                renderAllMenuItems();
-            } else {
-                filterByCategory(activeCategory.textContent);
-            }
-        }
-    </script>
-</body>
-</html>classList.contains('active')) {
-                    // Update button states
-                    this.classList.add('active');
-                    this.classList.add('text-primary');
-                    this.classList.remove('text-gray-400');
-                    gridViewBtn.classList.remove('active');
-                    gridViewBtn.classList.remove('text-primary');
-                    gridViewBtn.classList.add('text-gray-400');
-                    
-                    // Update view mode
-                    document.body.classList.remove('grid-view');
-                    document.body.classList.add('list-view');
-                    
-                    // Save preference
-                    localStorage.setItem('menuViewMode', 'list');
-                    
-                    // Re-render current items
-                    rerenderCurrentView();
-                }
-            });
-            
-            gridViewBtn.addEventListener('click', function() {
-                if (!this.classList.contains('active')) {
-                    // Update button states
-                    this.classList.add('active');
-                    this.classList.add('text-primary');
-                    this.classList.remove('text-gray-400');
-                    listViewBtn.classList.remove('active');
-                    listViewBtn.classList.remove('text-primary');
-                    listViewBtn.classList.add('text-gray-400');
-                    
-                    // Update view mode
-                    document.body.classList.remove('list-view');
-                    document.body.classList.add('grid-view');
-                    
-                    // Save preference
-                    localStorage.setItem('menuViewMode', 'grid');
-                    
-                    // Re-render current items
-                    rerenderCurrentView();
-                }
-            });
-            
-            // Load saved preference
-            const savedViewMode = localStorage.getItem('menuViewMode');
-            if (savedViewMode === 'grid') {
-                gridViewBtn.click();
-            }
-        }
-        
-        // Re-render current view
-        function rerenderCurrentView() {
-            const activeCategory = document.querySelector('.category-btn.active');
-            const searchInput = document.getElementById('search-input');
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            
-            if (searchTerm !== '') {
-                // Re-run search
-                const filteredItems = menuManager.menuData.filter(item => {
-                    return (
-                        item.name.toLowerCase().includes(searchTerm) ||
-                        item.description.toLowerCase().includes(searchTerm) ||
-                        item.category.toLowerCase().includes(searchTerm)
-                    );
-                });
-                
-                // Hide popular section when searching
-                document.getElementById('popular-section').classList.add('hidden');
-                
-                // Render filtered items
-                renderMenuItems(filteredItems, 'menu-items-container');
-                
-                // Show no results if needed
-                toggleNoResults(filteredItems.length === 0);
-            } else if (activeCategory.textContent === 'All') {
-                renderPopularItems();
-                renderAllMenuItems();
-            } else {
-                filterByCategory(activeCategory.textContent);
-            }
-        }
     </script>
 </body>
 </html>
