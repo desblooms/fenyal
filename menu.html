@@ -627,6 +627,94 @@
             });
         }
         
+        // Setup view toggle
+        function setupViewToggle() {
+            const listViewBtn = document.getElementById('list-view-btn');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            
+            listViewBtn.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    // Update button states
+                    this.classList.add('active');
+                    this.classList.add('text-primary');
+                    this.classList.remove('text-gray-400');
+                    gridViewBtn.classList.remove('active');
+                    gridViewBtn.classList.remove('text-primary');
+                    gridViewBtn.classList.add('text-gray-400');
+                    
+                    // Update view mode
+                    document.body.classList.remove('grid-view');
+                    document.body.classList.add('list-view');
+                    
+                    // Save preference
+                    localStorage.setItem('menuViewMode', 'list');
+                    
+                    // Re-render current items
+                    rerenderCurrentView();
+                }
+            });
+            
+            gridViewBtn.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    // Update button states
+                    this.classList.add('active');
+                    this.classList.add('text-primary');
+                    this.classList.remove('text-gray-400');
+                    listViewBtn.classList.remove('active');
+                    listViewBtn.classList.remove('text-primary');
+                    listViewBtn.classList.add('text-gray-400');
+                    
+                    // Update view mode
+                    document.body.classList.remove('list-view');
+                    document.body.classList.add('grid-view');
+                    
+                    // Save preference
+                    localStorage.setItem('menuViewMode', 'grid');
+                    
+                    // Re-render current items
+                    rerenderCurrentView();
+                }
+            });
+            
+            // Load saved preference
+            const savedViewMode = localStorage.getItem('menuViewMode');
+            if (savedViewMode === 'grid') {
+                gridViewBtn.click();
+            }
+        }
+        
+        // Re-render current view
+        function rerenderCurrentView() {
+            const activeCategory = document.querySelector('.category-btn.active');
+            const searchInput = document.getElementById('search-input');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm !== '') {
+                // Re-run search
+                const filteredItems = menuManager.menuData.filter(item => {
+                    return (
+                        item.name.toLowerCase().includes(searchTerm) ||
+                        item.description.toLowerCase().includes(searchTerm) ||
+                        item.category.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                // Hide popular section when searching
+                document.getElementById('popular-section').classList.add('hidden');
+                
+                // Render filtered items
+                renderMenuItems(filteredItems, 'menu-items-container');
+                
+                // Show no results if needed
+                toggleNoResults(filteredItems.length === 0);
+            } else if (activeCategory.textContent === 'All') {
+                renderPopularItems();
+                renderAllMenuItems();
+            } else {
+                filterByCategory(activeCategory.textContent);
+            }
+        }
+        
         // Debounce function for search input
         function debounce(func, wait) {
             let timeout;
@@ -652,6 +740,295 @@
                     this.style.transform = 'scale(1)';
                 });
             });
+        }
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default view mode
+            document.body.classList.add('list-view');
+            
+            // Setup view toggle buttons
+            setupViewToggle();
+            
+            // Initialize menu
+            initializeMenu();
+            
+            // Setup scale buttons
+            setupScaleButtons();
+        });
+    </script> mt-2">
+                                <span class="text-primary font-semibold">${priceDisplay}</span>
+                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // List view template
+                    menuItem.innerHTML = `
+                        <div class="menu-item-image">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
+                                <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-primary font-semibold">${priceDisplay}</span>
+                                <button class="add-to-cart-btn w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                itemsGrid.appendChild(menuItem);
+            });
+            
+            container.appendChild(itemsGrid);
+            
+            // Add event listeners to add-to-cart buttons
+            setupAddToCartButtons();
+        }
+        
+        // Setup add to cart buttons
+        function setupAddToCartButtons() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Prevent propagation to parent (which navigates to details)
+                    e.stopPropagation();
+                    
+                    const itemId = this.getAttribute('data-id');
+                    const item = menuManager.getItemById(itemId);
+                    
+                    if (item) {
+                        // For half/full items, default to half
+                        let variants = {};
+                        if (item.isHalfFull) {
+                            variants.size = 'half';
+                        }
+                        
+                        // Add to cart
+                        cartManager.addToCart(item, 1, variants);
+                        
+                        // Show toast
+                        showAddToCartToast();
+                        
+                        // Update cart badges
+                        updateCartNavBadge();
+                    }
+                });
+            });
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            const resetButton = document.getElementById('reset-search');
+            
+            searchInput.addEventListener('input', debounce(function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    // Reset to default view if search is cleared
+                    const activeCategory = document.querySelector('.category-btn.active');
+                    if (activeCategory.textContent === 'All') {
+                        renderPopularItems();
+                        renderAllMenuItems();
+                    } else {
+                        filterByCategory(activeCategory.textContent);
+                    }
+                    return;
+                }
+                
+                // Filter menu items by search term
+                const filteredItems = menuManager.menuData.filter(item => {
+                    return (
+                        item.name.toLowerCase().includes(searchTerm) ||
+                        item.description.toLowerCase().includes(searchTerm) ||
+                        item.category.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                // Hide popular section when searching
+                document.getElementById('popular-section').classList.add('hidden');
+                
+                // Update section title
+                const sectionTitle = document.querySelector('#all-menu-section h2');
+                sectionTitle.textContent = 'Search Results';
+                
+                // Render filtered items
+                renderMenuItems(filteredItems, 'menu-items-container');
+                
+                // Show no results if needed
+                toggleNoResults(filteredItems.length === 0);
+            }, 300));
+            
+            // Reset search button
+            resetButton.addEventListener('click', function() {
+                searchInput.value = '';
+                
+                // Reset to default view
+                const activeCategory = document.querySelector('.category-btn.active');
+                if (activeCategory.textContent === 'All') {
+                    renderPopularItems();
+                    renderAllMenuItems();
+                } else {
+                    filterByCategory(activeCategory.textContent);
+                }
+            });
+        }
+        
+        // Toggle no results message
+        function toggleNoResults(show) {
+            const noResultsElement = document.getElementById('no-results');
+            const menuItemsContainer = document.getElementById('all-menu-section');
+            
+            if (show) {
+                noResultsElement.classList.remove('hidden');
+                menuItemsContainer.classList.add('hidden');
+            } else {
+                noResultsElement.classList.add('hidden');
+                menuItemsContainer.classList.remove('hidden');
+            }
+        }
+        
+        // Show add to cart toast notification
+        function showAddToCartToast() {
+            const toast = document.getElementById('add-cart-toast');
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+        
+        // Update cart badge in nav
+        function updateCartNavBadge() {
+            const cartBadges = document.querySelectorAll('#cart-badge, .cart-nav-badge');
+            const itemCount = cartManager.getItemCount();
+            
+            cartBadges.forEach(badge => {
+                badge.textContent = itemCount;
+                badge.style.display = itemCount > 0 ? 'flex' : 'none';
+            });
+        }
+        
+        // Debounce function for search input
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        
+        // iOS active state for buttons
+        function setupScaleButtons() {
+            const buttons = document.querySelectorAll('.scale-button');
+            buttons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.97)';
+                });
+                
+                button.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        }
+        
+        // Re-render current view
+        function rerenderCurrentView() {
+            const activeCategory = document.querySelector('.category-btn.active');
+            const searchInput = document.getElementById('search-input');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm !== '') {
+                // Re-run search
+                const filteredItems = menuManager.menuData.filter(item => {
+                    return (
+                        item.name.toLowerCase().includes(searchTerm) ||
+                        item.description.toLowerCase().includes(searchTerm) ||
+                        item.category.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                // Hide popular section when searching
+                document.getElementById('popular-section').classList.add('hidden');
+                
+                // Render filtered items
+                renderMenuItems(filteredItems, 'menu-items-container');
+                
+                // Show no results if needed
+                toggleNoResults(filteredItems.length === 0);
+            } else if (activeCategory.textContent === 'All') {
+                renderPopularItems();
+                renderAllMenuItems();
+            } else {
+                filterByCategory(activeCategory.textContent);
+            }
+        }
+    </script>
+</body>
+</html>classList.contains('active')) {
+                    // Update button states
+                    this.classList.add('active');
+                    this.classList.add('text-primary');
+                    this.classList.remove('text-gray-400');
+                    gridViewBtn.classList.remove('active');
+                    gridViewBtn.classList.remove('text-primary');
+                    gridViewBtn.classList.add('text-gray-400');
+                    
+                    // Update view mode
+                    document.body.classList.remove('grid-view');
+                    document.body.classList.add('list-view');
+                    
+                    // Save preference
+                    localStorage.setItem('menuViewMode', 'list');
+                    
+                    // Re-render current items
+                    rerenderCurrentView();
+                }
+            });
+            
+            gridViewBtn.addEventListener('click', function() {
+                if (!this.classList.contains('active')) {
+                    // Update button states
+                    this.classList.add('active');
+                    this.classList.add('text-primary');
+                    this.classList.remove('text-gray-400');
+                    listViewBtn.classList.remove('active');
+                    listViewBtn.classList.remove('text-primary');
+                    listViewBtn.classList.add('text-gray-400');
+                    
+                    // Update view mode
+                    document.body.classList.remove('list-view');
+                    document.body.classList.add('grid-view');
+                    
+                    // Save preference
+                    localStorage.setItem('menuViewMode', 'grid');
+                    
+                    // Re-render current items
+                    rerenderCurrentView();
+                }
+            });
+            
+            // Load saved preference
+            const savedViewMode = localStorage.getItem('menuViewMode');
+            if (savedViewMode === 'grid') {
+                gridViewBtn.click();
+            }
         }
         
         // Re-render current view
