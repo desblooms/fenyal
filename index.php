@@ -1,9 +1,13 @@
 <?php
+// First load configuration
 require_once 'config.php';
+
+// Then load database connection with function definitions
 require_once 'db/db.php';
+
+// Then load utility functions and session management
 require_once 'includes/functions.php';
 require_once 'includes/session.php';
-
 // Get featured items for hero banner
 $featuredItems = [];
 try {

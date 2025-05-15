@@ -5,9 +5,9 @@
 
 // Database settings
 define('DB_HOST', 'localhost');     // Database host
-define('DB_NAME', 'u345095192_menudb'); // Database name
-define('DB_USER', 'u345095192_menu');       // Database username
-define('DB_PASS', 'Dineloo@788');   // Database password
+define('DB_NAME', 'u345095192_menudb'); // Your actual database name
+define('DB_USER', 'u345095192_menu');       // Your actual database username
+define('DB_PASS', 'your_password');   // Your actual database password (replace this)
 
 // Application settings
 define('APP_NAME', 'Digital Menu');
@@ -37,3 +37,4 @@ if (DEBUG_MODE) {
 
 // Set default timezone
 date_default_timezone_set('Asia/Kolkata');
+?>
