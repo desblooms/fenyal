@@ -7,7 +7,7 @@
 define('DB_HOST', 'localhost');     // Database host
 define('DB_NAME', 'u345095192_menudb'); // Your actual database name
 define('DB_USER', 'u345095192_menu');       // Your actual database username
-define('DB_PASS', 'your_password');   // Your actual database password (replace this)
+define('DB_PASS', 'Dineloo@788');   // Your actual database password (replace this)
 
 // Application settings
 define('APP_NAME', 'Digital Menu');
