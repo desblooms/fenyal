@@ -58,6 +58,49 @@
             transform: translateX(-100%);
             opacity: 0;
         }
+        /* Bottom sheet styles */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            z-index: 50;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+        .bottom-sheet.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease-out;
+            pointer-events: none;
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .option-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .option-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -174,26 +217,11 @@
                     <p class="font-semibold text-lg" id="checkout-total">₹0</p>
                 </div>
                 <div>
-                    <a href="index.html#orderOptions" id="place-order-btn" class="bg-primary text-white font-medium py-3 px-6 rounded-xl flex items-center">
+                    <button id="place-order-btn" class="bg-primary text-white font-medium py-3 px-6 rounded-xl flex items-center transform transition-transform active:scale-95">
                         Place Order
                         <i data-feather="arrow-right" class="h-4 w-4 ml-2"></i>
-                    </a>
+                    </button>
                 </div>
-            </div>
-            
-            <div class="flex justify-around text-xs">
-                <a href="takeaway.html" class="flex flex-col items-center px-2 pt-2">
-                    <i data-feather="package" class="h-5 w-5 mb-1 text-gray-500"></i>
-                    <span class="text-gray-600">Takeaway</span>
-                </a>
-                <a href="dine-in.html" class="flex flex-col items-center px-2 pt-2">
-                    <i data-feather="coffee" class="h-5 w-5 mb-1 text-gray-500"></i>
-                    <span class="text-gray-600">Dine-in</span>
-                </a>
-                <a href="home-delivery.html" class="flex flex-col items-center px-2 pt-2">
-                    <i data-feather="home" class="h-5 w-5 mb-1 text-gray-500"></i>
-                    <span class="text-gray-600">Delivery</span>
-                </a>
             </div>
         </div>
     </div>
@@ -207,6 +235,55 @@
                 <button id="cancel-clear" class="px-4 py-2 text-gray-600 font-medium text-sm">Cancel</button>
                 <button id="confirm-clear" class="px-4 py-2 bg-primary text-white rounded-lg font-medium text-sm">Clear Cart</button>
             </div>
+        </div>
+    </div>
+    
+    <!-- Order type bottom sheet -->
+    <div id="order-type-overlay" class="overlay"></div>
+    <div id="order-type-sheet" class="bottom-sheet p-5 bottom-safe-area">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold">Select Order Type</h2>
+            <button id="close-sheet" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i data-feather="x" class="h-4 w-4"></i>
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 gap-4 mb-4">
+            <!-- Delivery option -->
+            <a href="home-delivery.html" class="option-card flex items-center p-4 bg-white border border-gray-200 rounded-xl">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="home" class="h-6 w-6 text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base">Home Delivery</h3>
+                    <p class="text-sm text-gray-600">Get your food delivered to your doorstep</p>
+                </div>
+                <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+            </a>
+            
+            <!-- Takeaway option -->
+            <a href="takeaway.html" class="option-card flex items-center p-4 bg-white border border-gray-200 rounded-xl">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="package" class="h-6 w-6 text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base">Takeaway</h3>
+                    <p class="text-sm text-gray-600">Pick up your order from our restaurant</p>
+                </div>
+                <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+            </a>
+            
+            <!-- Dine-in option -->
+            <a href="dine-in.html" class="option-card flex items-center p-4 bg-white border border-gray-200 rounded-xl">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="coffee" class="h-6 w-6 text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-base">Dine-in</h3>
+                    <p class="text-sm text-gray-600">Order at your table in our restaurant</p>
+                </div>
+                <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+            </a>
         </div>
     </div>
     
@@ -234,6 +311,41 @@
         const confirmClearBtn = document.getElementById('confirm-clear');
         const cartLoading = document.getElementById('cart-loading');
         const placeOrderBtn = document.getElementById('place-order-btn');
+        
+        // Bottom sheet elements
+        const orderTypeSheet = document.getElementById('order-type-sheet');
+        const orderTypeOverlay = document.getElementById('order-type-overlay');
+        const closeSheetBtn = document.getElementById('close-sheet');
+        
+        // Show order type bottom sheet
+        function showOrderTypeSheet() {
+            orderTypeSheet.classList.add('active');
+            orderTypeOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reinitialize Feather icons in the sheet
+            feather.replace();
+        }
+        
+        // Hide order type bottom sheet
+        function hideOrderTypeSheet() {
+            orderTypeSheet.classList.remove('active');
+            orderTypeOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Set up event listeners for bottom sheet
+        placeOrderBtn.addEventListener('click', function() {
+            if (cartManager.getCartItems().length > 0) {
+                showOrderTypeSheet();
+            } else {
+                toast.show('Your cart is empty', 'error');
+            }
+        });
+        
+        closeSheetBtn.addEventListener('click', hideOrderTypeSheet);
+        
+        orderTypeOverlay.addEventListener('click', hideOrderTypeSheet);
         
         // Load cart items
         async function loadCartItems() {
@@ -435,7 +547,7 @@
                 const btn = event.target.closest('.remove-item-btn');
                 const index = parseInt(btn.dataset.index);
                 
-                // Ask for confirmation
+                // Remove item
                 removeCartItem(index);
             }
         });
@@ -530,6 +642,23 @@
             if (event.target === clearCartModal) {
                 clearCartModal.classList.add('hidden');
             }
+        });
+        
+        // Handle order type selection and pass the type to next page
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Store order type in session storage
+                const href = this.getAttribute('href');
+                if (href.includes('home-delivery')) {
+                    sessionStorage.setItem('orderType', 'delivery');
+                } else if (href.includes('takeaway')) {
+                    sessionStorage.setItem('orderType', 'takeaway');
+                } else if (href.includes('dine-in')) {
+                    sessionStorage.setItem('orderType', 'dine-in');
+                }
+                
+                // Let the navigation happen naturally
+            });
         });
         
         // Load cart items when page loads
