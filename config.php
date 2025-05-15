@@ -5,9 +5,9 @@
 
 // Database settings
 define('DB_HOST', 'localhost');     // Database host
-define('DB_NAME', 'restaurant_app'); // Database name
-define('DB_USER', 'db_user');       // Database username
-define('DB_PASS', 'db_password');   // Database password
+define('DB_NAME', 'u345095192_menudb'); // Database name
+define('DB_USER', 'u345095192_menu');       // Database username
+define('DB_PASS', 'Dineloo@788');   // Database password
 
 // Application settings
 define('APP_NAME', 'Digital Menu');
