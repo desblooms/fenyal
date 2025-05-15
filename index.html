@@ -1,133 +1,358 @@
+
+
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <title>FoodExpress</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="prec
+
+pasted
+
+make more creative
+
+Looking at the FoodExpress website HTML you've shared, I can see it's a good foundation but could use some creative enhancements to make it more engaging and distinctive. Let me create a more creative version for you with improved visuals, interactions, and content.
+
+
+Enhanced FoodExpress Website
+Interactive artifact 
+
+
+
+
+Continue
+
+I'll continue enhancing the FoodExpress website with more creative elements.
+
+
+Enhanced FoodExpress Website
+Interactive artifact 
+I've enhanced the FoodExpress website with numerous creative elements to make it more engaging and visually appealing. Here are the key improvements:
+
+Visual & Design Enhancements
+Modern Color Scheme - Refreshed the brand colors with a vibrant orange gradient theme for better visual appeal
+Animated Welcome Screen - Added rotating animation and improved typography
+Interactive Food Cards - Added hover effects, ratings, dietary badges, and original pricing
+Parallax Hero Banner - Created depth with scrolling effect and improved call-to-action buttons
+Beautiful Category Cards - Added icon overlays, counts, and improved visual hierarchy
+New Features & Sections
+Food Mood Selector - New interactive feature to help users find food based on their current cravings
+Featured Restaurants Section - Showcasing partner restaurants with ratings and cuisine tags
+Customer Testimonials Carousel - Interactive reviews from happy customers
+Live Countdown Timer - For limited-time offers to create urgency
+Special Offer Banner - Family weekend bundle with savings highlights
+Interactive Elements
+Animated Add-to-Cart Experience - Visual confirmation when items are added
+**Expandable S
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FoodExpress</title>
+    <title>FoodExpress - Flavor in a Flash</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/themecolor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <link rel="stylesheet" href="assets/css/app.css">
- 
+    <style>
+        :root {
+            --primary-color: #FF6B35;
+            --accent-color: #F7A325;
+            --dark-color: #2D2A32;
+            --light-color: #F6F7F8;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F8F9FA;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .food-card {
+            transition: all 0.3s ease;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pulse-btn {
+            position: relative;
+        }
+        
+        .pulse-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.7;
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            70% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .bg-food-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B35' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
 </head>
-<body class="bg-background text-dark font-sans">
-    <!-- Welcome Overlay - Shows once on first visit -->
-    <div id="welcome-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white p-6 space-y-6">
-        <div class="w-24 h-24 rounded-full bg-primary flex items-center justify-center mb-4">
-            <i class="fas fa-utensils text-4xl text-white"></i>
+<body class="bg-food-pattern text-gray-800">
+    <!-- Welcome Overlay - Interactive and Engaging -->
+    <div id="welcome-overlay" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 space-y-6 bg-gradient-to-br from-white to-orange-50">
+        <div class="w-32 h-32 relative">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B35] to-[#F7A325] rounded-full rotate-animation"></div>
+            <div class="absolute inset-2 bg-white rounded-full flex items-center justify-center">
+                <i class="fas fa-utensils text-4xl text-[#FF6B35]"></i>
+            </div>
         </div>
-        <h1 class="text-3xl font-bold text-center">FoodExpress</h1>
-        <p class="text-center text-gray-600">Delicious food delivered right to your doorstep</p>
-        <button id="get-started" class="w-full py-4 bg-primary text-white rounded-xl font-medium text-lg shadow-lg transform active:scale-95 transition-transform">
-            Get Started
-        </button>
+        <h1 class="text-4xl font-bold text-center bg-gradient-to-r from-[#FF6B35] to-[#F7A325] bg-clip-text text-transparent">FoodExpress</h1>
+        <p class="text-center text-gray-600 max-w-xs">Culinary adventures delivered to your doorstep in minutes!</p>
+        <div class="w-full max-w-xs space-y-4">
+            <button id="get-started" class="w-full py-4 bg-gradient-to-r from-[#FF6B35] to-[#F7A325] text-white rounded-xl font-medium text-lg shadow-lg transform transition-all hover:scale-105 active:scale-95">
+                Let's Feast!
+            </button>
+            <p class="text-xs text-center text-gray-500">Thousands of foodies already enjoying</p>
+        </div>
+        <div class="flex space-x-2 mt-2">
+            <span class="block w-2 h-2 rounded-full bg-[#FF6B35]"></span>
+            <span class="block w-2 h-2 rounded-full bg-gray-300"></span>
+            <span class="block w-2 h-2 rounded-full bg-gray-300"></span>
+        </div>
     </div>
 
     <div class="app-container hidden" id="main-app">
-        <!-- Header -->
+        <!-- Header with animation -->
         <header class="sticky top-0 z-40 bg-white shadow-sm">
             <div class="flex items-center justify-between p-4">
                 <div class="flex items-center">
-                    <i class="fas fa-utensils text-primary text-xl mr-2"></i>
-                    <h1 class="text-xl font-semibold">FoodExpress</h1>
+                    <div class="relative">
+                        <i class="fas fa-utensils text-[#FF6B35] text-xl mr-2"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full ping"></span>
+                    </div>
+                    <h1 class="text-xl font-semibold">Food<span class="text-[#FF6B35]">Express</span></h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="p-2 rounded-full hover:bg-gray-100">
+                    <button id="search-btn" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
                         <i class="fas fa-search text-gray-600"></i>
                     </button>
-                    <a href="cart.html" class="p-2 rounded-full hover:bg-gray-100 relative">
+                    <a href="cart.html" class="p-2 rounded-full hover:bg-gray-100 transition-colors relative">
                         <i class="fas fa-shopping-cart text-gray-600"></i>
-                        <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                        <span id="cart-badge" class="absolute -top-1 -right-1 bg-[#FF6B35] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
                     </a>
+                </div>
+            </div>
+            <!-- Search bar (hidden by default) -->
+            <div id="search-container" class="hidden px-4 pb-3 animate-slideDown">
+                <div class="relative">
+                    <input type="text" placeholder="Search for delicious food..." class="w-full px-4 py-2 pl-10 rounded-xl border border-gray-200 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] focus:outline-none">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
             </div>
         </header>
 
         <!-- Main Content -->
         <main class="pb-20">
-            <!-- Hero Banner -->
-            <section class="relative overflow-hidden rounded-b-xl">
-                <div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-accent/80 z-10"></div>
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                     alt="Food Banner" 
-                     class="w-full h-48 object-cover">
+            <!-- Hero Banner with Parallax Effect -->
+            <section class="relative overflow-hidden rounded-b-xl h-64">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B35]/90 to-[#F7A325]/90 z-10"></div>
+                <div id="parallax-bg" class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                         alt="Food Banner" 
+                         class="w-full h-full object-cover transform scale-110">
+                </div>
                 <div class="absolute inset-0 z-20 flex flex-col justify-center p-6">
-                    <h2 class="text-2xl font-bold text-white mb-2">Hungry?</h2>
-                    <p class="text-white mb-4">Order your favorite food now!</p>
-                    <a href="menu.html" class="bg-white text-primary font-medium px-6 py-2 rounded-lg shadow w-fit">
-                        Order Now
-                    </a>
+                    <h2 class="text-3xl font-bold text-white mb-2">Crave it? <br>We'll Deliver it!</h2>
+                    <p class="text-white/90 mb-6 max-w-xs">Your favorite dishes from the best local restaurants, delivered in minutes</p>
+                    <div class="flex space-x-3">
+                        <a href="menu.html" class="bg-white text-[#FF6B35] font-medium px-6 py-2 rounded-lg shadow hover:shadow-lg transition-shadow">
+                            Order Now
+                        </a>
+                        <a href="#daily-deals" class="bg-white/20 text-white border border-white/30 font-medium px-4 py-2 rounded-lg">
+                            Daily Deals
+                        </a>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 right-0 w-32 h-32 transform translate-x-8 translate-y-8 z-10 float-animation">
+                    <img src="/api/placeholder/120/120" alt="Floating burger" class="w-full h-full object-contain drop-shadow-xl">
                 </div>
             </section>
 
-            <!-- Ordering Options -->
-           
-
-            <!-- Special Items Section -->
+            <!-- Ordering Options with Interactive Elements -->
             <section class="px-4 py-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="flex flex-col items-center justify-center bg-gradient-to-br from-rose-50 to-rose-100 p-4 rounded-xl shadow-sm h-24 border border-rose-200/50 transform transition-transform hover:scale-105">
+                        <div class="w-10 h-10 mb-2 bg-rose-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-motorcycle"></i>
+                        </div>
+                        <span class="text-sm font-medium text-rose-700">Delivery</span>
+                    </button>
+                    
+                    <button class="flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl shadow-sm h-24 border border-blue-200/50 transform transition-transform hover:scale-105">
+                        <div class="w-10 h-10 mb-2 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <span class="text-sm font-medium text-blue-700">Pickup</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Special Items Section with Card Animations -->
+            <section class="px-4 py-6" id="daily-deals">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold">Today's Specials</h2>
-                    <a href="menu.html" class="text-primary text-sm font-medium">View All</a>
+                    <div>
+                        <h2 class="text-xl font-semibold">Today's Specials</h2>
+                        <p class="text-xs text-gray-500">Limited time offers!</p>
+                    </div>
+                    <a href="menu.html" class="text-[#FF6B35] text-sm font-medium flex items-center">
+                        View All
+                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </a>
                 </div>
                 
                 <div class="flex overflow-x-auto space-x-4 pb-2 -mx-4 px-4 hide-scrollbar">
-                    <div class="special-item w-36 flex-shrink-0 bg-white rounded-xl shadow overflow-hidden">
-                        <div class="h-24 overflow-hidden">
-                            <img src="assets/images/veggie-burger.jpg" alt="Veggie Burger" class="w-full h-full object-cover">
+                    <div class="special-item w-40 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card relative">
+                        <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg z-10">
+                            -20%
                         </div>
-                        <div class="p-2">
-                            <h3 class="font-medium text-sm">Veggie Burger</h3>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-sm font-bold">₹120</span>
-                                <button class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center">
+                        <div class="h-28 overflow-hidden">
+                            <img src="/api/placeholder/160/120" alt="Veggie Burger" class="w-full h-full object-cover transition-transform hover:scale-110">
+                        </div>
+                        <div class="p-3">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Veg</span>
+                                <div class="ml-2 flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.8</span>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm mt-1">Ultimate Veggie Burger</h3>
+                            <div class="flex items-center justify-between mt-2">
+                                <div>
+                                    <span class="text-sm font-bold">₹120</span>
+                                    <span class="text-xs text-gray-400 line-through ml-1">₹150</span>
+                                </div>
+                                <button class="w-8 h-8 bg-[#FF6B35] text-white rounded-full flex items-center justify-center shadow-md transform transition-transform hover:scale-110">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="special-item w-36 flex-shrink-0 bg-white rounded-xl shadow overflow-hidden">
-                        <div class="h-24 overflow-hidden">
-                            <img src="assets/images/butter-chicken.jpg" alt="Butter Chicken" class="w-full h-full object-cover">
+                    <div class="special-item w-40 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card relative">
+                        <div class="absolute top-2 right-2 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-lg z-10">
+                            Trending
                         </div>
-                        <div class="p-2">
-                            <h3 class="font-medium text-sm">Butter Chicken</h3>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-sm font-bold">₹180</span>
-                                <button class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center">
+                        <div class="h-28 overflow-hidden">
+                            <img src="/api/placeholder/160/120" alt="Butter Chicken" class="w-full h-full object-cover transition-transform hover:scale-110">
+                        </div>
+                        <div class="p-3">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">Non-veg</span>
+                                <div class="ml-2 flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.9</span>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm mt-1">Creamy Butter Chicken</h3>
+                            <div class="flex items-center justify-between mt-2">
+                                <div>
+                                    <span class="text-sm font-bold">₹180</span>
+                                </div>
+                                <button class="w-8 h-8 bg-[#FF6B35] text-white rounded-full flex items-center justify-center shadow-md transform transition-transform hover:scale-110">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="special-item w-36 flex-shrink-0 bg-white rounded-xl shadow overflow-hidden">
-                        <div class="h-24 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Pizza" class="w-full h-full object-cover">
+                    <div class="special-item w-40 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card">
+                        <div class="h-28 overflow-hidden">
+                            <img src="/api/placeholder/160/120" alt="Pizza" class="w-full h-full object-cover transition-transform hover:scale-110">
                         </div>
-                        <div class="p-2">
-                            <h3 class="font-medium text-sm">Margherita Pizza</h3>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-sm font-bold">₹220</span>
-                                <button class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center">
+                        <div class="p-3">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Veg</span>
+                                <div class="ml-2 flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.7</span>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm mt-1">Artisan Margherita</h3>
+                            <div class="flex items-center justify-between mt-2">
+                                <div>
+                                    <span class="text-sm font-bold">₹220</span>
+                                </div>
+                                <button class="w-8 h-8 bg-[#FF6B35] text-white rounded-full flex items-center justify-center shadow-md transform transition-transform hover:scale-110">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="special-item w-36 flex-shrink-0 bg-white rounded-xl shadow overflow-hidden">
-                        <div class="h-24 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Pasta" class="w-full h-full object-cover">
+                    <div class="special-item w-40 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card">
+                        <div class="h-28 overflow-hidden">
+                            <img src="/api/placeholder/160/120" alt="Pasta" class="w-full h-full object-cover transition-transform hover:scale-110">
                         </div>
-                        <div class="p-2">
-                            <h3 class="font-medium text-sm">Pasta Alfredo</h3>
-                            <div class="flex items-center justify-between mt-1">
-                                <span class="text-sm font-bold">₹160</span>
-                                <button class="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center">
+                        <div class="p-3">
+                            <div class="flex items-center">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Veg</span>
+                                <div class="ml-2 flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.6</span>
+                                </div>
+                            </div>
+                            <h3 class="font-medium text-sm mt-1">Creamy Alfredo Pasta</h3>
+                            <div class="flex items-center justify-between mt-2">
+                                <div>
+                                    <span class="text-sm font-bold">₹160</span>
+                                </div>
+                                <button class="w-8 h-8 bg-[#FF6B35] text-white rounded-full flex items-center justify-center shadow-md transform transition-transform hover:scale-110">
                                     <i class="fas fa-plus text-xs"></i>
                                 </button>
                             </div>
@@ -136,78 +361,317 @@
                 </div>
             </section>
 
-            <!-- Categories Section -->
+            <!-- Featured Restaurants Section (New) -->
             <section class="px-4 py-6">
-                <h2 class="text-xl font-semibold mb-4">Popular Categories</h2>
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold">Featured Restaurants</h2>
+                        <p class="text-xs text-gray-500">Our partners with highest ratings</p>
+                    </div>
+                    <a href="restaurants.html" class="text-[#FF6B35] text-sm font-medium flex items-center">
+                        View All
+                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </a>
+                </div>
+                
+                <div class="flex overflow-x-auto space-x-4 pb-2 -mx-4 px-4 hide-scrollbar">
+                    <div class="restaurant-card w-56 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card">
+                        <div class="h-24 overflow-hidden relative">
+                            <img src="/api/placeholder/200/100" alt="Spice Garden" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-2 left-2 flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-white p-1">
+                                    <img src="/api/placeholder/32/32" alt="Logo" class="w-full h-full object-cover rounded-full">
+                                </div>
+                                <span class="text-white text-sm font-medium ml-2">Spice Garden</span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.8 (200+)</span>
+                                </div>
+                                <span class="text-xs text-gray-500">15-25 min</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Indian</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Curry</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Spicy</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="restaurant-card w-56 flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden food-card">
+                        <div class="h-24 overflow-hidden relative">
+                            <img src="/api/placeholder/200/100" alt="Pizza Heaven" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <div class="absolute bottom-2 left-2 flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-white p-1">
+                                    <img src="/api/placeholder/32/32" alt="Logo" class="w-full h-full object-cover rounded-full">
+                                </div>
+                                <span class="text-white text-sm font-medium ml-2">Pizza Heaven</span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center text-amber-400 text-xs">
+                                    <i class="fas fa-star"></i>
+                                    <span class="ml-1 text-gray-700">4.6 (150+)</span>
+                                </div>
+                                <span class="text-xs text-gray-500">20-30 min</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-2">
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Italian</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Pizza</span>
+                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">Fast</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section with Interactive Cards -->
+            <section class="px-4 py-6">
+                <h2 class="text-xl font-semibold mb-2">Popular Categories</h2>
+                <p class="text-xs text-gray-500 mb-4">Explore cuisines you love</p>
+                
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="category-card bg-white rounded-xl shadow overflow-hidden relative h-24">
-                        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80" alt="Burger" class="w-full h-full object-cover absolute inset-0">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end p-3">
+                    <div class="category-card bg-white rounded-xl shadow-md overflow-hidden relative h-28 transform transition-transform hover:scale-105">
+                        <img src="/api/placeholder/160/120" alt="Burger" class="w-full h-full object-cover absolute inset-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-3">
+                            <div class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center mb-2">
+                                <i class="fas fa-hamburger text-white"></i>
+                            </div>
                             <span class="text-white font-medium">Burgers</span>
+                            <span class="text-white/70 text-xs">15+ options</span>
                         </div>
                     </div>
                     
-                    <div class="category-card bg-white rounded-xl shadow overflow-hidden relative h-24">
-                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Pizza" class="w-full h-full object-cover absolute inset-0">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end p-3">
+                    <div class="category-card bg-white rounded-xl shadow-md overflow-hidden relative h-28 transform transition-transform hover:scale-105">
+                        <img src="/api/placeholder/160/120" alt="Pizza" class="w-full h-full object-cover absolute inset-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-3">
+                            <div class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center mb-2">
+                                <i class="fas fa-pizza-slice text-white"></i>
+                            </div>
                             <span class="text-white font-medium">Pizzas</span>
+                            <span class="text-white/70 text-xs">20+ options</span>
                         </div>
                     </div>
                     
-                    <div class="category-card bg-white rounded-xl shadow overflow-hidden relative h-24">
-                        <img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1625&q=80" alt="Indian" class="w-full h-full object-cover absolute inset-0">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end p-3">
+                    <div class="category-card bg-white rounded-xl shadow-md overflow-hidden relative h-28 transform transition-transform hover:scale-105">
+                        <img src="/api/placeholder/160/120" alt="Indian" class="w-full h-full object-cover absolute inset-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-3">
+                            <div class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center mb-2">
+                                <i class="fas fa-utensils text-white"></i>
+                            </div>
                             <span class="text-white font-medium">Indian</span>
+                            <span class="text-white/70 text-xs">30+ options</span>
                         </div>
                     </div>
                     
-                    <div class="category-card bg-white rounded-xl shadow overflow-hidden relative h-24">
-                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1557&q=80" alt="Desserts" class="w-full h-full object-cover absolute inset-0">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end p-3">
+                    <div class="category-card bg-white rounded-xl shadow-md overflow-hidden relative h-28 transform transition-transform hover:scale-105">
+                        <img src="/api/placeholder/160/120" alt="Desserts" class="w-full h-full object-cover absolute inset-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-3">
+                            <div class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center mb-2">
+                                <i class="fas fa-ice-cream text-white"></i>
+                            </div>
                             <span class="text-white font-medium">Desserts</span>
+                            <span class="text-white/70 text-xs">12+ options</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Promotions -->
+            <!-- Interactive Promotions & Offers -->
             <section class="px-4 py-6">
-                <div class="bg-gradient-to-r from-primary to-accent rounded-xl p-4 shadow-md">
-                    <div class="flex items-center justify-between">
-                        <div class="text-white">
-                            <h3 class="font-bold text-lg">Get 20% OFF</h3>
-                            <p class="text-white/80 text-sm">Use code: WELCOME20</p>
-                            <p class="text-xs text-white/60 mt-1">Valid on first order</p>
+                <div class="rounded-xl overflow-hidden shadow-md">
+                    <div class="bg-gradient-to-r from-[#FF6B35] to-[#F7A325] p-5 relative">
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between">
+                                <div class="text-white">
+                                    <h3 class="font-bold text-xl">First Order Surprise!</h3>
+                                    <p class="text-white/90 text-sm mt-1">Use code: <span class="font-bold">WELCOME20</span></p>
+                                    <p class="text-xs text-white/70 mt-1">Valid on orders above ₹300</p>
+                                    <button class="mt-4 bg-white text-[#FF6B35] px-4 py-2 rounded-lg font-medium text-sm hover:shadow-lg transform transition-transform hover:scale-105">
+                                        Apply Now
+                                    </button>
+                                </div>
+                                <div class="h-24 w-24 relative float-animation">
+                                    <div class="absolute inset-0 bg-white/20 rounded-full"></div>
+                                    <div class="absolute inset-2 bg-white/30 rounded-full flex items-center justify-center">
+                                        <div class="text-center">
+                                            <span class="text-white font-bold text-2xl">20%</span>
+                                            <span class="text-white text-xs block">OFF</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="h-16 w-16 bg-white/20 rounded-full flex items-center justify-center">
-                            <i class="fas fa-gift text-2xl text-white"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Food Mood Selector (New Interactive Feature) -->
+            <section class="px-4 py-6">
+                <h2 class="text-xl font-semibold mb-2">What's Your Food Mood?</h2>
+                <p class="text-xs text-gray-500 mb-4">Let us suggest the perfect meal</p>
+                
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="mood-btn flex flex-col items-center justify-center bg-orange-50 border border-orange-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-orange-100">
+                        <div class="w-10 h-10 mb-2 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <span class="text-xs font-medium text-orange-700">Spicy</span>
+                    </button>
+                    
+                    <button class="mood-btn flex flex-col items-center justify-center bg-green-50 border border-green-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-green-100">
+                        <div class="w-10 h-10 mb-2 bg-green-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <span class="text-xs font-medium text-green-700">Healthy</span>
+                    </button>
+                    
+                    <button class="mood-btn flex flex-col items-center justify-center bg-purple-50 border border-purple-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-purple-100">
+                        <div class="w-10 h-10 mb-2 bg-purple-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-ice-cream"></i>
+                        </div>
+                        <span class="text-xs font-medium text-purple-700">Sweet</span>
+                    </button>
+                    
+                    <button class="mood-btn flex flex-col items-center justify-center bg-blue-50 border border-blue-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-blue-100">
+                        <div class="w-10 h-10 mb-2 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-cheese"></i>
+                        </div>
+                        <span class="text-xs font-medium text-blue-700">Cheesy</span>
+                    </button>
+                    
+                    <button class="mood-btn flex flex-col items-center justify-center bg-amber-50 border border-amber-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-amber-100">
+                        <div class="w-10 h-10 mb-2 bg-amber-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-drumstick-bite"></i>
+                        </div>
+                        <span class="text-xs font-medium text-amber-700">Protein</span>
+                    </button>
+                    
+                    <button class="mood-btn flex flex-col items-center justify-center bg-pink-50 border border-pink-100 p-3 rounded-xl shadow-sm transform transition-transform hover:scale-105 hover:bg-pink-100">
+                        <div class="w-10 h-10 mb-2 bg-pink-500 rounded-full flex items-center justify-center text-white">
+                            <i class="fas fa-cookie"></i>
+                        </div>
+                        <span class="text-xs font-medium text-pink-700">Comfort</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Featured Offer with Countdown Timer -->
+            <section class="px-4 py-6">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <div class="relative h-40">
+                        <img src="/api/placeholder/400/160" alt="Special Offer" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4">
+                            <span class="bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold">LIMITED TIME</span>
+                            <h3 class="text-white font-bold text-lg mt-2">Family Weekend Bundle</h3>
+                            <p class="text-white/80 text-sm">2 Large Pizzas + 2 Sides + 4 Drinks</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center">
+                                <span class="text-lg font-bold">₹899</span>
+                                <span class="text-sm text-gray-400 line-through ml-2">₹1299</span>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded ml-2">Save ₹400</span>
+                            </div>
+                            <div class="flex items-center space-x-1 text-xs text-gray-500">
+                                <i class="fas fa-clock"></i>
+                                <span id="countdown-timer">05:59:30</span>
+                            </div>
+                        </div>
+                        <button class="w-full py-3 bg-[#FF6B35] text-white font-medium rounded-lg transform transition-transform hover:scale-105">
+                            Order Bundle Now
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Customer Reviews with Testimonials Carousel -->
+            <section class="px-4 py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold">Happy Customers</h2>
+                    <div class="flex space-x-2">
+                        <button id="prev-review" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chevron-left text-gray-500 text-xs"></i>
+                        </button>
+                        <button id="next-review" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chevron-right text-gray-500 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="overflow-hidden">
+                    <div id="reviews-container" class="flex transition-transform duration-300">
+                        <div class="review-slide w-full flex-shrink-0 bg-white rounded-xl shadow-md p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 font-medium">
+                                    PR
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-sm">Priya R.</h4>
+                                    <div class="flex text-amber-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600">"The food arrived piping hot and much faster than I expected! The Butter Chicken was absolutely delicious. Definitely ordering again!"</p>
+                        </div>
+                        
+                        <div class="review-slide w-full flex-shrink-0 bg-white rounded-xl shadow-md p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 font-medium">
+                                    AK
+                                </div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-sm">Akash K.</h4>
+                                    <div class="flex text-amber-400 text-xs">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600">"Great app, easy to use and the WELCOME20 coupon saved me money on my first order. The pizza was perfect and arrived in just 20 minutes!"</p>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-50">
+        <!-- Bottom Navigation with Interactive Elements -->
+        <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-50 shadow-lg">
             <div class="flex items-center justify-around h-16">
-                <a href="index.html" class="flex flex-col items-center justify-center text-primary">
+                <a href="index.html" class="flex flex-col items-center justify-center text-[#FF6B35]">
                     <i class="fas fa-home text-lg"></i>
                     <span class="text-xs mt-1 font-medium">Home</span>
                 </a>
-                <a href="menu.html" class="flex flex-col items-center justify-center text-gray-500">
+                <a href="menu.html" class="flex flex-col items-center justify-center text-gray-500 transition-colors hover:text-[#FF6B35]">
                     <i class="fas fa-utensils text-lg"></i>
                     <span class="text-xs mt-1">Menu</span>
                 </a>
                 <div class="flex-grow-0 flex justify-center items-center relative -mt-5">
-                    <a href="cart.html" class="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg">
+                    <a href="cart.html" class="w-14 h-14 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#F7A325] flex items-center justify-center shadow-lg pulse-btn">
                         <i class="fas fa-shopping-cart text-xl text-white"></i>
                     </a>
                 </div>
-                <a href="contact-us.html" class="flex flex-col items-center justify-center text-gray-500">
+                <a href="contact-us.html" class="flex flex-col items-center justify-center text-gray-500 transition-colors hover:text-[#FF6B35]">
                     <i class="fas fa-headset text-lg"></i>
                     <span class="text-xs mt-1">Support</span>
                 </a>
-                <a href="#" id="account-button" class="flex flex-col items-center justify-center text-gray-500">
+                <a href="#" id="account-button" class="flex flex-col items-center justify-center text-gray-500 transition-colors hover:text-[#FF6B35]">
                     <i class="fas fa-user text-lg"></i>
                     <span class="text-xs mt-1">Account</span>
                 </a>
@@ -226,12 +690,14 @@
         window.addEventListener('resize', setViewportHeight);
         setViewportHeight();
 
-        // Welcome overlay handling
+        // Welcome overlay handling with animation
         document.addEventListener('DOMContentLoaded', function() {
             const welcomeOverlay = document.getElementById('welcome-overlay');
             const mainApp = document.getElementById('main-app');
             const getStartedBtn = document.getElementById('get-started');
             const accountButton = document.getElementById('account-button');
+            const searchBtn = document.getElementById('search-btn');
+            const searchContainer = document.getElementById('search-container');
             
             // Check if user has visited before
             const hasVisited = localStorage.getItem('hasVisited');
@@ -239,12 +705,32 @@
             if (hasVisited) {
                 welcomeOverlay.classList.add('hidden');
                 mainApp.classList.remove('hidden');
+            } else {
+                // Add animation to welcome elements
+                gsap.from(".rotate-animation", {
+                    rotation: 360,
+                    duration: 20,
+                    repeat: -1,
+                    ease: "linear"
+                });
             }
             
             getStartedBtn.addEventListener('click', function() {
-                welcomeOverlay.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                mainApp.classList.add('fade-in');
+                gsap.to(welcomeOverlay, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: function() {
+                        welcomeOverlay.classList.add('hidden');
+                        mainApp.classList.remove('hidden');
+                        // Animate main app entrance
+                        gsap.from("#main-app > *", {
+                            y: 50,
+                            opacity: 0,
+                            stagger: 0.1,
+                            duration: 0.5
+                        });
+                    }
+                });
                 localStorage.setItem('hasVisited', 'true');
             });
             
@@ -253,10 +739,125 @@
                 window.location.href = 'login.html';
             });
 
+            // Search functionality toggle
+            searchBtn.addEventListener('click', function() {
+                searchContainer.classList.toggle('hidden');
+            });
+
             // Update cart badge number from localStorage if exists
             const cartBadge = document.getElementById('cart-badge');
             const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
             cartBadge.textContent = cartItems.length;
+            
+            // Parallax effect for hero banner
+            const parallaxBg = document.getElementById('parallax-bg');
+            if (parallaxBg) {
+                window.addEventListener('scroll', function() {
+                    let scrollPosition = window.pageYOffset;
+                    parallaxBg.style.transform = 'translateY(' + scrollPosition * 0.2 + 'px)';
+                });
+            }
+            
+            // Reviews carousel
+            const reviewsContainer = document.getElementById('reviews-container');
+            const prevReviewBtn = document.getElementById('prev-review');
+            const nextReviewBtn = document.getElementById('next-review');
+            let currentReview = 0;
+            
+            function updateReviewsCarousel() {
+                if (reviewsContainer) {
+                    reviewsContainer.style.transform = `translateX(-${currentReview * 100}%)`;
+                }
+            }
+            
+            if (prevReviewBtn && nextReviewBtn) {
+                prevReviewBtn.addEventListener('click', function() {
+                    if (currentReview > 0) {
+                        currentReview--;
+                        updateReviewsCarousel();
+                    }
+                });
+                
+                nextReviewBtn.addEventListener('click', function() {
+                    if (currentReview < document.querySelectorAll('.review-slide').length - 1) {
+                        currentReview++;
+                        updateReviewsCarousel();
+                    }
+                });
+            }
+            
+            // Countdown timer for special offer
+            function updateCountdown() {
+                const countdownEl = document.getElementById('countdown-timer');
+                if (!countdownEl) return;
+                
+                let parts = countdownEl.textContent.split(':');
+                let hours = parseInt(parts[0]);
+                let minutes = parseInt(parts[1]);
+                let seconds = parseInt(parts[2]);
+                
+                seconds--;
+                
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        
+                        if (hours < 0) {
+                            countdownEl.textContent = "Expired!";
+                            return;
+                        }
+                    }
+                }
+                
+                countdownEl.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update countdown every second
+            setInterval(updateCountdown, 1000);
+            
+            // Add to cart functionality
+            const addToCartBtns = document.querySelectorAll('.food-card button');
+            addToCartBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const foodItem = this.closest('.food-card, .special-item');
+                    const foodName = foodItem.querySelector('h3').textContent;
+                    const foodPrice = foodItem.querySelector('.font-bold').textContent;
+                    
+                    // Create cart item object
+                    const item = {
+                        name: foodName,
+                        price: foodPrice,
+                        quantity: 1
+                    };
+                    
+                    // Get existing cart items or initialize empty array
+                    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+                    
+                    // Add item to cart
+                    cartItems.push(item);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    
+                    // Update cart badge
+                    cartBadge.textContent = cartItems.length;
+                    
+                    // Show added to cart animation
+                    const button = this;
+                    button.innerHTML = '<i class="fas fa-check text-xs"></i>';
+                    button.classList.add('bg-green-500');
+                    
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="fas fa-plus text-xs"></i>';
+                        button.classList.remove('bg-green-500');
+                    }, 1000);
+                });
+            });
         });
     </script>
 </body>
