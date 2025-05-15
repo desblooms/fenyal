@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Cart - Tasty Bites</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .quantity-input::-webkit-inner-spin-button,
+        .quantity-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .quantity-input {
+            -moz-appearance: textfield;
+        }
+        .checkout-btn-container {
+            box-shadow: 0 -10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .cart-item {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .cart-item.removing {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app -->
+    <div class="app-container pt-4 pb-36 scroll-touch">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                        <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+                    </a>
+                    <h1 class="text-xl font-semibold">My Cart</h1>
+                </div>
+                <button id="clear-cart-btn" class="text-primary text-sm font-medium flex items-center opacity-80">
+                    <i data-feather="trash-2" class="h-4 w-4 mr-1"></i>
+                    Clear
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4">
+            <!-- Empty cart state -->
+            <div id="empty-cart" class="hidden flex flex-col items-center justify-center py-16">
+                <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                    <i data-feather="shopping-cart" class="h-8 w-8 text-gray-400"></i>
+                </div>
+                <h3 class="text-lg font-medium mb-1">Your cart is empty</h3>
+                <p class="text-gray-500 text-sm text-center mb-6">Looks like you haven't added any items to your cart yet.</p>
+                <a href="menu.html" class="bg-primary text-white font-medium py-3 px-6 rounded-full flex items-center">
+                    Browse Menu
+                    <i data-feather="arrow-right" class="h-4 w-4 ml-2"></i>
+                </a>
+            </div>
+            
+            <!-- Cart items -->
+            <div id="cart-items-container" class="pb-4">
+                <!-- Cart items will be dynamically added here -->
+                <div class="animate-pulse py-4 hidden" id="cart-loading">
+                    <div class="flex mb-4">
+                        <div class="w-16 h-16 bg-gray-200 rounded-lg mr-3"></div>
+                        <div class="flex-1">
+                            <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                            <div class="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                        </div>
+                    </div>
+                    <div class="flex mb-4">
+                        <div class="w-16 h-16 bg-gray-200 rounded-lg mr-3"></div>
+                        <div class="flex-1">
+                            <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                            <div class="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add more items -->
+            <div class="mt-4 mb-6 flex justify-center" id="add-more-section">
+                <a href="menu.html" class="flex items-center text-primary font-medium">
+                    <i data-feather="plus-circle" class="h-5 w-5 mr-2"></i>
+                    Add more items
+                </a>
+            </div>
+            
+            <!-- Order summary -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-4" id="order-summary">
+                <h3 class="font-medium mb-3">Order Summary</h3>
+                
+                <div class="space-y-2 text-sm mb-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Subtotal</span>
+                        <span id="subtotal">₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">GST (5%)</span>
+                        <span id="tax">₹0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Delivery Fee</span>
+                        <span id="delivery-fee">₹30</span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-100 pt-3 flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span class="text-primary" id="total">₹0</span>
+                </div>
+            </div>
+            
+            <!-- Instructions -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-4">
+                <h3 class="font-medium mb-2">Add Instructions</h3>
+                <textarea placeholder="Any specific instructions for your order?" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:border-primary resize-none" rows="2"></textarea>
+            </div>
+            
+            <!-- Apply coupon -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-12">
+                <div class="flex items-center">
+                    <i data-feather="tag" class="h-5 w-5 text-primary mr-3"></i>
+                    <input type="text" placeholder="Apply Coupon Code" class="flex-1 focus:outline-none text-sm">
+                    <button class="text-primary font-medium text-sm">Apply</button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Checkout button -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white checkout-btn-container p-4 pt-3 bottom-safe-area z-40">
+            <div class="flex justify-between items-center mb-2">
+                <div>
+                    <p class="text-sm text-gray-500">Total Amount</p>
+                    <p class="font-semibold text-lg" id="checkout-total">₹0</p>
+                </div>
+                <div>
+                    <a href="index.html#orderOptions" id="place-order-btn" class="bg-primary text-white font-medium py-3 px-6 rounded-xl flex items-center">
+                        Place Order
+                        <i data-feather="arrow-right" class="h-4 w-4 ml-2"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex justify-around text-xs">
+                <a href="takeaway.html" class="flex flex-col items-center px-2 pt-2">
+                    <i data-feather="package" class="h-5 w-5 mb-1 text-gray-500"></i>
+                    <span class="text-gray-600">Takeaway</span>
+                </a>
+                <a href="dine-in.html" class="flex flex-col items-center px-2 pt-2">
+                    <i data-feather="coffee" class="h-5 w-5 mb-1 text-gray-500"></i>
+                    <span class="text-gray-600">Dine-in</span>
+                </a>
+                <a href="home-delivery.html" class="flex flex-col items-center px-2 pt-2">
+                    <i data-feather="home" class="h-5 w-5 mb-1 text-gray-500"></i>
+                    <span class="text-gray-600">Delivery</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirm clear cart modal -->
+    <div id="clear-cart-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden fade-in">
+        <div class="bg-white rounded-xl p-5 w-5/6 max-w-sm">
+            <h3 class="text-lg font-semibold mb-2">Clear Cart?</h3>
+            <p class="text-gray-500 text-sm mb-4">Are you sure you want to remove all items from your cart?</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-clear" class="px-4 py-2 text-gray-600 font-medium text-sm">Cancel</button>
+                <button id="confirm-clear" class="px-4 py-2 bg-primary text-white rounded-lg font-medium text-sm">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from './assets/js/app.js';
+        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        
+        // Initialize icons
+        feather.replace();
+        
+        // DOM elements
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const emptyCartElement = document.getElementById('empty-cart');
+        const orderSummaryElement = document.getElementById('order-summary');
+        const addMoreSection = document.getElementById('add-more-section');
+        const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
+        const totalElement = document.getElementById('total');
+        const checkoutTotalElement = document.getElementById('checkout-total');
+        const deliveryFeeElement = document.getElementById('delivery-fee');
+        const clearCartBtn = document.getElementById('clear-cart-btn');
+        const clearCartModal = document.getElementById('clear-cart-modal');
+        const cancelClearBtn = document.getElementById('cancel-clear');
+        const confirmClearBtn = document.getElementById('confirm-clear');
+        const cartLoading = document.getElementById('cart-loading');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        
+        // Load cart items
+        async function loadCartItems() {
+            // Show loading
+            cartLoading.classList.remove('hidden');
+            
+            // Wait for menu data to load
+            await menuManager.loadMenuData();
+            
+            // Get cart items
+            const cartItems = cartManager.getCartItems();
+            
+            // Hide loading
+            cartLoading.classList.add('hidden');
+            
+            // Check if cart is empty
+            if (cartItems.length === 0) {
+                showEmptyCart();
+                return;
+            }
+            
+            // Clear existing items
+            clearCartContainer();
+            
+            // Add items to DOM
+            cartItems.forEach((item, index) => {
+                const cartItemElement = createCartItemElement(item, index);
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            // Update summary
+            updateOrderSummary();
+        }
+        
+        // Create a cart item element
+        function createCartItemElement(item, index) {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'flex py-4 border-b border-gray-100 cart-item';
+            cartItem.dataset.index = index;
+            
+            // Calculate item price
+            let itemPrice = 0;
+            let itemLabel = '';
+            
+            // Handle half/full pricing
+            if (item.variants && item.variants.size === 'half') {
+                itemPrice = item.halfPrice;
+                itemLabel = '(Half)';
+            } else if (item.variants && item.variants.size === 'full') {
+                itemPrice = item.fullPrice;
+                itemLabel = '(Full)';
+            } else {
+                itemPrice = item.price;
+            }
+            
+            // Add addons price
+            let addonsList = '';
+            let addonsTotal = 0;
+            
+            if (item.variants && item.variants.addons && item.variants.addons.length > 0) {
+                item.variants.addons.forEach(addon => {
+                    addonsList += `<div class="text-xs text-gray-500 flex justify-between">
+                                    <span>+ ${addon.name}</span>
+                                    <span>${formatPrice(addon.price)}</span>
+                                </div>`;
+                    addonsTotal += addon.price;
+                });
+                
+                itemPrice += addonsTotal;
+            }
+            
+            // Spice level
+            let spiceLevel = '';
+            if (item.variants && item.variants.spiceLevel) {
+                spiceLevel = `<div class="inline-block bg-gray-100 text-xs rounded-full px-2 py-0.5 text-gray-600 mb-1">
+                                ${item.variants.spiceLevel}
+                            </div>`;
+            }
+            
+            // Calculate total price for this item
+            const totalPrice = itemPrice * item.quantity;
+            
+            cartItem.innerHTML = `
+                <div class="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden mr-3 flex-shrink-0">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 flex flex-col">
+                    <div class="flex justify-between">
+                        <div>
+                            <h3 class="font-medium">${item.name} <span class="text-sm font-normal text-gray-500">${itemLabel}</span></h3>
+                            ${spiceLevel}
+                        </div>
+                        <button class="remove-item-btn p-1 text-gray-400 hover:text-red-500" data-index="${index}">
+                            <i data-feather="x" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                    
+                    ${addonsList ? `<div class="mt-1 mb-1.5">${addonsList}</div>` : ''}
+                    
+                    <div class="flex justify-between items-center mt-auto">
+                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                            <button class="decrement-btn w-8 h-8 flex items-center justify-center text-gray-500 bg-gray-50" data-index="${index}">
+                                <i data-feather="minus" class="h-4 w-4"></i>
+                            </button>
+                            <input type="number" min="1" value="${item.quantity}" class="quantity-input w-10 h-8 text-center border-x border-gray-200 focus:outline-none text-sm" data-index="${index}">
+                            <button class="increment-btn w-8 h-8 flex items-center justify-center text-gray-500 bg-gray-50" data-index="${index}">
+                                <i data-feather="plus" class="h-4 w-4"></i>
+                            </button>
+                        </div>
+                        <div class="font-medium">${formatPrice(totalPrice)}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Initialize Feather icons for this item
+            setTimeout(() => {
+                feather.replace(cartItem.querySelectorAll('[data-feather]'));
+            }, 0);
+            
+            return cartItem;
+        }
+        
+        // Show empty cart
+        function showEmptyCart() {
+            emptyCartElement.classList.remove('hidden');
+            orderSummaryElement.classList.add('hidden');
+            addMoreSection.classList.add('hidden');
+            clearCartBtn.classList.add('hidden');
+            
+            // Hide checkout button or make it disabled
+            document.querySelector('.checkout-btn-container').classList.add('opacity-50', 'pointer-events-none');
+        }
+        
+        // Clear cart container
+        function clearCartContainer() {
+            // Remove all cart items but keep the loading element
+            const items = cartItemsContainer.querySelectorAll('.cart-item');
+            items.forEach(item => item.remove());
+            
+            emptyCartElement.classList.add('hidden');
+            orderSummaryElement.classList.remove('hidden');
+            addMoreSection.classList.remove('hidden');
+            clearCartBtn.classList.remove('hidden');
+            
+            // Show checkout button
+            document.querySelector('.checkout-btn-container').classList.remove('opacity-50', 'pointer-events-none');
+        }
+        
+        // Update order summary
+        function updateOrderSummary() {
+            const subtotal = cartManager.getCartTotal();
+            const tax = Math.round(subtotal * 0.05); // 5% GST
+            const deliveryFee = 30; // Fixed delivery fee
+            const total = subtotal + tax + deliveryFee;
+            
+            subtotalElement.textContent = formatPrice(subtotal);
+            taxElement.textContent = formatPrice(tax);
+            totalElement.textContent = formatPrice(total);
+            checkoutTotalElement.textContent = formatPrice(total);
+            
+            // Update button state
+            placeOrderBtn.classList.toggle('opacity-50', subtotal === 0);
+            placeOrderBtn.classList.toggle('pointer-events-none', subtotal === 0);
+        }
+        
+        // Event delegation for cart item actions
+        cartItemsContainer.addEventListener('click', function(event) {
+            // Handle decrement button
+            if (event.target.closest('.decrement-btn')) {
+                const btn = event.target.closest('.decrement-btn');
+                const index = parseInt(btn.dataset.index);
+                const quantityInput = btn.parentNode.querySelector('.quantity-input');
+                const currentQuantity = parseInt(quantityInput.value);
+                
+                if (currentQuantity > 1) {
+                    quantityInput.value = currentQuantity - 1;
+                    cartManager.updateQuantity(index, currentQuantity - 1);
+                    updateOrderSummary();
+                } else {
+                    // Remove item if quantity becomes 0
+                    removeCartItem(index);
+                }
+            }
+            
+            // Handle increment button
+            if (event.target.closest('.increment-btn')) {
+                const btn = event.target.closest('.increment-btn');
+                const index = parseInt(btn.dataset.index);
+                const quantityInput = btn.parentNode.querySelector('.quantity-input');
+                const currentQuantity = parseInt(quantityInput.value);
+                
+                quantityInput.value = currentQuantity + 1;
+                cartManager.updateQuantity(index, currentQuantity + 1);
+                updateOrderSummary();
+            }
+            
+            // Handle remove item button
+            if (event.target.closest('.remove-item-btn')) {
+                const btn = event.target.closest('.remove-item-btn');
+                const index = parseInt(btn.dataset.index);
+                
+                // Ask for confirmation
+                removeCartItem(index);
+            }
+        });
+        
+        // Handle quantity input change
+        cartItemsContainer.addEventListener('change', function(event) {
+            if (event.target.classList.contains('quantity-input')) {
+                const input = event.target;
+                const index = parseInt(input.dataset.index);
+                const newQuantity = parseInt(input.value);
+                
+                if (newQuantity <= 0) {
+                    input.value = 1;
+                    cartManager.updateQuantity(index, 1);
+                } else {
+                    cartManager.updateQuantity(index, newQuantity);
+                }
+                
+                updateOrderSummary();
+            }
+        });
+        
+        // Remove cart item with animation
+        function removeCartItem(index) {
+            const cartItem = cartItemsContainer.querySelector(`.cart-item[data-index="${index}"]`);
+            
+            if (cartItem) {
+                // Add animation class
+                cartItem.classList.add('removing');
+                
+                // Wait for animation to complete
+                setTimeout(() => {
+                    // Remove from DOM
+                    cartItem.remove();
+                    
+                    // Remove from cart manager
+                    cartManager.removeFromCart(index);
+                    
+                    // Update indexes of remaining items
+                    updateCartItemIndexes();
+                    
+                    // Update summary
+                    updateOrderSummary();
+                    
+                    // Show empty cart if no items left
+                    if (cartManager.getCartItems().length === 0) {
+                        showEmptyCart();
+                    }
+                    
+                    // Show toast
+                    toast.show('Item removed from cart', 'success');
+                }, 300);
+            }
+        }
+        
+        // Update indexes of cart items after removal
+        function updateCartItemIndexes() {
+            const cartItems = cartItemsContainer.querySelectorAll('.cart-item');
+            
+            cartItems.forEach((item, newIndex) => {
+                item.dataset.index = newIndex;
+                
+                // Update all buttons and inputs inside
+                item.querySelectorAll('[data-index]').forEach(el => {
+                    el.dataset.index = newIndex;
+                });
+            });
+        }
+        
+        // Clear cart button
+        clearCartBtn.addEventListener('click', function() {
+            if (cartManager.getCartItems().length > 0) {
+                clearCartModal.classList.remove('hidden');
+            }
+        });
+        
+        // Cancel clear cart
+        cancelClearBtn.addEventListener('click', function() {
+            clearCartModal.classList.add('hidden');
+        });
+        
+        // Confirm clear cart
+        confirmClearBtn.addEventListener('click', function() {
+            cartManager.clearCart();
+            clearCartModal.classList.add('hidden');
+            showEmptyCart();
+            toast.show('Cart has been cleared', 'success');
+        });
+        
+        // Close modal when clicking outside
+        clearCartModal.addEventListener('click', function(event) {
+            if (event.target === clearCartModal) {
+                clearCartModal.classList.add('hidden');
+            }
+        });
+        
+        // Load cart items when page loads
+        document.addEventListener('DOMContentLoaded', loadCartItems);
+    </script>
+</body>
+</html>
