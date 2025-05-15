@@ -118,33 +118,47 @@
                 <p class="text-gray-500 text-xs">What would you like to order today?</p>
             </div>
             
-            <!-- Quick actions -->
-            <div class="grid grid-cols-4 gap-2 mb-5">
-                <a href="menu.html" class="flex flex-col items-center">
-                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        <i data-feather="menu" class="text-primary h-6 w-6"></i>
-                    </div>
-                    <span class="text-xs font-medium">Menu</span>
-                </a>
-                <a href="dine-in.html" class="flex flex-col items-center">
-                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        <i data-feather="coffee" class="text-primary h-6 w-6"></i>
-                    </div>
-                    <span class="text-xs font-medium">Dine In</span>
-                </a>
-                <a href="takeaway.html" class="flex flex-col items-center">
-                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        <i data-feather="package" class="text-primary h-6 w-6"></i>
-                    </div>
-                    <span class="text-xs font-medium">Takeaway</span>
-                </a>
-                <a href="home-delivery.html" class="flex flex-col items-center">
-                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                        <i data-feather="home" class="text-primary h-6 w-6"></i>
-                    </div>
-                    <span class="text-xs font-medium">Delivery</span>
-                </a>
+          <!-- Categories -->
+<div class="mb-1">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="text-base font-semibold">Categories</h2>
+        <a href="menu.html" class="text-primary text-xs">View all</a>
+    </div>
+    
+    <div class="flex space-x-4 overflow-x-auto py-1 special-scroll">
+        <a href="menu.html?category=Burgers" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="coffee" class="text-primary h-6 w-6"></i>
             </div>
+            <span class="text-xs font-medium">Burgers</span>
+        </a>
+        <a href="menu.html?category=Indian" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="airplay" class="text-primary h-6 w-6"></i>
+            </div>
+            <span class="text-xs font-medium">Indian</span>
+        </a>
+        <a href="menu.html?category=Pizzas" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="pie-chart" class="text-primary h-6 w-6"></i>
+            </div>
+            <span class="text-xs font-medium">Pizzas</span>
+        </a>
+        <a href="menu.html?category=Italian" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="book" class="text-primary h-6 w-6"></i>
+            </div>
+            <span class="text-xs font-medium">Italian</span>
+        </a>
+        <a href="menu.html?category=Desserts" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="gift" class="text-primary h-6 w-6"></i>
+            </div>
+            <span class="text-xs font-medium">Desserts</span>
+        </a>
+    </div>
+</div>
+            
             
             <!-- Special offers -->
             <div class="rounded-xl overflow-hidden shadow-sm bg-gradient-to-r from-primary/80 to-primary mb-6">
@@ -181,39 +195,7 @@
             </div>
             
             <!-- Categories -->
-            <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-base font-semibold">Categories</h2>
-                    <a href="menu.html" class="text-primary text-xs">View all</a>
-                </div>
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
-                        </div>
-                        <span class="text-sm font-medium">Burgers</span>
-                    </a>
-                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
-                        </div>
-                        <span class="text-sm font-medium">Indian</span>
-                    </a>
-                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
-                        </div>
-                        <span class="text-sm font-medium">Pizzas</span>
-                    </a>
-                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
-                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
-                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
-                        </div>
-                        <span class="text-sm font-medium">Desserts</span>
-                    </a>
-                </div>
-            </div>
+            
         </main>
         
         <!-- Navigation bar -->
