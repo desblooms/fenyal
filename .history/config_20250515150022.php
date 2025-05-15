@@ -11,7 +11,7 @@ define('DB_PASS', 'db_password');   // Database password
 
 // Application settings
 define('APP_NAME', 'Digital Menu');
-define('APP_URL', 'https://digitalmenu.desblooms.in/');
+define('APP_URL', 'https://yourdomain.com');
 define('APP_VERSION', '1.0.0');
 
 // Path settings
