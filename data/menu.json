@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "name": "Veggie Burger",
+    "description": "A juicy plant-based patty with lettuce, tomato, and our secret sauce.",
+    "price": 120,
+    "category": "Burgers",
+    "image": "assets/images/veggie-burger.jpg",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": false,
+    "addons": [
+      { "name": "Extra Cheese", "price": 20 },
+      { "name": "Add Fries", "price": 40 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 2,
+    "name": "Butter Chicken",
+    "description": "Rich creamy curry with tender chicken pieces in a tomato-based sauce.",
+    "category": "Indian",
+    "image": "assets/images/butter-chicken.jpg",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": true,
+    "halfPrice": 180,
+    "fullPrice": 320,
+    "addons": [
+      { "name": "Extra Gravy", "price": 30 },
+      { "name": "Butter Naan", "price": 40 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 3,
+    "name": "Margherita Pizza",
+    "description": "Classic pizza with tomato sauce, mozzarella, fresh basil, salt, and olive oil.",
+    "category": "Pizzas",
+    "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": false,
+    "price": 220,
+    "addons": [
+      { "name": "Extra Cheese", "price": 40 },
+      { "name": "Add Mushrooms", "price": 30 },
+      { "name": "Add Chicken", "price": 60 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium"]
+  },
+  {
+    "id": 4,
+    "name": "Pasta Alfredo",
+    "description": "Creamy pasta with garlic, butter, and parmesan cheese sauce.",
+    "category": "Italian",
+    "image": "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    "isPopular": false,
+    "isSpecial": true,
+    "isHalfFull": false,
+    "price": 160,
+    "addons": [
+      { "name": "Add Chicken", "price": 50 },
+      { "name": "Add Mushrooms", "price": 30 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium"]
+  },
+  {
+    "id": 5,
+    "name": "Chicken Burger",
+    "description": "Juicy chicken patty with lettuce, tomato, and special mayo.",
+    "price": 140,
+    "category": "Burgers",
+    "image": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80",
+    "isPopular": true,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+      { "name": "Extra Cheese", "price": 20 },
+      { "name": "Add Bacon", "price": 30 },
+      { "name": "Add Fries", "price": 40 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 6,
+    "name": "Chicken Biryani",
+    "description": "Aromatic basmati rice cooked with tender chicken and spices.",
+    "category": "Indian",
+    "image": "https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1625&q=80",
+    "isPopular": true,
+    "isSpecial": false,
+    "isHalfFull": true,
+    "halfPrice": 150,
+    "fullPrice": 280,
+    "addons": [
+      { "name": "Extra Raita", "price": 20 },
+      { "name": "Extra Gravy", "price": 30 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy", "Extra Spicy"]
+  },
+  {
+    "id": 7,
+    "name": "Chocolate Brownie",
+    "description": "Rich chocolate brownie with a scoop of vanilla ice cream.",
+    "price": 120,
+    "category": "Desserts",
+    "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1557&q=80",
+    "isPopular": true,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+      { "name": "Extra Ice Cream", "price": 30 },
+      { "name": "Chocolate Sauce", "price": 15 }
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 8,
+    "name": "Paneer Tikka",
+    "description": "Marinated cottage cheese cubes grilled to perfection.",
+    "category": "Indian",
+    "image": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1550&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": true,
+    "halfPrice": 140,
+    "fullPrice": 260,
+    "addons": [
+      { "name": "Mint Chutney", "price": 15 },
+      { "name": "Extra Onions", "price": 10 }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  }
+]
