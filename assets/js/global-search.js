@@ -1,5 +1,5 @@
 /**
- * Tasty Bites - Global Search Module
+ * Fenyal - Global Search Module
  * 
  * This script adds universal search functionality to all pages via the search button
  * in the bottom navigation bar. It handles creating a search modal, performing searches,
