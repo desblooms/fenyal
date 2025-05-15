@@ -55,7 +55,7 @@ $(document).ready(function() {
         loop: true,
         smartSpeed: 1050,
         items: 1,
-        navText: ["<div class='nav-button owl-prev'><i class='fal fa-chevron-left'></i> </div>‹</div>", "<div class='nav-button owl-next'><i class='fal fa-chevron-right'></i></div>"],
+        navText: ["<div class='nav-button owl-prev'><i class='fa fa-chevron-left'></i> </div>‹</div>", "<div class='nav-button owl-next'><i class='fa fa-chevron-right'></i></div>"],
 
     });
 });
