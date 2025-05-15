@@ -21,12 +21,55 @@
     
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .special-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .nav-indicator {
+            position: absolute;
+            height: 3px;
+            width: 3px;
+            border-radius: 50%;
+            background-color: currentColor;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
 </head>
 <body class="bg-background font-sans text-dark">
+    <!-- Status bar (mobile look) -->
+    <div class="status-bar fixed top-0 left-0 right-0 bg-primary text-white flex justify-between items-center px-4 z-50">
+        <span>9:41</span>
+        <div class="flex items-center space-x-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10a8 8 0 0 0-16 0v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2h2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20l12-10z" fill="currentColor"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6v16h-6"/><path d="M5 10a7 7 0 0 1 7-7"/><path d="M5 22a7 7 0 0 0 7-7"/><line x1="19" y1="6" x2="1" y2="6"/><line x1="1" y1="6" x2="1" y2="22"/></svg>
+        </div>
+    </div>
+    
     <!-- Welcome overlay -->
-    <div id="welcome-overlay" class="fixed inset-0 bg-primary z-50 flex flex-col items-center justify-center text-white p-6 slide-in">
-        <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div id="welcome-overlay" class="fixed inset-0 bg-primary z-40 flex flex-col items-center justify-center text-white p-4 slide-in pt-10">
+        <div class="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
                 <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
                 <line x1="6" y1="1" x2="6" y2="4"></line>
@@ -34,112 +77,172 @@
                 <line x1="14" y1="1" x2="14" y2="4"></line>
             </svg>
         </div>
-        <h1 class="text-3xl font-bold mb-2">Tasty Bites</h1>
-        <p class="text-center text-white/80 mb-8">Delicious food, delivered to your doorstep</p>
-        <button id="get-started-btn" class="bg-white text-primary font-semibold py-3 px-8 rounded-xl shadow-lg transform transition-transform active:scale-95">
+        <h1 class="text-2xl font-bold mb-1">Tasty Bites</h1>
+        <p class="text-center text-white/80 text-sm mb-8">Delicious food at your fingertips</p>
+        <button id="get-started-btn" class="bg-white text-primary font-medium text-sm py-3 px-8 rounded-full shadow-lg transform transition-transform active:scale-95 flex items-center">
             Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </button>
     </div>
     
     <!-- Main app (initially hidden) -->
-    <div id="main-app" class="app-container p-6 hidden">
+    <div id="main-app" class="app-container pt-6 pb-20 hidden scroll-touch">
         <!-- Header -->
-        <header class="mb-8 flex justify-center">
-            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
-                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
-                    <line x1="6" y1="1" x2="6" y2="4"></line>
-                    <line x1="10" y1="1" x2="10" y2="4"></line>
-                    <line x1="14" y1="1" x2="14" y2="4"></line>
-                </svg>
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" y2="4"></line>
+                            <line x1="10" y1="1" x2="10" y2="4"></line>
+                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div>
+                    <h1 class="text-lg font-semibold">Tasty Bites</h1>
+                </div>
+                <div>
+                    <a href="login.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i data-feather="user" class="h-4 w-4 text-gray-600"></i>
+                    </a>
+                </div>
             </div>
         </header>
         
-        <!-- Welcome section -->
-        <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold mb-2">Welcome to Tasty Bites</h1>
-            <p class="text-gray-600">What would you like to do today?</p>
-        </div>
-        
-        <!-- Order options -->
-        <div class="grid grid-cols-1 gap-4 mb-8">
-            <a href="menu.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
-                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                    <i data-feather="menu" class="text-primary"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-lg">Browse Menu</h3>
-                    <p class="text-gray-500 text-sm">Explore our delicious options</p>
-                </div>
-                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
-            </a>
+        <!-- Main content -->
+        <main class="px-4">
+            <!-- Welcome banner -->
+            <div class="mb-4 mt-2">
+                <h2 class="text-xl font-semibold">Hi, there! 👋</h2>
+                <p class="text-gray-500 text-xs">What would you like to order today?</p>
+            </div>
             
-            <a href="dine-in.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
-                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                    <i data-feather="coffee" class="text-primary"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-lg">Dine In</h3>
-                    <p class="text-gray-500 text-sm">Order to your table</p>
-                </div>
-                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
-            </a>
+            <!-- Quick actions -->
+            <div class="grid grid-cols-4 gap-2 mb-5">
+                <a href="menu.html" class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        <i data-feather="menu" class="text-primary h-6 w-6"></i>
+                    </div>
+                    <span class="text-xs font-medium">Menu</span>
+                </a>
+                <a href="dine-in.html" class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        <i data-feather="coffee" class="text-primary h-6 w-6"></i>
+                    </div>
+                    <span class="text-xs font-medium">Dine In</span>
+                </a>
+                <a href="takeaway.html" class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        <i data-feather="package" class="text-primary h-6 w-6"></i>
+                    </div>
+                    <span class="text-xs font-medium">Takeaway</span>
+                </a>
+                <a href="home-delivery.html" class="flex flex-col items-center">
+                    <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                        <i data-feather="home" class="text-primary h-6 w-6"></i>
+                    </div>
+                    <span class="text-xs font-medium">Delivery</span>
+                </a>
+            </div>
             
-            <a href="takeaway.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
-                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                    <i data-feather="package" class="text-primary"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-lg">Takeaway</h3>
-                    <p class="text-gray-500 text-sm">Pickup your order</p>
-                </div>
-                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
-            </a>
-            
-            <a href="home-delivery.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
-                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
-                    <i data-feather="home" class="text-primary"></i>
-                </div>
-                <div class="flex-1">
-                    <h3 class="font-semibold text-lg">Home Delivery</h3>
-                    <p class="text-gray-500 text-sm">Delivered to your doorstep</p>
-                </div>
-                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
-            </a>
-        </div>
-        
-        <!-- Special offers -->
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Special Offers</h2>
-            <div class="special-items-container" id="special-items-container">
-                <div class="animate-pulse flex space-x-4 mb-4 overflow-x-auto py-2">
-                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
-                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
-                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
+            <!-- Special offers -->
+            <div class="rounded-xl overflow-hidden shadow-sm bg-gradient-to-r from-primary/80 to-primary mb-6">
+                <div class="p-4 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium uppercase tracking-wide opacity-80">Special offer</h3>
+                            <h2 class="text-xl font-bold mb-1">30% OFF</h2>
+                            <p class="text-xs text-white/90 mb-2">On your first order</p>
+                            <a href="menu.html" class="inline-block bg-white text-primary text-xs font-medium px-4 py-1.5 rounded-full">Order Now</a>
+                        </div>
+                        <div class="w-20 h-20 relative">
+                            <div class="absolute inset-0 rounded-full bg-white/20 backdrop-blur-sm"></div>
+                            <img src="assets/images/butter-chicken.jpg" class="absolute inset-0 w-full h-full object-cover rounded-full" alt="Special item">
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            
+            <!-- Trending items -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-base font-semibold">Popular Items</h2>
+                    <a href="menu.html" class="text-primary text-xs">View all</a>
+                </div>
+                
+                <div class="special-items-container" id="special-items-container">
+                    <div class="animate-pulse flex space-x-3 overflow-x-auto py-1 special-scroll">
+                        <div class="flex-shrink-0 w-36 bg-gray-200 rounded-lg h-44"></div>
+                        <div class="flex-shrink-0 w-36 bg-gray-200 rounded-lg h-44"></div>
+                        <div class="flex-shrink-0 w-36 bg-gray-200 rounded-lg h-44"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categories -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-base font-semibold">Categories</h2>
+                    <a href="menu.html" class="text-primary text-xs">View all</a>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
+                        </div>
+                        <span class="text-sm font-medium">Burgers</span>
+                    </a>
+                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
+                        </div>
+                        <span class="text-sm font-medium">Indian</span>
+                    </a>
+                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
+                        </div>
+                        <span class="text-sm font-medium">Pizzas</span>
+                    </a>
+                    <a href="menu.html" class="bg-white rounded-lg shadow-sm p-3 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                            <i data-feather="coffee" class="text-primary h-5 w-5"></i>
+                        </div>
+                        <span class="text-sm font-medium">Desserts</span>
+                    </a>
+                </div>
+            </div>
+        </main>
         
         <!-- Navigation bar -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl h-16 flex justify-around items-center px-2 z-40">
-            <a href="index.html" class="flex flex-col items-center justify-center text-primary">
-                <i data-feather="home" class="h-6 w-6"></i>
-                <span class="text-xs mt-1">Home</span>
-            </a>
-            <a href="menu.html" class="flex flex-col items-center justify-center text-gray-500">
-                <i data-feather="menu" class="h-6 w-6"></i>
-                <span class="text-xs mt-1">Menu</span>
-            </a>
-            <a href="cart.html" class="flex flex-col items-center justify-center text-gray-500 relative">
-                <i data-feather="shopping-cart" class="h-6 w-6"></i>
-                <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                <span class="text-xs mt-1">Cart</span>
-            </a>
-            <a href="login.html" class="flex flex-col items-center justify-center text-gray-500">
-                <i data-feather="user" class="h-6 w-6"></i>
-                <span class="text-xs mt-1">Profile</span>
-            </a>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
+            <div class="h-16 flex justify-around items-center">
+                <a href="index.html" class="flex flex-col items-center justify-center text-primary relative">
+                    <i data-feather="home" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Home</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="menu.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="menu" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Menu</span>
+                </a>
+                <a href="#" class="flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center -mt-5 shadow-md">
+                        <i data-feather="search" class="h-5 w-5 text-white"></i>
+                    </div>
+                </a>
+                <a href="cart.html" class="flex flex-col items-center justify-center text-gray-400 relative">
+                    <i data-feather="shopping-cart" class="h-5 w-5"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">0</span>
+                    <span class="text-xs mt-0.5">Cart</span>
+                </a>
+                <a href="login.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="user" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Profile</span>
+                </a>
+            </div>
         </nav>
     </div>
     
@@ -174,32 +277,36 @@
         async function loadSpecialItems() {
             await menuManager.loadMenuData();
             const specialItems = menuManager.getSpecialItems();
+            const categories = menuManager.getAllCategories();
             
             if (specialItems.length > 0) {
                 const container = document.getElementById('special-items-container');
                 container.innerHTML = '';
                 
                 const itemsWrapper = document.createElement('div');
-                itemsWrapper.className = 'flex space-x-4 overflow-x-auto py-2';
+                itemsWrapper.className = 'flex space-x-3 overflow-x-auto py-1 special-scroll';
                 
                 specialItems.forEach(item => {
                     const specialItem = document.createElement('div');
-                    specialItem.className = 'flex-shrink-0 w-64 rounded-xl overflow-hidden special-item shadow-md bg-white';
+                    specialItem.className = 'flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white';
                     specialItem.onclick = () => {
                         pageTransition(`menu-item-details.html?id=${item.id}`);
                     };
                     
-                    const price = item.isHalfFull ? formatPrice(item.halfPrice) + ' - ' + formatPrice(item.fullPrice) : formatPrice(item.price);
+                    const price = item.isHalfFull ? formatPrice(item.halfPrice) : formatPrice(item.price);
                     
                     specialItem.innerHTML = `
-                        <div class="h-32 overflow-hidden">
+                        <div class="h-24 overflow-hidden">
                             <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
                         </div>
-                        <div class="p-3">
-                            <h3 class="font-semibold">${item.name}</h3>
+                        <div class="p-2.5">
+                            <h3 class="font-medium text-sm leading-tight line-clamp-1">${item.name}</h3>
+                            <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">${item.category}</p>
                             <div class="flex justify-between items-center mt-2">
-                                <span class="text-primary font-semibold">${price}</span>
-                                <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">${item.category}</span>
+                                <span class="text-primary font-semibold text-sm">${price}</span>
+                                <button class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
                             </div>
                         </div>
                     `;
@@ -211,6 +318,15 @@
             }
         }
         
+        // Set mobile viewport height fix
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        
         // Check if user has visited before
         if (localStorage.getItem('hasVisited')) {
             document.getElementById('welcome-overlay').classList.add('hidden');
@@ -219,6 +335,18 @@
             // Load special items
             loadSpecialItems();
         }
+        
+        // Add iOS-like active state for buttons
+        const buttons = document.querySelectorAll('button, a');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.97)';
+            });
+            
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
     </script>
 </body>
 </html>
