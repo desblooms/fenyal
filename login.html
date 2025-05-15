@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Login - Tasty Bites</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .form-input:focus {
+            border-color: #c45230;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(196, 82, 48, 0.2);
+        }
+        .input-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .input-container label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.2s ease-in-out;
+            pointer-events: none;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .input-container input:focus + label,
+        .input-container input:not(:placeholder-shown) + label {
+            top: 0;
+            transform: translateY(-50%) scale(0.85);
+            background-color: white;
+            padding: 0 4px;
+            font-size: 0.75rem;
+            color: #c45230;
+        }
+        .input-container input::placeholder {
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Status bar (mobile look) -->
+    <div class="status-bar fixed top-0 left-0 right-0 bg-primary text-white flex justify-between items-center px-4 z-50">
+        <span>9:41</span>
+        <div class="flex items-center space-x-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10a8 8 0 0 0-16 0v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a2 2 0 0 1 2-2h2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20l12-10z" fill="currentColor"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6v16h-6"/><path d="M5 10a7 7 0 0 1 7-7"/><path d="M5 22a7 7 0 0 0 7-7"/><line x1="19" y1="6" x2="1" y2="6"/><line x1="1" y1="6" x2="1" y2="22"/></svg>
+        </div>
+    </div>
+    
+    <!-- Main app -->
+    <div class="app-container pt-6 pb-20 scroll-touch">
+        <!-- Header -->
+        <header class="flex items-center px-4 py-2 mb-4">
+            <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-4">
+                <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+            </a>
+            <h1 class="text-xl font-semibold">Login</h1>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4">
+            <div class="flex flex-col items-center mb-8">
+                <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                        <line x1="6" y1="1" x2="6" y2="4"></line>
+                        <line x1="10" y1="1" x2="10" y2="4"></line>
+                        <line x1="14" y1="1" x2="14" y2="4"></line>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-semibold mb-1">Welcome to Tasty Bites</h2>
+                <p class="text-gray-500 text-sm text-center">Login with your phone number to continue</p>
+            </div>
+            
+            <form id="login-form" class="mb-6">
+                <div class="input-container">
+                    <input type="tel" id="phone" name="phone" class="form-input w-full border border-gray-300 rounded-xl p-4 placeholder-transparent" required placeholder="Phone Number">
+                    <label for="phone" class="text-gray-500">Phone Number</label>
+                </div>
+                
+                <button type="submit" class="w-full bg-primary text-white font-medium py-4 rounded-xl mb-4 transform transition-transform active:scale-95 flex items-center justify-center">
+                    Send OTP
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </form>
+            
+            <div class="flex items-center justify-center">
+                <span class="text-gray-500 text-sm">Don't have an account?</span>
+                <a href="#" class="text-primary text-sm font-medium ml-2">Sign Up</a>
+            </div>
+            
+            <div class="mt-8">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="h-px bg-gray-300 flex-grow"></div>
+                    <span class="px-4 text-gray-500 text-sm">or continue with</span>
+                    <div class="h-px bg-gray-300 flex-grow"></div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="flex items-center justify-center border border-gray-300 rounded-xl py-3 transform transition-transform active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                        </svg>
+                    </button>
+                    <button class="flex items-center justify-center border border-gray-300 rounded-xl py-3 transform transition-transform active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M13.397 20.997v-8.196h2.765l.411-3.209h-3.176V7.548c0-.926.258-1.56 1.587-1.56h1.684V3.127A22.336 22.336 0 0 0 14.201 3c-2.444 0-4.122 1.492-4.122 4.231v2.355H7.332v3.209h2.753v8.202h3.312z" fill="#3b5998"></path>
+                        </svg>
+                    </button>
+                    <button class="flex items-center justify-center border border-gray-300 rounded-xl py-3 transform transition-transform active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#000"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, validateForm, showLoading, hideLoading, toast } from './assets/js/app.js';
+        
+        // Initialize icons
+        feather.replace();
+        
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Validate form
+            if (!validateForm(this)) {
+                return;
+            }
+            
+            // Show loading
+            showLoading();
+            
+            // Simulate API request
+            setTimeout(() => {
+                hideLoading();
+                
+                // Get phone number
+                const phone = document.getElementById('phone').value;
+                
+                // Store phone number in session storage
+                sessionStorage.setItem('userPhone', phone);
+                
+                // Redirect to OTP screen
+                pageTransition('otp.html');
+            }, 1500);
+        });
+        
+        // Mobile input formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let input = e.target.value.replace(/\D/g, '');
+            
+            // Limit to 10 digits
+            if (input.length > 10) {
+                input = input.substring(0, 10);
+            }
+            
+            // Format as XXX-XXX-XXXX
+            let formatted = '';
+            for (let i = 0; i < input.length; i++) {
+                if (i === 3 || i === 6) {
+                    formatted += '-';
+                }
+                formatted += input[i];
+            }
+            
+            e.target.value = formatted;
+        });
+        
+        // Add iOS-like active state for buttons
+        const buttons = document.querySelectorAll('button, a');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.97)';
+            });
+            
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
