@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title>Login - Tasty Bites</title>
+    <title>Tasty Bites</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -23,112 +23,202 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 </head>
 <body class="bg-background font-sans text-dark">
-    <div class="app-container p-6">
-        <!-- Back button -->
-        <div class="mb-6">
-            <button onclick="window.history.back()" class="p-2 rounded-full bg-white shadow-sm">
-                <i data-feather="arrow-left" class="h-6 w-6"></i>
-            </button>
+    <!-- Welcome overlay -->
+    <div id="welcome-overlay" class="fixed inset-0 bg-primary z-50 flex flex-col items-center justify-center text-white p-6 slide-in">
+        <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
         </div>
-        
-        <!-- Header -->
-        <header class="mb-10 text-center">
-            <h1 class="text-2xl font-bold mb-2">Login to your account</h1>
-            <p class="text-gray-600">Enter your phone number to continue</p>
-        </header>
-        
-        <!-- Login form -->
-        <form id="login-form" class="mb-8">
-            <div class="mb-6">
-                <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                        <span class="text-gray-500">+91</span>
-                    </div>
-                    <input type="tel" id="phone" name="phone" 
-                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary transition"
-                           placeholder="Enter 10 digit mobile number"
-                           maxlength="10"
-                           pattern="[0-9]{10}"
-                           required>
-                </div>
-                <p class="mt-2 text-xs text-gray-500">We'll send a verification code to this number</p>
-            </div>
-            
-            <button type="submit" 
-                    class="w-full bg-primary text-white font-semibold py-3 px-6 rounded-xl shadow-md transform transition active:scale-95">
-                Continue
-            </button>
-        </form>
-        
-        <!-- Divider -->
-        <div class="flex items-center my-8">
-            <div class="flex-1 h-px bg-gray-300"></div>
-            <p class="mx-4 text-gray-500 text-sm">or continue with</p>
-            <div class="flex-1 h-px bg-gray-300"></div>
-        </div>
-        
-        <!-- Social login buttons -->
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <button class="bg-white p-3 rounded-xl border border-gray-300 flex items-center justify-center shadow-sm transform transition active:scale-95">
-                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/google.svg" alt="Google" class="h-6 w-6 mr-2">
-                <span>Google</span>
-            </button>
-            <button class="bg-white p-3 rounded-xl border border-gray-300 flex items-center justify-center shadow-sm transform transition active:scale-95">
-                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/whatsapp.svg" alt="WhatsApp" class="h-6 w-6 mr-2">
-                <span>WhatsApp</span>
-            </button>
-        </div>
-        
-        <!-- Skip login -->
-        <div class="text-center">
-            <button onclick="location.href='menu.html'" class="text-primary font-medium">
-                Skip login and browse menu
-            </button>
-        </div>
+        <h1 class="text-3xl font-bold mb-2">Tasty Bites</h1>
+        <p class="text-center text-white/80 mb-8">Delicious food, delivered to your doorstep</p>
+        <button id="get-started-btn" class="bg-white text-primary font-semibold py-3 px-8 rounded-xl shadow-lg transform transition-transform active:scale-95">
+            Get Started
+        </button>
     </div>
     
-    <!-- Script -->
+    <!-- Main app (initially hidden) -->
+    <div id="main-app" class="app-container p-6 hidden">
+        <!-- Header -->
+        <header class="mb-8 flex justify-center">
+            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                    <line x1="6" y1="1" x2="6" y2="4"></line>
+                    <line x1="10" y1="1" x2="10" y2="4"></line>
+                    <line x1="14" y1="1" x2="14" y2="4"></line>
+                </svg>
+            </div>
+        </header>
+        
+        <!-- Welcome section -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold mb-2">Welcome to Tasty Bites</h1>
+            <p class="text-gray-600">What would you like to do today?</p>
+        </div>
+        
+        <!-- Order options -->
+        <div class="grid grid-cols-1 gap-4 mb-8">
+            <a href="menu.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="menu" class="text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Browse Menu</h3>
+                    <p class="text-gray-500 text-sm">Explore our delicious options</p>
+                </div>
+                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
+            </a>
+            
+            <a href="dine-in.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="coffee" class="text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Dine In</h3>
+                    <p class="text-gray-500 text-sm">Order to your table</p>
+                </div>
+                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
+            </a>
+            
+            <a href="takeaway.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="package" class="text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Takeaway</h3>
+                    <p class="text-gray-500 text-sm">Pickup your order</p>
+                </div>
+                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
+            </a>
+            
+            <a href="home-delivery.html" class="bg-white p-5 rounded-xl shadow-md flex items-center transform transition hover:scale-[1.02] active:scale-95">
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mr-4">
+                    <i data-feather="home" class="text-primary"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Home Delivery</h3>
+                    <p class="text-gray-500 text-sm">Delivered to your doorstep</p>
+                </div>
+                <i data-feather="chevron-right" class="ml-4 text-gray-400"></i>
+            </a>
+        </div>
+        
+        <!-- Special offers -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-4">Special Offers</h2>
+            <div class="special-items-container" id="special-items-container">
+                <div class="animate-pulse flex space-x-4 mb-4 overflow-x-auto py-2">
+                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
+                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
+                    <div class="flex-shrink-0 w-64 bg-gray-200 rounded-xl h-40"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation bar -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl h-16 flex justify-around items-center px-2 z-40">
+            <a href="index.html" class="flex flex-col items-center justify-center text-primary">
+                <i data-feather="home" class="h-6 w-6"></i>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="menu.html" class="flex flex-col items-center justify-center text-gray-500">
+                <i data-feather="menu" class="h-6 w-6"></i>
+                <span class="text-xs mt-1">Menu</span>
+            </a>
+            <a href="cart.html" class="flex flex-col items-center justify-center text-gray-500 relative">
+                <i data-feather="shopping-cart" class="h-6 w-6"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                <span class="text-xs mt-1">Cart</span>
+            </a>
+            <a href="login.html" class="flex flex-col items-center justify-center text-gray-500">
+                <i data-feather="user" class="h-6 w-6"></i>
+                <span class="text-xs mt-1">Profile</span>
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Custom JavaScript -->
     <script type="module">
-        import { pageTransition, toast, validateForm } from './assets/js/app.js';
+        import { pageTransition, toast } from './assets/js/app.js';
+        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
         
         // Initialize icons
         feather.replace();
         
-        // Handle form submission
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Handle getting started button
+        document.getElementById('get-started-btn').addEventListener('click', function() {
+            // Hide welcome overlay and show main app
+            document.getElementById('welcome-overlay').classList.add('opacity-0');
+            document.getElementById('welcome-overlay').style.transition = 'opacity 0.3s ease-out';
             
-            // Validate form
-            if (validateForm(this)) {
-                const phone = document.getElementById('phone').value;
+            setTimeout(() => {
+                document.getElementById('welcome-overlay').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('fade-in');
                 
-                // Basic validation
-                if (phone.length !== 10 || !/^\d+$/.test(phone)) {
-                    toast.show('Please enter a valid 10-digit phone number', 'error');
-                    return;
-                }
+                // Set flag in localStorage to remember user has visited
+                localStorage.setItem('hasVisited', 'true');
                 
-                // Store phone in localStorage
-                localStorage.setItem('userPhone', phone);
-                
-                // Redirect to OTP screen
-                pageTransition('otp.html');
-            }
+                // Load special items
+                loadSpecialItems();
+            }, 300);
         });
         
-        // Format phone number input
-        const phoneInput = document.getElementById('phone');
-        
-        phoneInput.addEventListener('input', function() {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/\D/g, '');
+        // Load special items from menu
+        async function loadSpecialItems() {
+            await menuManager.loadMenuData();
+            const specialItems = menuManager.getSpecialItems();
             
-            // Limit to 10 digits
-            if (this.value.length > 10) {
-                this.value = this.value.slice(0, 10);
+            if (specialItems.length > 0) {
+                const container = document.getElementById('special-items-container');
+                container.innerHTML = '';
+                
+                const itemsWrapper = document.createElement('div');
+                itemsWrapper.className = 'flex space-x-4 overflow-x-auto py-2';
+                
+                specialItems.forEach(item => {
+                    const specialItem = document.createElement('div');
+                    specialItem.className = 'flex-shrink-0 w-64 rounded-xl overflow-hidden special-item shadow-md bg-white';
+                    specialItem.onclick = () => {
+                        pageTransition(`menu-item-details.html?id=${item.id}`);
+                    };
+                    
+                    const price = item.isHalfFull ? formatPrice(item.halfPrice) + ' - ' + formatPrice(item.fullPrice) : formatPrice(item.price);
+                    
+                    specialItem.innerHTML = `
+                        <div class="h-32 overflow-hidden">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-semibold">${item.name}</h3>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-primary font-semibold">${price}</span>
+                                <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">${item.category}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    itemsWrapper.appendChild(specialItem);
+                });
+                
+                container.appendChild(itemsWrapper);
             }
-        });
+        }
+        
+        // Check if user has visited before
+        if (localStorage.getItem('hasVisited')) {
+            document.getElementById('welcome-overlay').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            
+            // Load special items
+            loadSpecialItems();
+        }
     </script>
 </body>
 </html>
