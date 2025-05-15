@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Include configuration and database connection
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/session.php';  // Load first for authentication
 require_once __DIR__ . '/../db/db.php';
 require_once __DIR__ . '/functions.php';
 

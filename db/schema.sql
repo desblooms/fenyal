@@ -1,8 +1,8 @@
 -- Restaurant Menu App Database Schema
 
 -- Create the database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS restaurant_menu;
-USE restaurant_menu;
+CREATE DATABASE IF NOT EXISTS u345095192_menudb;
+USE u345095192_menudb;
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
