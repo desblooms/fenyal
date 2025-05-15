@@ -2,325 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Foodie - Order Delicious Food</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Login - Tasty Bites</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/themecolor.js"></script>
-    <link rel="stylesheet" href="assets/css/app.css">
-    <!-- PWA Support -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#c45230">
-    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
-</head>
-<body class="font-sans bg-background text-dark antialiased">
-    <!-- Welcome Overlay - Shown only on first visit -->
-    <div id="welcome-overlay" class="fixed inset-0 bg-primary z-50 flex flex-col items-center justify-center text-white p-8 transition-opacity duration-500">
-        <div class="w-32 h-32 mb-8 rounded-full bg-white flex items-center justify-center shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-        </div>
-        <h1 class="text-3xl font-bold mb-2 text-center">Foodie</h1>
-        <p class="text-lg mb-8 text-center opacity-90">Delicious food, delivered fast</p>
-        <button id="get-started-btn" class="bg-white text-primary font-semibold py-3 px-8 rounded-xl shadow-lg transform transition-transform hover:scale-105 active:scale-95">
-            Get Started
-        </button>
-    </div>
     
-    <!-- Main App Container -->
-    <div id="main-app" class="app-container hidden bg-background">
-        <!-- Home Screen Content -->
-        <header class="bg-primary text-white p-6 pt-12 pb-32 rounded-b-3xl shadow-md">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Foodie</h1>
-                <div class="relative">
-                    <a href="cart.html" class="p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span id="cart-badge" class="absolute -top-1 -right-1 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold" style="display: none;">0</span>
-                    </a>
-                </div>
-            </div>
-            <div class="relative">
-                <input type="text" placeholder="Search for food..." class="w-full py-3 px-4 pr-10 rounded-xl text-dark focus:outline-none focus:ring-2 focus:ring-accent">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </div>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+</head>
+<body class="bg-background font-sans text-dark">
+    <div class="app-container p-6">
+        <!-- Back button -->
+        <div class="mb-6">
+            <button onclick="window.history.back()" class="p-2 rounded-full bg-white shadow-sm">
+                <i data-feather="arrow-left" class="h-6 w-6"></i>
+            </button>
+        </div>
+        
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <h1 class="text-2xl font-bold mb-2">Login to your account</h1>
+            <p class="text-gray-600">Enter your phone number to continue</p>
         </header>
         
-        <!-- Order Type Options -->
-        <div class="px-6 -mt-20 mb-8">
-            <div class="grid grid-cols-3 gap-3 text-center">
-                <a href="dine-in.html" class="bg-white rounded-xl p-4 shadow-md transform transition hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center bg-primary/10 rounded-full text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
+        <!-- Login form -->
+        <form id="login-form" class="mb-8">
+            <div class="mb-6">
+                <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Phone Number</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                        <span class="text-gray-500">+91</span>
                     </div>
-                    <span class="text-sm font-medium">Dine-in</span>
-                </a>
-                <a href="takeaway.html" class="bg-white rounded-xl p-4 shadow-md transform transition hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center bg-primary/10 rounded-full text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <span class="text-sm font-medium">Takeaway</span>
-                </a>
-                <a href="home-delivery.html" class="bg-white rounded-xl p-4 shadow-md transform transition hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 flex items-center justify-center bg-primary/10 rounded-full text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-                        </svg>
-                    </div>
-                    <span class="text-sm font-medium">Delivery</span>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Special Offers -->
-        <div class="px-6 mb-8">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Special Offers</h2>
-                <a href="menu.html" class="text-primary text-sm font-medium">View All</a>
-            </div>
-            <div class="overflow-x-auto pb-4 -mx-6 px-6">
-                <div class="flex space-x-4 w-max">
-                    <div class="special-item w-60 bg-white rounded-xl shadow-md overflow-hidden transform transition hover:shadow-lg">
-                        <div class="h-32 overflow-hidden">
-                            <img src="assets/images/veggie-burger.jpg" alt="Veggie Burger" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between">
-                                <h3 class="font-medium">Veggie Burger</h3>
-                                <span class="text-primary font-semibold">₹120</span>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-1 line-clamp-2">A juicy plant-based patty with lettuce, tomato, and our secret sauce.</p>
-                            <a href="menu-item-details.html?id=1" class="mt-3 block text-center py-2 w-full bg-primary text-white rounded-lg text-sm font-medium transition transform hover:scale-105 active:scale-95">Order Now</a>
-                        </div>
-                    </div>
-                    
-                    <div class="special-item w-60 bg-white rounded-xl shadow-md overflow-hidden transform transition hover:shadow-lg">
-                        <div class="h-32 overflow-hidden">
-                            <img src="assets/images/butter-chicken.jpg" alt="Butter Chicken" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between">
-                                <h3 class="font-medium">Butter Chicken</h3>
-                                <div class="text-right">
-                                    <span class="text-primary font-semibold">₹180</span>
-                                    <span class="text-xs text-gray-500 block">Half</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-1 line-clamp-2">Rich creamy curry with tender chicken pieces in a tomato-based sauce.</p>
-                            <a href="menu-item-details.html?id=2" class="mt-3 block text-center py-2 w-full bg-primary text-white rounded-lg text-sm font-medium transition transform hover:scale-105 active:scale-95">Order Now</a>
-                        </div>
-                    </div>
-                    
-                    <div class="special-item w-60 bg-white rounded-xl shadow-md overflow-hidden transform transition hover:shadow-lg">
-                        <div class="h-32 overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Margherita Pizza" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between">
-                                <h3 class="font-medium">Margherita Pizza</h3>
-                                <span class="text-primary font-semibold">₹220</span>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-1 line-clamp-2">Classic pizza with tomato sauce, mozzarella, fresh basil.</p>
-                            <a href="menu-item-details.html?id=3" class="mt-3 block text-center py-2 w-full bg-primary text-white rounded-lg text-sm font-medium transition transform hover:scale-105 active:scale-95">Order Now</a>
-                        </div>
-                    </div>
+                    <input type="tel" id="phone" name="phone" 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-primary transition"
+                           placeholder="Enter 10 digit mobile number"
+                           maxlength="10"
+                           pattern="[0-9]{10}"
+                           required>
                 </div>
+                <p class="mt-2 text-xs text-gray-500">We'll send a verification code to this number</p>
             </div>
+            
+            <button type="submit" 
+                    class="w-full bg-primary text-white font-semibold py-3 px-6 rounded-xl shadow-md transform transition active:scale-95">
+                Continue
+            </button>
+        </form>
+        
+        <!-- Divider -->
+        <div class="flex items-center my-8">
+            <div class="flex-1 h-px bg-gray-300"></div>
+            <p class="mx-4 text-gray-500 text-sm">or continue with</p>
+            <div class="flex-1 h-px bg-gray-300"></div>
         </div>
         
-        <!-- Popular Categories -->
-        <div class="px-6 mb-8">
-            <h2 class="text-lg font-semibold mb-4">Categories</h2>
-            <div class="grid grid-cols-4 gap-3">
-                <a href="menu.html?category=Burgers" class="bg-white rounded-xl p-3 shadow-sm text-center transform transition hover:shadow-md hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 3a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 3a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 3a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <span class="text-xs font-medium">Burgers</span>
-                </a>
-                <a href="menu.html?category=Indian" class="bg-white rounded-xl p-3 shadow-sm text-center transform transition hover:shadow-md hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                        </svg>
-                    </div>
-                    <span class="text-xs font-medium">Indian</span>
-                </a>
-                <a href="menu.html?category=Pizzas" class="bg-white rounded-xl p-3 shadow-sm text-center transform transition hover:shadow-md hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <span class="text-xs font-medium">Pizzas</span>
-                </a>
-                <a href="menu.html?category=Desserts" class="bg-white rounded-xl p-3 shadow-sm text-center transform transition hover:shadow-md hover:scale-105 active:scale-95">
-                    <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <span class="text-xs font-medium">Desserts</span>
-                </a>
-            </div>
+        <!-- Social login buttons -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <button class="bg-white p-3 rounded-xl border border-gray-300 flex items-center justify-center shadow-sm transform transition active:scale-95">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/google.svg" alt="Google" class="h-6 w-6 mr-2">
+                <span>Google</span>
+            </button>
+            <button class="bg-white p-3 rounded-xl border border-gray-300 flex items-center justify-center shadow-sm transform transition active:scale-95">
+                <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/whatsapp.svg" alt="WhatsApp" class="h-6 w-6 mr-2">
+                <span>WhatsApp</span>
+            </button>
         </div>
         
-        <!-- Popular Items -->
-        <div class="px-6 mb-20">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold">Popular Items</h2>
-                <a href="menu.html" class="text-primary text-sm font-medium">View All</a>
-            </div>
-            <div class="space-y-4">
-                <a href="menu-item-details.html?id=5" class="flex bg-white rounded-xl shadow-sm p-3 transform transition hover:shadow-md">
-                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80" alt="Chicken Burger" class="w-full h-full object-cover">
-                    </div>
-                    <div class="ml-3 flex-grow">
-                        <div class="flex justify-between">
-                            <h3 class="font-medium">Chicken Burger</h3>
-                            <span class="text-primary font-semibold">₹140</span>
-                        </div>
-                        <p class="text-gray-500 text-sm mt-1 line-clamp-2">Juicy chicken patty with lettuce, tomato, and special mayo.</p>
-                    </div>
-                </a>
-                
-                <a href="menu-item-details.html?id=6" class="flex bg-white rounded-xl shadow-sm p-3 transform transition hover:shadow-md">
-                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1625&q=80" alt="Chicken Biryani" class="w-full h-full object-cover">
-                    </div>
-                    <div class="ml-3 flex-grow">
-                        <div class="flex justify-between">
-                            <h3 class="font-medium">Chicken Biryani</h3>
-                            <div class="text-right">
-                                <span class="text-primary font-semibold">₹150</span>
-                                <span class="text-xs text-gray-500 block">Half</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-500 text-sm mt-1 line-clamp-2">Aromatic basmati rice cooked with tender chicken and spices.</p>
-                    </div>
-                </a>
-                
-                <a href="menu-item-details.html?id=7" class="flex bg-white rounded-xl shadow-sm p-3 transform transition hover:shadow-md">
-                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1557&q=80" alt="Chocolate Brownie" class="w-full h-full object-cover">
-                    </div>
-                    <div class="ml-3 flex-grow">
-                        <div class="flex justify-between">
-                            <h3 class="font-medium">Chocolate Brownie</h3>
-                            <span class="text-primary font-semibold">₹120</span>
-                        </div>
-                        <p class="text-gray-500 text-sm mt-1 line-clamp-2">Rich chocolate brownie with a scoop of vanilla ice cream.</p>
-                    </div>
-                </a>
-            </div>
-        </div>
-        
-        <!-- Bottom Navigation -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl z-10">
-            <div class="flex justify-around">
-                <a href="index.html" class="py-3 px-4 text-primary flex flex-col items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                    <span class="text-xs mt-1">Home</span>
-                </a>
-                <a href="menu.html" class="py-3 px-4 text-gray-500 flex flex-col items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
-                    </svg>
-                    <span class="text-xs mt-1">Menu</span>
-                </a>
-                <a href="cart.html" class="py-3 px-4 text-gray-500 flex flex-col items-center relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span class="text-xs mt-1">Cart</span>
-                </a>
-                <a href="contact-us.html" class="py-3 px-4 text-gray-500 flex flex-col items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 016 6v1H0v-1a6 6 0 016-6zM2 9h12v2H2V9zm15 0c1.66 0 3 1.34 3 3s-1.34 3-3 3H9c-1.66 0-3-1.34-3-3s1.34-3 3-3h8z" />
-                    </svg>
-                    <span class="text-xs mt-1">Contact</span>
-                </a>
-            </div>
+        <!-- Skip login -->
+        <div class="text-center">
+            <button onclick="location.href='menu.html'" class="text-primary font-medium">
+                Skip login and browse menu
+            </button>
         </div>
     </div>
     
+    <!-- Script -->
     <script type="module">
-        import { pageTransition, toast } from './assets/js/app.js';
-        import menuManager, { cartManager } from './assets/js/menu.js';
+        import { pageTransition, toast, validateForm } from './assets/js/app.js';
         
-        // Pre-load menu data
-        menuManager.loadMenuData().then(() => {
-            console.log('Menu data loaded');
-        }).catch(error => {
-            console.error('Error loading menu data:', error);
-        });
+        // Initialize icons
+        feather.replace();
         
-        // Handle welcome screen
-        const welcomeOverlay = document.getElementById('welcome-overlay');
-        const mainApp = document.getElementById('main-app');
-        const getStartedBtn = document.getElementById('get-started-btn');
-        
-        // Check if user has visited before
-        const hasVisited = localStorage.getItem('hasVisited');
-        
-        if (hasVisited) {
-            welcomeOverlay.classList.add('hidden');
-            mainApp.classList.remove('hidden');
-        }
-        
-        // Get Started button click
-        getStartedBtn.addEventListener('click', () => {
-            localStorage.setItem('hasVisited', 'true');
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            welcomeOverlay.classList.add('opacity-0');
-            welcomeOverlay.style.transition = 'opacity 0.5s ease-out';
-            
-            setTimeout(() => {
-                welcomeOverlay.classList.add('hidden');
-                mainApp.classList.remove('hidden');
-                mainApp.classList.add('fade-in');
-            }, 500);
-        });
-        
-        // Handle navigation links
-        document.querySelectorAll('a[href]:not([href^="#"])').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
+            // Validate form
+            if (validateForm(this)) {
+                const phone = document.getElementById('phone').value;
                 
-                // Skip for external links
-                if (href.includes('://') || href.startsWith('mailto:')) {
+                // Basic validation
+                if (phone.length !== 10 || !/^\d+$/.test(phone)) {
+                    toast.show('Please enter a valid 10-digit phone number', 'error');
                     return;
                 }
                 
-                e.preventDefault();
-                pageTransition(href);
-            });
+                // Store phone in localStorage
+                localStorage.setItem('userPhone', phone);
+                
+                // Redirect to OTP screen
+                pageTransition('otp.html');
+            }
         });
         
-        // Show a welcome back toast for returning users
-        if (hasVisited) {
-            setTimeout(() => {
-                toast.show('Welcome back!', 'success', 2000);
-            }, 1000);
-        }
+        // Format phone number input
+        const phoneInput = document.getElementById('phone');
+        
+        phoneInput.addEventListener('input', function() {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/\D/g, '');
+            
+            // Limit to 10 digits
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
     </script>
 </body>
 </html>
