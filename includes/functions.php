@@ -117,18 +117,20 @@ function updateAppSetting($key, $value) {
  * 
  * @return bool Login status
  */
-function isLoggedIn() {
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
-}
+// function isLoggedIn() {
+//     return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
+// }
+
+
 
 /**
  * Check if user is admin
  * 
  * @return bool Admin status
  */
-function isAdmin() {
-    return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
-}
+// function isAdmin() {
+//     return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+// }
 
 /**
  * Redirect to a URL
