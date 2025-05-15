@@ -199,11 +199,11 @@
                     <i data-feather="menu" class="h-5 w-5"></i>
                     <span class="text-xs mt-0.5">Menu</span>
                 </a>
-                <a href="#" class="flex items-center justify-center">
-                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center -mt-5 shadow-md">
-                        <i data-feather="search" class="h-5 w-5 text-white"></i>
-                    </div>
-                </a>
+               <div class="search-trigger">
+            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center -mt-5 shadow-md cursor-pointer">
+                <i data-feather="search" class="h-5 w-5 text-white"></i>
+            </div>
+        </div>
                 <a href="cart.html" class="flex flex-col items-center justify-center text-gray-400 relative">
                     <i data-feather="shopping-cart" class="h-5 w-5"></i>
                     <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]">0</span>
@@ -319,6 +319,8 @@
             });
         });
     </script>
-    <script src="assets/js/global-search.js"></script>
+
+    <script src="assets/js/search-modal.js"></script>
+        <script src="assets/js/global-search.js"></script>
 </body>
 </html>
