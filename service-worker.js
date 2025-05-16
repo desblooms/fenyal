@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // service-worker.js - Enhanced PWA Capabilities for Fenyal Food Ordering
 
 const CACHE_NAME = 'fenyal-cache-v2';
@@ -380,3 +381,5 @@ self.addEventListener('notificationclick', event => {
       })
   );
 });
+=======
+>>>>>>> parent of 2bb6e88 (PWA)

@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Fenyal</title>
- <!-- PWA Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
     
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="manifest.json">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -131,9 +126,9 @@
                     <h1 class="text-lg font-semibold">Fenyal</h1>
                 </div>
                 <div>
-                    <!-- <a href="login.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                    <a href="login.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
                         <i data-feather="user" class="h-4 w-4 text-gray-600"></i>
-                    </a> -->
+                    </a>
                 </div>
             </div>
         </header>
@@ -148,44 +143,38 @@
             
           <!-- Categories -->
 <div class="mb-2">
-  
+   
     
     <div class="flex space-x-4 overflow-x-auto py-1 special-scroll">
-        <a href="menu.html?category=Breakfast" class="flex flex-col items-center flex-shrink-0">
+        <a href="menu.html?category=Burgers" class="flex flex-col items-center flex-shrink-0">
             <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                <i  data-food-icons="true" class="text-primary h-10 w-10">÷</i>
+                <i data-feather="coffee" class="text-primary h-6 w-6"></i>
             </div>
-            <span class="text-xs font-medium">Breakfast</span>
+            <span class="text-xs font-medium">Burgers</span>
         </a>
-        <a href="menu.html?category=Dishes" class="flex flex-col items-center flex-shrink-0">
+        <a href="menu.html?category=Indian" class="flex flex-col items-center flex-shrink-0">
             <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-              <i  data-food-icons="true" class="text-primary h-10 w-10">5</i>
+                <i data-feather="airplay" class="text-primary h-6 w-6"></i>
             </div>
-            <span class="text-xs font-medium">Dishes</span>
+            <span class="text-xs font-medium">Indian</span>
         </a>
-        <a href="menu.html?category=Bread" class="flex flex-col items-center flex-shrink-0">
+        <a href="menu.html?category=Pizzas" class="flex flex-col items-center flex-shrink-0">
             <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-               <i  data-food-icons="true" class="text-primary h-10 w-10">-</i>
+                <i data-feather="pie-chart" class="text-primary h-6 w-6"></i>
             </div>
-            <span class="text-xs font-medium">Bread</span>
+            <span class="text-xs font-medium">Pizzas</span>
+        </a>
+        <a href="menu.html?category=Italian" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
+                <i data-feather="book" class="text-primary h-6 w-6"></i>
+            </div>
+            <span class="text-xs font-medium">Italian</span>
         </a>
         <a href="menu.html?category=Desserts" class="flex flex-col items-center flex-shrink-0">
             <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-               <i  data-food-icons="true" class="text-primary h-10 w-10">·</i>
+                <i data-feather="gift" class="text-primary h-6 w-6"></i>
             </div>
             <span class="text-xs font-medium">Desserts</span>
-        </a>
-        <a href="menu.html?category=Cold Drinks" class="flex flex-col items-center flex-shrink-0">
-            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                <i  data-food-icons="true" class="text-primary h-10 w-10">à</i>
-            </div>
-            <span class="text-xs font-medium">Cold Drinks</span>
-        </a>
-         <a href="menu.html?category=Cold Drinks" class="flex flex-col items-center flex-shrink-0">
-            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1">
-                   <i  data-food-icons="true" class="text-primary h-10 w-10">ü</i>
-            </div>
-            <span class="text-xs font-medium">Hot Drinks</span>
         </a>
     </div>
 </div>
@@ -202,8 +191,8 @@
                             <a href="menu.html" class="inline-block bg-white text-primary text-xs font-medium px-4 py-1.5 rounded-full">Order Now</a>
                         </div>
                         <div class="w-20 h-20 relative">
-                            <!-- <div class="absolute inset-0 rounded-full bg-white/20 backdrop-blur-sm"></div> -->
-                            <img src="https://www.myplantifulcooking.com/wp-content/uploads/2022/01/plain-parathas-featured.jpg" class="absolute inset-0 w-full h-full object-cover rounded-full" alt="Special item">
+                            <div class="absolute inset-0 rounded-full bg-white/20 backdrop-blur-sm"></div>
+                            <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1550&q=80" class="absolute inset-0 w-full h-full object-cover rounded-full" alt="Special item">
                         </div>
                     </div>
                 </div>
@@ -388,18 +377,7 @@
             // Load special items
             loadSpecialItems();
         }
-            // Register service worker for PWA support
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
+        
         // Add iOS-like active state for buttons
         const buttons = document.querySelectorAll('button, a');
         buttons.forEach(button => {
