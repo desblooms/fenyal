@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Offline - Fenyal</title>
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c45230',
+                        accent: '#f96d43',
+                        background: '#f8f8f8',
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['"Poppins"', 'sans-serif']
+                    },
+                    borderRadius: {
+                        xl: '1.2rem'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .no-connection-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark h-screen flex flex-col">
+    <!-- Main content -->
+    <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-6 no-connection-animation">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+        </div>
+        <h1 class="text-2xl font-bold mb-2">You're Offline</h1>
+        <p class="text-gray-600 mb-8 max-w-xs">It looks like you've lost your internet connection. Some features may not be available while offline.</p>
+        
+        <div class="flex flex-col space-y-3 w-full max-w-xs">
+            <button id="retry-button" class="w-full bg-primary text-white py-3 rounded-xl font-medium flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="1 4 1 10 7 10"></polyline>
+                    <polyline points="23 20 23 14 17 14"></polyline>
+                    <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+                </svg>
+                Retry Connection
+            </button>
+            
+            <a href="index.html" class="w-full border border-gray-300 py-3 rounded-xl font-medium text-gray-700">
+                Go to Homepage
+            </a>
+        </div>
+    </main>
+    
+    <!-- Footer with branding -->
+    <footer class="p-6 text-center">
+        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Fenyal Food Ordering</p>
+    </footer>
+    
+    <script>
+        // Retry connection button
+        document.getElementById('retry-button').addEventListener('click', function() {
+            // Check connection status
+            if (navigator.onLine) {
+                // If we're already online, just reload the page
+                window.location.reload();
+            } else {
+                // Show message that we're still offline
+                alert('Still offline. Please check your connection and try again.');
+            }
+        });
+        
+        // Listen for online event
+        window.addEventListener('online', function() {
+            // When connection is restored, reload the page
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>
