@@ -164,7 +164,7 @@ foreach ($splashSizes as $splashSize) {
     $splash = imagecreatetruecolor((int)$width, (int)$height);
     
     // Create background color (primary color from your theme)
-    $bgColor = imagecolorallocate($splash, 196, 82, 48); // #c45230 - primary color
+    $bgColor = imagecolorallocate($splash, 255, 255, 255); // #FFFFF - primary color
     imagefill($splash, 0, 0, $bgColor);
     
     // Calculate icon size (40% of the smallest dimension)
