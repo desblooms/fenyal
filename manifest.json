@@ -1,0 +1,90 @@
+{
+  "name": "Fenyal Food Ordering",
+  "short_name": "Fenyal",
+  "theme_color": "#c45230",
+  "background_color": "#f8f8f8",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/index.html",
+  "description": "Order delicious food from Fenyal - food delivery app",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "splash_pages": null,
+  "screenshots": [
+    {
+      "src": "assets/screenshots/screen1.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpg"
+    },
+    {
+      "src": "assets/screenshots/screen2.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpg"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "View Menu",
+      "short_name": "Menu",
+      "description": "View our delicious menu",
+      "url": "/menu.html",
+      "icons": [{ "src": "assets/icons/menu-icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "My Cart",
+      "short_name": "Cart",
+      "description": "View your cart items",
+      "url": "/cart.html",
+      "icons": [{ "src": "assets/icons/cart-icon-96x96.png", "sizes": "96x96" }]
+    }
+  ]
+}
