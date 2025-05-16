@@ -194,7 +194,7 @@ async function performSearch(query) {
     
     // Format price helper
     const formatPrice = (price) => {
-      return '₹' + price.toFixed(0);
+      return 'QAR ' + price.toFixed(0);
     };
     
     // Generate results HTML

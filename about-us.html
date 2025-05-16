@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>About Us - Fenyal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c45230',
+                        accent: '#f96d43',
+                        background: '#f8f8f8',
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['"Poppins"', 'sans-serif']
+                    },
+                    borderRadius: {
+                        xl: '1.2rem'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .story-image {
+            height: 200px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .team-member {
+            transition: transform 0.2s ease;
+        }
+        .team-member:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app container -->
+    <div class="app-container pt-4 pb-24 scroll-touch fade-in">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center">
+                <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-4 transform transition-transform active:scale-95">
+                    <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-semibold">About Us</h1>
+            </div>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4 pt-2">
+            <!-- Hero section -->
+            <div class="rounded-xl overflow-hidden mb-6">
+                <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80');">
+                    <div class="w-full h-full bg-gradient-to-b from-black/50 to-transparent flex items-center">
+                        <div class="p-5">
+                            <h2 class="text-white text-2xl font-bold">Our Story</h2>
+                            <p class="text-white/80 text-sm">Serving delicious food since 2015</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- About story -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+                <h2 class="text-lg font-semibold mb-3">Our Journey</h2>
+                <p class="text-gray-600 text-sm mb-3">
+                    Fenyal was born out of a passion for quality food and exceptional service. What started as a small family restaurant in Malappuram in 2015 has now evolved into one of the most beloved dining establishments in Kerala.
+                </p>
+                <p class="text-gray-600 text-sm">
+                    Our founder, Chef Rahul, brought his culinary expertise from years of working in premium restaurants across India. His vision was simple: to create a place where traditional recipes meet contemporary flavors, all served in a warm, welcoming atmosphere.
+                </p>
+            </div>
+            
+            <!-- Mission & Vision -->
+            <div class="grid grid-cols-1 gap-4 mb-6">
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start mb-2">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i data-feather="target" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-base mb-1">Our Mission</h3>
+                            <p class="text-gray-600 text-sm">To serve delicious, quality food that brings people together and creates memorable dining experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex items-start mb-2">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i data-feather="eye" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-base mb-1">Our Vision</h3>
+                            <p class="text-gray-600 text-sm">To be the most trusted and loved food service brand, known for exceptional quality, innovation, and customer satisfaction.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team section -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">Meet Our Team</h2>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="team-member bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="h-32 bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80" alt="Chef Rahul" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm">Chef Rahul</h3>
+                            <p class="text-gray-500 text-xs">Founder & Head Chef</p>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="h-32 bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Priya Sharma" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm">Priya Sharma</h3>
+                            <p class="text-gray-500 text-xs">Operations Manager</p>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="h-32 bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=384&q=80" alt="Arun Kumar" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm">Arun Kumar</h3>
+                            <p class="text-gray-500 text-xs">Customer Relations</p>
+                        </div>
+                    </div>
+                    
+                    <div class="team-member bg-white rounded-xl overflow-hidden shadow-sm">
+                        <div class="h-32 bg-gray-100">
+                            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80" alt="Meera Patel" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm">Meera Patel</h3>
+                            <p class="text-gray-500 text-xs">Marketing Lead</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Achievements -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">Our Achievements</h2>
+                
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <i data-feather="award" class="h-4 w-4 text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-sm mb-0.5">Best Restaurant Award</h3>
+                                <p class="text-gray-500 text-xs">Kerala Food & Beverage Association, 2023</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <i data-feather="award" class="h-4 w-4 text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-sm mb-0.5">Excellence in Customer Service</h3>
+                                <p class="text-gray-500 text-xs">Restaurant Guild of India, 2022</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0">
+                                <i data-feather="award" class="h-4 w-4 text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-sm mb-0.5">Chef of the Year</h3>
+                                <p class="text-gray-500 text-xs">South Indian Culinary Awards, 2021</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Values -->
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold mb-3">Our Values</h2>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                            <i data-feather="heart" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">Passion</h3>
+                        <p class="text-gray-500 text-xs">We put our heart into everything we create.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                            <i data-feather="star" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">Quality</h3>
+                        <p class="text-gray-500 text-xs">We never compromise on the quality of our ingredients.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                            <i data-feather="users" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">Community</h3>
+                        <p class="text-gray-500 text-xs">We believe in building relationships with our customers.</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-3 shadow-sm">
+                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+                            <i data-feather="refresh-cw" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <h3 class="font-medium text-sm mb-1">Innovation</h3>
+                        <p class="text-gray-500 text-xs">We continuously explore new flavors and experiences.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA -->
+            <div class="bg-primary rounded-xl p-4 mb-8">
+                <div class="text-white text-center">
+                    <h3 class="font-semibold mb-2">Ready to taste our delicious food?</h3>
+                    <p class="text-white/80 text-sm mb-3">Experience the Fenyal difference today!</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="menu.html" class="bg-white text-primary font-medium px-4 py-2 rounded-lg transform transition-transform active:scale-95">
+                            View Menu
+                        </a>
+                        <a href="contact-us.html" class="bg-white/20 text-white font-medium px-4 py-2 rounded-lg transform transition-transform active:scale-95">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Navigation bar -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
+            <div class="h-16 flex justify-around items-center">
+                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="home" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Home</span>
+                </a>
+                <a href="menu.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="menu" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Menu</span>
+                </a>
+                <div class="search-trigger">
+                    <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center -mt-5 shadow-md cursor-pointer">
+                        <i data-feather="search" class="h-5 w-5 text-white"></i>
+                    </div>
+                </div>
+                <a href="cart.html" class="flex flex-col items-center justify-center text-gray-400 relative">
+                    <i data-feather="shopping-cart" class="h-5 w-5"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center text-[10px]" style="display: none;">0</span>
+                    <span class="text-xs mt-0.5">Cart</span>
+                </a>
+                <a href="login.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="user" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition } from './assets/js/app.js';
+        import { cartManager } from './assets/js/menu.js';
+        
+        // Initialize icons
+        feather.replace();
+        
+        // Initialize cart badge
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update cart badge
+            const cartBadge = document.getElementById('cart-badge');
+            const cartItems = cartManager?.getCartItems?.() || [];
+            
+            if (cartItems.length > 0) {
+                cartBadge.style.display = 'flex';
+                cartBadge.textContent = cartItems.reduce((total, item) => total + item.quantity, 0);
+            }
+        });
+        
+        // Search button functionality
+        document.querySelector('.search-trigger')?.addEventListener('click', function() {
+            // If global search exists, use it
+            if (window.globalSearch && window.globalSearch.open) {
+                window.globalSearch.open();
+            } else {
+                pageTransition('menu.html');
+            }
+        });
+    </script>
+    <script src="assets/js/global-search.js"></script>
+</body>
+</html>

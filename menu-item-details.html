@@ -198,7 +198,7 @@
             </div>
             
             <!-- Quantity counter -->
-            <div class="mb-8">
+            <div class="mb-8 hidden">
                 <h3 class="text-base font-semibold mb-3">Quantity</h3>
                 <div class="flex items-center">
                     <button id="decrease-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
@@ -213,25 +213,27 @@
             
             <!-- Special instructions -->
             <div class="mb-8">
-                <h3 class="text-base font-semibold mb-3">Special Instructions</h3>
-                <textarea id="special-instructions" class="w-full p-3 border border-gray-200 rounded-xl text-sm" placeholder="Any special requests? (optional)" rows="2"></textarea>
+                <div>
+                <p class="text-sm text-gray-500">Price</p>
+                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+            </div>
             </div>
         </div>
     </div>
     
     <!-- Add to cart sticky footer -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
+    <!-- <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
         <div class="flex justify-between items-center">
             <div>
                 <p class="text-sm text-gray-500">Price</p>
-                <p id="item-price" class="text-xl font-bold text-primary">₹0</p>
+                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
             </div>
             <button id="add-to-cart-btn" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center transform transition-transform active:scale-95">
                 Add to Cart
                 <i data-feather="shopping-cart" class="h-5 w-5 ml-2"></i>
             </button>
         </div>
-    </div>
+    </div> -->
     
     <!-- Success notification (hidden by default) -->
     <div id="success-toast" class="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">

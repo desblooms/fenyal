@@ -77,7 +77,7 @@ export default menuManager;
 
 // Helper function to format price in Indian Rupees
 export function formatPrice(price) {
-    return '₹' + price.toFixed(0);
+    return 'QAR ' + price.toFixed(0);
 }
 
 // Cart functionality

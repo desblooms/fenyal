@@ -322,7 +322,7 @@ function formatPrice(price) {
   }
   
   // Fallback implementation
-  return '₹' + price.toFixed(0);
+  return 'QAR ' + price.toFixed(0);
 }
 
 // Perform search with results
