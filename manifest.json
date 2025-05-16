@@ -1,138 +1,90 @@
 {
   "name": "Fenyal Food Ordering",
   "short_name": "Fenyal",
-  "description": "Order delicious food from Fenyal - Your favorite food ordering app",
-  "start_url": "/index.html",
+  "theme_color": "#c45230",
+  "background_color": "#f8f8f8",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f8f8f8",
-  "theme_color": "#c45230",
+  "scope": "/",
+  "start_url": "/index.html",
+  "description": "Order delicious food from Fenyal - food delivery app",
   "icons": [
     {
       "src": "assets/icons/icon-72x72.png",
       "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-96x96.png",
       "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-128x128.png",
       "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-144x144.png",
       "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-152x152.png",
       "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-384x384.png",
       "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     },
     {
       "src": "assets/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icons/maskable-icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
       "purpose": "maskable"
     }
   ],
+  "splash_pages": null,
   "screenshots": [
     {
-      "src": "assets/screenshots/home-screen.jpg",
-      "sizes": "1080x1920",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Home Screen"
+      "src": "assets/screenshots/screen1.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpg"
     },
     {
-      "src": "assets/screenshots/menu-screen.jpg",
-      "sizes": "1080x1920",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Menu Screen"
-    },
-    {
-      "src": "assets/screenshots/cart-screen.jpg",
-      "sizes": "1080x1920",
-      "type": "image/jpeg",
-      "form_factor": "narrow",
-      "label": "Cart Screen"
+      "src": "assets/screenshots/screen2.jpg",
+      "sizes": "750x1334",
+      "type": "image/jpg"
     }
   ],
+  "related_applications": [],
+  "prefer_related_applications": false,
   "shortcuts": [
     {
       "name": "View Menu",
       "short_name": "Menu",
-      "description": "Browse our delicious menu items",
+      "description": "View our delicious menu",
       "url": "/menu.html",
       "icons": [{ "src": "assets/icons/menu-icon-96x96.png", "sizes": "96x96" }]
     },
     {
       "name": "My Cart",
       "short_name": "Cart",
-      "description": "View your cart and checkout",
+      "description": "View your cart items",
       "url": "/cart.html",
       "icons": [{ "src": "assets/icons/cart-icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Contact Us",
-      "short_name": "Contact",
-      "description": "Get in touch with our team",
-      "url": "/contact-us.html",
-      "icons": [{ "src": "assets/icons/contact-icon-96x96.png", "sizes": "96x96" }]
     }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false,
-  "categories": ["food", "shopping", "lifestyle"],
-  "lang": "en",
-  "dir": "ltr",
-  "scope": "/",
-  "id": "fenyal-food-ordering",
-  "iarc_rating_id": "",
-  "share_target": {
-    "action": "/share-target.html",
-    "method": "GET",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  },
-  "protocol_handlers": [
-    {
-      "protocol": "web+fenyal",
-      "url": "/app-link?link=%s"
-    }
-  ],
-  "edge_side_panel": {
-    "preferred_width": 300
-  }
+  ]
 }

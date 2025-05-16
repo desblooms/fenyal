@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Fenyal</title>
- <!-- PWA Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
     
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="manifest.json">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -388,18 +383,7 @@
             // Load special items
             loadSpecialItems();
         }
-            // Register service worker for PWA support
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
+        
         // Add iOS-like active state for buttons
         const buttons = document.querySelectorAll('button, a');
         buttons.forEach(button => {

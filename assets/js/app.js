@@ -184,29 +184,3 @@ export function getUrlParams() {
     
     return paramObj;
 }
-
-
-
-
-
-
-
-     import { toast, pageTransition } from './app-base.js';
-   import offlineUtils from './offline-utils.js';
-   import { initNetworkMonitoring } from './network-status.js';
-   import { initInstallationGuide } from './installation-guide.js';
-
-
-   // Initialize offline support
-   offlineUtils.initOfflineSupport().then(success => {
-     console.log('Offline support initialized:', success);
-   });
-   
-   // Initialize network monitoring
-   initNetworkMonitoring();
-   
-   // Initialize installation guide
-   initInstallationGuide();
-   
-   // Export common functions
-   export { toast, pageTransition };

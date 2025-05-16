@@ -1,6 +1,4 @@
 // Menu Data Handler
-import offlineUtils from './offline-utils.js';
-
 class MenuManager {
     constructor() {
         this.menuData = [];
@@ -8,54 +6,29 @@ class MenuManager {
         this.initialized = false;
     }
 
-    
-     
-     // In loadMenuData method:
-     async loadMenuData() {
-       if (this.initialized) return this.menuData;
-       
-       try {
-         if (offlineUtils.isOnline()) {
-           // Online: fetch from network
-           const response = await fetch('data/menu.json');
-           if (!response.ok) {
-             throw new Error('Failed to load menu data');
-           }
-           
-           this.menuData = await response.json();
-           
-           // Cache for offline use
-           offlineUtils.cacheMenuData(this.menuData);
-         } else {
-           // Offline: get from cache
-           this.menuData = await offlineUtils.getCachedMenuData() || [];
-         }
-         
-         this.initialized = true;
-         
-         // Extract unique categories
-         const categorySet = new Set();
-         this.menuData.forEach(item => categorySet.add(item.category));
-         this.categories = Array.from(categorySet);
-         
-         return this.menuData;
-       } catch (error) {
-         console.error('Error loading menu data:', error);
-         
-         // Try to get from cache as fallback
-         this.menuData = await offlineUtils.getCachedMenuData() || [];
-         this.initialized = this.menuData.length > 0;
-         
-         if (this.initialized) {
-           // Extract categories from cached data
-           const categorySet = new Set();
-           this.menuData.forEach(item => categorySet.add(item.category));
-           this.categories = Array.from(categorySet);
-         }
-         
-         return this.menuData;
-       }
-     }
+    async loadMenuData() {
+        if (this.initialized) return this.menuData;
+        
+        try {
+            const response = await fetch('data/menu.json');
+            if (!response.ok) {
+                throw new Error('Failed to load menu data');
+            }
+            
+            this.menuData = await response.json();
+            this.initialized = true;
+            
+            // Extract unique categories
+            const categorySet = new Set();
+            this.menuData.forEach(item => categorySet.add(item.category));
+            this.categories = Array.from(categorySet);
+            
+            return this.menuData;
+        } catch (error) {
+            console.error('Error loading menu data:', error);
+            return [];
+        }
+    }
     
     getItemById(id) {
         if (!this.initialized) {
