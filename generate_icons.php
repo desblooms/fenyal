@@ -5,7 +5,7 @@
  * This script generates various icon sizes required for PWA from a source image.
  * It requires the GD library to be installed in PHP.
  * 
- * Usage: php generate_icons.php [source_image.png]
+ * Usage: php generate_icons.php [fenyal-logo.png]
  */
 
 // Check if GD is installed
