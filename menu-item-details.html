@@ -223,6 +223,38 @@
                 transform: scale(1);
             }
         }
+
+        /* Enhanced styling */
+        .nutrition-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .spice-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .spice-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .favorite-btn {
+            transition: all 0.3s ease;
+        }
+
+        .favorite-btn.active {
+            color: #ef4444;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -241,14 +273,19 @@
             <!-- Language Toggle in top right -->
             <div class="absolute top-4 right-4 flex space-x-2">
                 <button id="lang-en-details" 
-                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all">
+                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all lang-en">
                     EN
                 </button>
                 <button id="lang-ar-details" 
-                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all">
+                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all lang-ar">
                     عربي
                 </button>
             </div>
+
+            <!-- Favorite button -->
+            <button id="favorite-btn" class="absolute top-4 right-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg favorite-btn">
+                <i data-feather="heart" class="h-5 w-5 text-white"></i>
+            </button>
         </div>
         
         <!-- Item details -->
@@ -256,12 +293,25 @@
             <!-- Item title and category -->
             <div class="mb-3">
                 <div class="flex justify-between items-start">
-                    <div>
+                    <div class="flex-1">
                         <h1 id="item-name" class="text-xl font-bold mb-1">Loading item...</h1>
-                        <p id="item-category" class="text-sm text-gray-500"></p>
+                        <div class="flex items-center gap-2 mb-2">
+                            <p id="item-category" class="text-sm text-gray-500"></p>
+                            <span id="nutrition-badge" class="nutrition-badge hidden">Healthy</span>
+                        </div>
                     </div>
-                    <div class="flex items-center">
-                        <span id="popular-badge" class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium" data-en="Popular" data-ar="شائع">Popular</span>
+                    <div class="flex flex-col items-end gap-2">
+                        <span id="popular-badge" class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium hidden" data-en="Popular" data-ar="شائع">Popular</span>
+                        <div id="rating-display" class="flex items-center gap-1">
+                            <div class="flex">
+                                <i data-feather="star" class="h-4 w-4 text-yellow-400 fill-current"></i>
+                                <i data-feather="star" class="h-4 w-4 text-yellow-400 fill-current"></i>
+                                <i data-feather="star" class="h-4 w-4 text-yellow-400 fill-current"></i>
+                                <i data-feather="star" class="h-4 w-4 text-yellow-400 fill-current"></i>
+                                <i data-feather="star" class="h-4 w-4 text-gray-300"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(4.2)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -272,17 +322,21 @@
             <!-- Size options (if half/full available) -->
             <div id="size-options-container" class="mb-6 hidden">
                 <h3 class="text-base font-semibold mb-3" data-en="Select Size" data-ar="اختر الحجم">Select Size</h3>
-                <div class="flex space-x-3 radio-container">
-                    <div>
+                <div class="grid grid-cols-2 gap-3 radio-container">
+                    <div class="border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-primary/50 transition-colors">
                         <input type="radio" name="size" id="size-half" value="half" checked>
-                        <label for="size-half" class="text-sm" data-en="Half" data-ar="نصف">
-                            Half
+                        <label for="size-half" class="cursor-pointer">
+                            <div class="font-medium text-sm" data-en="Half Portion" data-ar="نصف حصة">Half Portion</div>
+                            <div class="text-xs text-gray-500" data-en="Perfect for light appetite" data-ar="مثالي للشهية الخفيفة">Perfect for light appetite</div>
+                            <div class="text-primary font-semibold mt-1" id="half-price">QAR 0</div>
                         </label>
                     </div>
-                    <div>
+                    <div class="border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-primary/50 transition-colors">
                         <input type="radio" name="size" id="size-full" value="full">
-                        <label for="size-full" class="text-sm" data-en="Full" data-ar="كامل">
-                            Full
+                        <label for="size-full" class="cursor-pointer">
+                            <div class="font-medium text-sm" data-en="Full Portion" data-ar="حصة كاملة">Full Portion</div>
+                            <div class="text-xs text-gray-500" data-en="Recommended for full meal" data-ar="موصى به للوجبة الكاملة">Recommended for full meal</div>
+                            <div class="text-primary font-semibold mt-1" id="full-price">QAR 0</div>
                         </label>
                     </div>
                 </div>
@@ -291,7 +345,7 @@
             <!-- Spice level -->
             <div id="spice-level-container" class="mb-6 hidden">
                 <h3 class="text-base font-semibold mb-3" data-en="Spice Level" data-ar="مستوى الحرارة">Spice Level</h3>
-                <div class="flex flex-wrap gap-3 radio-container" id="spice-options"></div>
+                <div class="grid grid-cols-3 gap-3 radio-container" id="spice-options"></div>
             </div>
             
             <!-- Add-ons -->
@@ -303,13 +357,13 @@
             <!-- Quantity counter -->
             <div class="mb-8">
                 <h3 class="text-base font-semibold mb-3" data-en="Quantity" data-ar="الكمية">Quantity</h3>
-                <div class="flex items-center">
-                    <button id="decrease-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                        <i data-feather="minus" class="h-5 w-5 text-gray-600"></i>
+                <div class="flex items-center justify-center bg-gray-100 rounded-xl w-fit mx-auto">
+                    <button id="decrease-qty" class="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-primary transition-colors">
+                        <i data-feather="minus" class="h-5 w-5"></i>
                     </button>
-                    <input type="number" id="item-quantity" value="1" min="1" class="mx-3 w-12 h-10 text-center border-none quantity-input text-lg font-medium focus:outline-none" readonly>
-                    <button id="increase-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                        <i data-feather="plus" class="h-5 w-5 text-gray-600"></i>
+                    <input type="number" id="item-quantity" value="1" min="1" class="w-16 h-12 text-center border-none quantity-input text-lg font-medium focus:outline-none bg-transparent" readonly>
+                    <button id="increase-qty" class="w-12 h-12 flex items-center justify-center text-gray-600 hover:text-primary transition-colors">
+                        <i data-feather="plus" class="h-5 w-5"></i>
                     </button>
                 </div>
             </div>
@@ -320,24 +374,48 @@
                 <textarea id="special-instructions" data-placeholder-en="Any special requests..." data-placeholder-ar="أي طلبات خاصة..." placeholder="Any special requests..." class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none h-20"></textarea>
             </div>
             
+            <!-- Nutritional info -->
+            <div class="mb-8">
+                <h3 class="text-base font-semibold mb-3" data-en="Nutritional Information" data-ar="المعلومات الغذائية">Nutritional Information</h3>
+                <div class="grid grid-cols-4 gap-3">
+                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                        <div class="text-lg font-bold text-primary">250</div>
+                        <div class="text-xs text-gray-500" data-en="Calories" data-ar="سعرة">Calories</div>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                        <div class="text-lg font-bold text-green-500">15g</div>
+                        <div class="text-xs text-gray-500" data-en="Protein" data-ar="بروتين">Protein</div>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                        <div class="text-lg font-bold text-blue-500">30g</div>
+                        <div class="text-xs text-gray-500" data-en="Carbs" data-ar="كربوهيدرات">Carbs</div>
+                    </div>
+                    <div class="bg-gray-100 rounded-lg p-3 text-center">
+                        <div class="text-lg font-bold text-orange-500">8g</div>
+                        <div class="text-xs text-gray-500" data-en="Fat" data-ar="دهون">Fat</div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Price display -->
             <div class="mb-8">
-                <div>
-                    <p class="text-sm text-gray-500" data-en="Price" data-ar="السعر">Price</p>
-                    <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                <div class="bg-primary/5 rounded-xl p-4">
+                    <p class="text-sm text-gray-500 mb-1" data-en="Total Price" data-ar="السعر الإجمالي">Total Price</p>
+                    <p id="item-price" class="text-2xl font-bold text-primary">QAR 0</p>
+                    <p class="text-xs text-gray-500 mt-1" data-en="Including all customizations" data-ar="شامل جميع التخصيصات">Including all customizations</p>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Add to cart sticky footer -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-4 px-4 z-40 bottom-safe-area">
         <div class="flex justify-between items-center">
             <div>
                 <p class="text-sm text-gray-500" data-en="Total Price" data-ar="السعر الإجمالي">Total Price</p>
                 <p id="footer-price" class="text-xl font-bold text-primary">QAR 0</p>
             </div>
-            <button id="add-to-cart-btn" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center transform transition-transform active:scale-95">
+            <button id="add-to-cart-btn" class="bg-primary text-white px-8 py-3 rounded-xl font-medium flex items-center transform transition-all active:scale-95 hover:bg-primary/90">
                 <span data-en="Add to Cart" data-ar="أضف إلى السلة">Add to Cart</span>
                 <i data-feather="shopping-cart" class="h-5 w-5 ml-2"></i>
             </button>
@@ -345,59 +423,76 @@
     </div>
     
     <!-- Success notification (hidden by default) -->
-    <div id="success-toast" class="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">
-        <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
-            <i data-feather="check-circle" class="h-4 w-4 mr-2"></i>
+    <div id="success-toast" class="fixed bottom-24 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+        <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center">
+            <i data-feather="check-circle" class="h-5 w-5 mr-2"></i>
             <span data-en="Added to cart!" data-ar="تمت الإضافة إلى السلة!">Added to cart!</span>
         </div>
     </div>
+    
+    <!-- Language Manager Script -->
+    <script src="assets/js/language.js"></script>
     
     <!-- Custom JavaScript -->
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
         
-        // Language system
-        let currentLanguage = localStorage.getItem('language') || 'en';
-        
-        const translations = {
-            en: {
-                selectSize: 'Select Size',
-                half: 'Half',
-                full: 'Full',
-                spiceLevel: 'Spice Level',
-                addons: 'Add-ons',
-                quantity: 'Quantity',
-                specialInstructions: 'Special Instructions',
-                price: 'Price',
-                totalPrice: 'Total Price',
-                addToCart: 'Add to Cart',
-                addedToCart: 'Added to cart!',
-                popular: 'Popular',
-                mild: 'Mild',
-                medium: 'Medium',
-                spicy: 'Spicy',
-                specialRequestsPlaceholder: 'Any special requests...'
-            },
-            ar: {
-                selectSize: 'اختر الحجم',
-                half: 'نصف',
-                full: 'كامل',
-                spiceLevel: 'مستوى الحرارة',
-                addons: 'إضافات',
-                quantity: 'الكمية',
-                specialInstructions: 'تعليمات خاصة',
-                price: 'السعر',
-                totalPrice: 'السعر الإجمالي',
-                addToCart: 'أضف إلى السلة',
-                addedToCart: 'تمت الإضافة إلى السلة!',
-                popular: 'شائع',
-                mild: 'خفيف',
-                medium: 'متوسط',
-                spicy: 'حار',
-                specialRequestsPlaceholder: 'أي طلبات خاصة...'
-            }
-        };
+        // Register page-specific translations with Language Manager
+        if (window.languageManager) {
+            window.languageManager.registerTranslations({
+                en: {
+                    selectSize: 'Select Size',
+                    halfPortion: 'Half Portion',
+                    fullPortion: 'Full Portion',
+                    perfectLight: 'Perfect for light appetite',
+                    recommendedFull: 'Recommended for full meal',
+                    spiceLevel: 'Spice Level',
+                    addons: 'Add-ons',
+                    quantity: 'Quantity',
+                    specialInstructions: 'Special Instructions',
+                    nutritionalInfo: 'Nutritional Information',
+                    calories: 'Calories',
+                    protein: 'Protein',
+                    carbs: 'Carbs',
+                    fat: 'Fat',
+                    totalPrice: 'Total Price',
+                    includingCustomizations: 'Including all customizations',
+                    addToCart: 'Add to Cart',
+                    addedToCart: 'Added to cart!',
+                    popular: 'Popular',
+                    mild: 'Mild',
+                    medium: 'Medium',
+                    spicy: 'Spicy',
+                    specialRequestsPlaceholder: 'Any special requests...'
+                },
+                ar: {
+                    selectSize: 'اختر الحجم',
+                    halfPortion: 'نصف حصة',
+                    fullPortion: 'حصة كاملة', 
+                    perfectLight: 'مثالي للشهية الخفيفة',
+                    recommendedFull: 'موصى به للوجبة الكاملة',
+                    spiceLevel: 'مستوى الحرارة',
+                    addons: 'إضافات',
+                    quantity: 'الكمية',
+                    specialInstructions: 'تعليمات خاصة',
+                    nutritionalInfo: 'المعلومات الغذائية',
+                    calories: 'سعرة',
+                    protein: 'بروتين',
+                    carbs: 'كربوهيدرات',
+                    fat: 'دهون',
+                    totalPrice: 'السعر الإجمالي',
+                    includingCustomizations: 'شامل جميع التخصيصات',
+                    addToCart: 'أضف إلى السلة',
+                    addedToCart: 'تمت الإضافة إلى السلة!',
+                    popular: 'شائع',
+                    mild: 'خفيف',
+                    medium: 'متوسط',
+                    spicy: 'حار',
+                    specialRequestsPlaceholder: 'أي طلبات خاصة...'
+                }
+            });
+        }
 
         // Spice level translations
         const spiceLevelTranslations = {
@@ -405,82 +500,6 @@
             'Medium': { en: 'Medium', ar: 'متوسط' },
             'Spicy': { en: 'Spicy', ar: 'حار' }
         };
-
-        function updateLanguage(lang) {
-            currentLanguage = lang;
-            localStorage.setItem('language', lang);
-            
-            // Update HTML direction and font
-            const html = document.documentElement;
-            if (lang === 'ar') {
-                html.setAttribute('dir', 'rtl');
-                html.setAttribute('lang', 'ar');
-                document.body.classList.add('arabic-font');
-            } else {
-                html.setAttribute('dir', 'ltr');
-                html.setAttribute('lang', 'en');
-                document.body.classList.remove('arabic-font');
-            }
-
-            // Update all translatable elements
-            document.querySelectorAll('[data-en]').forEach(element => {
-                const enText = element.getAttribute('data-en');
-                const arText = element.getAttribute('data-ar');
-                
-                if (lang === 'ar' && arText) {
-                    element.textContent = arText;
-                } else if (lang === 'en' && enText) {
-                    element.textContent = enText;
-                }
-            });
-
-            // Update placeholders
-            document.querySelectorAll('[data-placeholder-en]').forEach(element => {
-                const placeholderEn = element.getAttribute('data-placeholder-en');
-                const placeholderAr = element.getAttribute('data-placeholder-ar');
-                
-                if (lang === 'ar' && placeholderAr) {
-                    element.placeholder = placeholderAr;
-                } else if (lang === 'en' && placeholderEn) {
-                    element.placeholder = placeholderEn;
-                }
-            });
-
-            // Update language button states
-            updateLanguageButtons();
-            
-            // Add animation class
-            document.body.classList.add('language-switch');
-            setTimeout(() => {
-                document.body.classList.remove('language-switch');
-            }, 300);
-        }
-
-        function updateLanguageButtons() {
-            const enButton = document.getElementById('lang-en-details');
-            const arButton = document.getElementById('lang-ar-details');
-
-            if (currentLanguage === 'ar') {
-                arButton?.classList.add('bg-white/40', 'border-white/60');
-                arButton?.classList.remove('bg-white/20', 'border-white/30');
-                
-                enButton?.classList.remove('bg-white/40', 'border-white/60');
-                enButton?.classList.add('bg-white/20', 'border-white/30');
-            } else {
-                enButton?.classList.add('bg-white/40', 'border-white/60');
-                enButton?.classList.remove('bg-white/20', 'border-white/30');
-                
-                arButton?.classList.remove('bg-white/40', 'border-white/60');
-                arButton?.classList.add('bg-white/20', 'border-white/30');
-            }
-        }
-
-        // Initialize language on page load
-        updateLanguage(currentLanguage);
-
-        // Language button event listeners
-        document.getElementById('lang-en-details')?.addEventListener('click', () => updateLanguage('en'));
-        document.getElementById('lang-ar-details')?.addEventListener('click', () => updateLanguage('ar'));
         
         // Initialize Feather icons
         feather.replace();
@@ -529,9 +548,17 @@
                 popularBadge.classList.add('hidden');
             }
             
+            // Show nutrition badge for healthy items
+            const nutritionBadge = document.getElementById('nutrition-badge');
+            if (item.category === 'Breakfast' || item.category === 'Dishes') {
+                nutritionBadge.classList.remove('hidden');
+            }
+            
             // Handle half/full pricing if available
             if (item.isHalfFull) {
                 document.getElementById('size-options-container').classList.remove('hidden');
+                document.getElementById('half-price').textContent = formatPrice(item.halfPrice);
+                document.getElementById('full-price').textContent = formatPrice(item.fullPrice);
                 updatePrice(item);
                 
                 // Add event listeners for size selection
@@ -539,6 +566,14 @@
                     input.addEventListener('change', function() {
                         selectedSize = this.value;
                         updatePrice(item);
+                        
+                        // Update border styling
+                        document.querySelectorAll('#size-options-container .border').forEach(div => {
+                            div.classList.remove('border-primary', 'bg-primary/5');
+                            div.classList.add('border-gray-200');
+                        });
+                        this.closest('.border').classList.add('border-primary', 'bg-primary/5');
+                        this.closest('.border').classList.remove('border-gray-200');
                     });
                 });
             } else {
@@ -559,15 +594,23 @@
                     
                     // Get translated text
                     const levelText = spiceLevelTranslations[level] 
-                        ? spiceLevelTranslations[level][currentLanguage] 
+                        ? spiceLevelTranslations[level][window.languageManager?.getCurrentLanguage() || 'en'] 
                         : level;
+                    
+                    // Create spice indicators
+                    let spiceIndicators = '';
+                    const spiceCount = level === 'Mild' ? 1 : level === 'Medium' ? 2 : 3;
+                    for (let i = 0; i < 3; i++) {
+                        spiceIndicators += `<div class="spice-dot ${i < spiceCount ? '' : 'opacity-30'}"></div>`;
+                    }
                     
                     // Create radio input for each spice level
                     const radioHtml = `
-                        <div>
+                        <div class="border border-gray-200 rounded-lg p-3 cursor-pointer hover:border-primary/50 transition-colors">
                             <input type="radio" name="spice-level" id="${id}" value="${level}" ${index === 0 ? 'checked' : ''}>
-                            <label for="${id}" class="text-sm">
-                                ${levelText}
+                            <label for="${id}" class="cursor-pointer">
+                                <div class="font-medium text-sm mb-1">${levelText}</div>
+                                <div class="spice-indicator">${spiceIndicators}</div>
                             </label>
                         </div>
                     `;
@@ -584,6 +627,14 @@
                 document.querySelectorAll('input[name="spice-level"]').forEach(input => {
                     input.addEventListener('change', function() {
                         selectedSpiceLevel = this.value;
+                        
+                        // Update border styling
+                        document.querySelectorAll('#spice-options .border').forEach(div => {
+                            div.classList.remove('border-primary', 'bg-primary/5');
+                            div.classList.add('border-gray-200');
+                        });
+                        this.closest('.border').classList.add('border-primary', 'bg-primary/5');
+                        this.closest('.border').classList.remove('border-gray-200');
                     });
                 });
             }
@@ -600,14 +651,15 @@
                     
                     // Create checkbox for each add-on
                     const checkboxHtml = `
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-center p-3 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
+                            <div class="flex-1">
                                 <input type="checkbox" id="${id}" name="addons" value="${addon.name}" data-price="${addon.price}">
-                                <label for="${id}" class="text-sm">
-                                    ${addon.name}
+                                <label for="${id}" class="cursor-pointer">
+                                    <div class="font-medium text-sm">${addon.name}</div>
+                                    <div class="text-xs text-gray-500">Extra flavor enhancement</div>
                                 </label>
                             </div>
-                            <span class="text-sm text-gray-600">${formatPrice(addon.price)}</span>
+                            <span class="text-primary font-semibold">${formatPrice(addon.price)}</span>
                         </div>
                     `;
                     
@@ -617,16 +669,22 @@
                 // Add event listeners for add-on selection
                 document.querySelectorAll('input[name="addons"]').forEach(input => {
                     input.addEventListener('change', function() {
+                        const parentDiv = this.closest('.border');
+                        
                         if (this.checked) {
                             selectedAddons.push({
                                 name: this.value,
                                 price: parseInt(this.dataset.price)
                             });
+                            parentDiv.classList.add('border-primary', 'bg-primary/5');
+                            parentDiv.classList.remove('border-gray-200');
                         } else {
                             const index = selectedAddons.findIndex(addon => addon.name === this.value);
                             if (index !== -1) {
                                 selectedAddons.splice(index, 1);
                             }
+                            parentDiv.classList.remove('border-primary', 'bg-primary/5');
+                            parentDiv.classList.add('border-gray-200');
                         }
                         
                         updatePrice(item);
@@ -654,6 +712,20 @@
                 updatePrice(item);
             });
             
+            // Handle favorite button
+            document.getElementById('favorite-btn').addEventListener('click', function() {
+                this.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.setAttribute('data-feather', 'heart');
+                    icon.style.fill = 'currentColor';
+                } else {
+                    icon.setAttribute('data-feather', 'heart');
+                    icon.style.fill = 'none';
+                }
+                feather.replace();
+            });
+            
             // Handle add to cart button
             document.getElementById('add-to-cart-btn').addEventListener('click', function() {
                 const quantity = parseInt(document.getElementById('item-quantity').value);
@@ -679,15 +751,26 @@
                 successToast.classList.remove('opacity-0');
                 successToast.classList.add('opacity-100');
                 
+                // Update button text temporarily
+                const originalText = this.querySelector('span').textContent;
+                this.querySelector('span').textContent = window.languageManager?.getTranslation('addedToCart') || 'Added!';
+                this.classList.add('bg-green-500');
+                this.classList.remove('bg-primary');
+                
                 setTimeout(() => {
                     successToast.classList.remove('opacity-100');
                     successToast.classList.add('opacity-0');
+                    
+                    // Reset button
+                    this.querySelector('span').textContent = originalText;
+                    this.classList.remove('bg-green-500');
+                    this.classList.add('bg-primary');
                 }, 2000);
                 
-                // Optional: Redirect to cart after short delay
+                // Optional: Redirect to cart after delay
                 setTimeout(() => {
                     pageTransition('cart.html');
-                }, 1500);
+                }, 2500);
             });
         }
         
@@ -714,22 +797,29 @@
             document.getElementById('footer-price').textContent = formatPrice(totalPrice);
         }
         
-        // Load item details on page load
-        document.addEventListener('DOMContentLoaded', loadItemDetails);
-
-        // Update spice level translations when language changes
+        // Listen for language changes
         window.addEventListener('languageChanged', function(e) {
             const lang = e.detail.language;
             
             // Update spice level options
             document.querySelectorAll('input[name="spice-level"]').forEach(input => {
                 const level = input.value;
-                const label = document.querySelector(`label[for="${input.id}"]`);
+                const label = document.querySelector(`label[for="${input.id}"] .font-medium`);
                 if (label && spiceLevelTranslations[level]) {
                     label.textContent = spiceLevelTranslations[level][lang];
                 }
             });
+            
+            // Update placeholders
+            const specialInstructions = document.getElementById('special-instructions');
+            if (specialInstructions) {
+                const placeholder = lang === 'ar' ? 'أي طلبات خاصة...' : 'Any special requests...';
+                specialInstructions.placeholder = placeholder;
+            }
         });
+        
+        // Load item details on page load
+        document.addEventListener('DOMContentLoaded', loadItemDetails);
     </script>
 </body>
 </html>

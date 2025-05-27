@@ -208,11 +208,11 @@
         <!-- Language Toggle in Welcome Screen -->
         <div class="absolute top-8 right-4 flex space-x-2">
             <button id="lang-en-welcome" 
-                class="language-toggle px-3 py-1.5 rounded-full text-sm font-medium text-white active">
+                class="language-toggle px-3 py-1.5 rounded-full text-sm font-medium text-white lang-en active">
                 EN
             </button>
             <button id="lang-ar-welcome" 
-                class="language-toggle px-3 py-1.5 rounded-full text-sm font-medium text-white">
+                class="language-toggle px-3 py-1.5 rounded-full text-sm font-medium text-white lang-ar">
                 عربي
             </button>
         </div>
@@ -220,11 +220,11 @@
         <div class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
             <img src="fenyal-logo-1.png" width="100px">
         </div>
-        <h1 id="welcome-title" class="text-2xl font-bold mb-1">Fenyal</h1>
-        <p id="welcome-subtitle" class="text-center text-white/80 text-sm mb-8">Delicious food at your fingertips</p>
+        <h1 id="welcome-title" class="text-2xl font-bold mb-1" data-en="Fenyal" data-ar="فينيال">Fenyal</h1>
+        <p id="welcome-subtitle" class="text-center text-white/80 text-sm mb-8" data-en="Delicious food at your fingertips" data-ar="طعام لذيذ في متناول يدك">Delicious food at your fingertips</p>
         <button id="get-started-btn"
             class="bg-white text-primary font-medium text-sm py-3 px-8 rounded-full shadow-lg transform transition-transform active:scale-95 flex items-center">
-            <span id="get-started-text">Get Started</span>
+            <span id="get-started-text" data-en="Get Started" data-ar="ابدأ الآن">Get Started</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -241,11 +241,11 @@
                 <!-- Language Toggle Buttons -->
                 <div class="flex space-x-2">
                     <button id="lang-en-main" 
-                        class="px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-white border border-primary transition-all">
+                        class="px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-white border border-primary transition-all lang-en">
                         EN
                     </button>
                     <button id="lang-ar-main" 
-                        class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 transition-all">
+                        class="px-3 py-1.5 rounded-full text-xs font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 transition-all lang-ar">
                         عربي
                     </button>
                 </div>
@@ -262,6 +262,12 @@
 
         <!-- Main content -->
         <main class="px-4">
+            <!-- Welcome message -->
+            <div class="mb-4 mt-2">
+                <h2 id="welcome-message" class="text-xl font-semibold" data-en="Hi, there! 👋" data-ar="مرحباً! 👋">Hi, there! 👋</h2>
+                <p id="order-prompt" class="text-gray-500 text-xs" data-en="What would you like to order today?" data-ar="ماذا تريد أن تطلب اليوم؟">What would you like to order today?</p>
+            </div>
+
             <!-- Categories -->
             <div class="mb-2">
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll" id="categories-container">
@@ -304,6 +310,24 @@
                 </div>
             </div>
 
+            <!-- Special offers banner -->
+            <div class="rounded-xl overflow-hidden shadow-sm bg-gradient-to-r from-primary/80 to-primary mb-6">
+                <div class="p-4 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium uppercase tracking-wide opacity-80" data-en="Special offer" data-ar="عرض خاص">Special offer</h3>
+                            <h2 class="text-xl font-bold mb-1">30% OFF</h2>
+                            <p class="text-xs text-white/90 mb-2" data-en="On your first order" data-ar="على طلبك الأول">On your first order</p>
+                            <a href="menu.html" class="inline-block bg-white text-primary text-xs font-medium px-4 py-1.5 rounded-full" data-en="Our Menu" data-ar="قائمتنا">Our Menu</a>
+                        </div>
+                        <div class="w-20 h-20 relative">
+                            <div class="absolute inset-0 rounded-full bg-white/20 backdrop-blur-sm"></div> 
+                            <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover rounded-full" alt="Special item">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Popular items -->
             <div class="mb-5">
                 <div class="flex justify-between items-center mb-3">
@@ -324,6 +348,31 @@
                             <div class="shimmer"></div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mb-6">
+                <h2 class="text-base font-semibold mb-3" data-en="Quick Actions" data-ar="إجراءات سريعة">Quick Actions</h2>
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="menu.html" class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mr-3">
+                            <i data-feather="coffee" class="h-5 w-5 text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-sm" data-en="Order Now" data-ar="اطلب الآن">Order Now</p>
+                            <p class="text-xs text-gray-500" data-en="Browse menu" data-ar="تصفح القائمة">Browse menu</p>
+                        </div>
+                    </a>
+                    <a href="contact-us.html" class="bg-white p-4 rounded-xl shadow-sm flex items-center">
+                        <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center mr-3">
+                            <i data-feather="phone" class="h-5 w-5 text-green-500"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-sm" data-en="Call Us" data-ar="اتصل بنا">Call Us</p>
+                            <p class="text-xs text-gray-500" data-en="Quick support" data-ar="دعم سريع">Quick support</p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </main>
@@ -351,143 +400,57 @@
         </nav>
     </div>
 
+    <!-- Language Manager Script -->
+    <script src="assets/js/language.js"></script>
+
     <!-- Custom JavaScript -->
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
 
-        // Language system
-        let currentLanguage = localStorage.getItem('language') || 'en';
-        
-        const translations = {
-            en: {
-                title: 'Fenyal',
-                subtitle: 'Delicious food at your fingertips',
-                getStarted: 'Get Started',
-                home: 'Home',
-                menu: 'Menu',
-                popularItems: 'Popular Items',
-                viewAll: 'View all',
-                breakfast: 'Breakfast',
-                dishes: 'Dishes',
-                bread: 'Bread',
-                desserts: 'Desserts',
-                coldDrinks: 'Cold Drinks',
-                hotDrinks: 'Hot Drinks'
-            },
-            ar: {
-                title: 'فينيال',
-                subtitle: 'طعام لذيذ في متناول يدك',
-                getStarted: 'ابدأ الآن',
-                home: 'الرئيسية',
-                menu: 'القائمة',
-                popularItems: 'العناصر الشائعة',
-                viewAll: 'عرض الكل',
-                breakfast: 'فطور',
-                dishes: 'أطباق',
-                bread: 'خبز',
-                desserts: 'حلويات',
-                coldDrinks: 'مشروبات باردة',
-                hotDrinks: 'مشروبات ساخنة'
-            }
-        };
-
-        function updateLanguage(lang) {
-            currentLanguage = lang;
-            localStorage.setItem('language', lang);
-            
-            // Update HTML direction and font
-            const html = document.documentElement;
-            if (lang === 'ar') {
-                html.setAttribute('dir', 'rtl');
-                html.setAttribute('lang', 'ar');
-                document.body.classList.add('arabic-font');
-            } else {
-                html.setAttribute('dir', 'ltr');
-                html.setAttribute('lang', 'en');
-                document.body.classList.remove('arabic-font');
-            }
-
-            // Update all translatable elements
-            document.querySelectorAll('[data-en]').forEach(element => {
-                const enText = element.getAttribute('data-en');
-                const arText = element.getAttribute('data-ar');
-                
-                if (lang === 'ar' && arText) {
-                    element.textContent = arText;
-                } else if (lang === 'en' && enText) {
-                    element.textContent = enText;
+        // Register page-specific translations with the Language Manager
+        if (window.languageManager) {
+            window.languageManager.registerTranslations({
+                en: {
+                    title: 'Fenyal',
+                    subtitle: 'Delicious food at your fingertips',
+                    getStarted: 'Get Started',
+                    home: 'Home',
+                    menu: 'Menu',
+                    popularItems: 'Popular Items',
+                    viewAll: 'View all',
+                    welcomeMessage: 'Hi, there! 👋',
+                    orderPrompt: 'What would you like to order today?',
+                    specialOffer: 'Special offer',
+                    onFirstOrder: 'On your first order',
+                    ourMenu: 'Our Menu',
+                    quickActions: 'Quick Actions',
+                    orderNow: 'Order Now',
+                    browseMenu: 'Browse menu',
+                    callUs: 'Call Us',
+                    quickSupport: 'Quick support'
+                },
+                ar: {
+                    title: 'فينيال',
+                    subtitle: 'طعام لذيذ في متناول يدك',
+                    getStarted: 'ابدأ الآن',
+                    home: 'الرئيسية',
+                    menu: 'القائمة',
+                    popularItems: 'العناصر الشائعة',
+                    viewAll: 'عرض الكل',
+                    welcomeMessage: 'مرحباً! 👋',
+                    orderPrompt: 'ماذا تريد أن تطلب اليوم؟',
+                    specialOffer: 'عرض خاص',
+                    onFirstOrder: 'على طلبك الأول',
+                    ourMenu: 'قائمتنا',
+                    quickActions: 'إجراءات سريعة',
+                    orderNow: 'اطلب الآن',
+                    browseMenu: 'تصفح القائمة',
+                    callUs: 'اتصل بنا',
+                    quickSupport: 'دعم سريع'
                 }
             });
-
-            // Update specific elements
-            const elements = {
-                'welcome-title': translations[lang].title,
-                'welcome-subtitle': translations[lang].subtitle,
-                'get-started-text': translations[lang].getStarted,
-                'popular-title': translations[lang].popularItems,
-                'view-all-link': translations[lang].viewAll,
-                'nav-home': translations[lang].home,
-                'nav-menu': translations[lang].menu
-            };
-
-            Object.keys(elements).forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.textContent = elements[id];
-                }
-            });
-
-            // Update language button states
-            updateLanguageButtons();
-            
-            // Add animation class
-            document.body.classList.add('language-switch');
-            setTimeout(() => {
-                document.body.classList.remove('language-switch');
-            }, 300);
         }
-
-        function updateLanguageButtons() {
-            // Welcome screen buttons
-            const enWelcome = document.getElementById('lang-en-welcome');
-            const arWelcome = document.getElementById('lang-ar-welcome');
-            
-            // Main screen buttons
-            const enMain = document.getElementById('lang-en-main');
-            const arMain = document.getElementById('lang-ar-main');
-
-            if (currentLanguage === 'ar') {
-                // Arabic active
-                arWelcome?.classList.add('active');
-                enWelcome?.classList.remove('active');
-                
-                arMain?.classList.add('bg-primary', 'text-white', 'border-primary');
-                arMain?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
-                
-                enMain?.classList.remove('bg-primary', 'text-white', 'border-primary');
-                enMain?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
-            } else {
-                // English active
-                enWelcome?.classList.add('active');
-                arWelcome?.classList.remove('active');
-                
-                enMain?.classList.add('bg-primary', 'text-white', 'border-primary');
-                enMain?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
-                
-                arMain?.classList.remove('bg-primary', 'text-white', 'border-primary');
-                arMain?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
-            }
-        }
-
-        // Initialize language on page load
-        updateLanguage(currentLanguage);
-
-        // Language button event listeners
-        document.getElementById('lang-en-welcome')?.addEventListener('click', () => updateLanguage('en'));
-        document.getElementById('lang-ar-welcome')?.addEventListener('click', () => updateLanguage('ar'));
-        document.getElementById('lang-en-main')?.addEventListener('click', () => updateLanguage('en'));
-        document.getElementById('lang-ar-main')?.addEventListener('click', () => updateLanguage('ar'));
 
         // Initialize icons
         feather.replace();

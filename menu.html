@@ -156,6 +156,27 @@
                 transform: scale(1);
             }
         }
+
+        /* Enhanced menu item cards */
+        .menu-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .price-badge {
+            background: linear-gradient(135deg, #c45230 0%, #f96d43 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -174,18 +195,19 @@
                     <!-- Language Toggle Buttons -->
                     <div class="flex space-x-2">
                         <button id="lang-en-menu" 
-                            class="px-2 py-1 rounded-full text-xs font-medium bg-primary text-white border border-primary transition-all">
+                            class="px-2 py-1 rounded-full text-xs font-medium bg-primary text-white border border-primary transition-all lang-en">
                             EN
                         </button>
                         <button id="lang-ar-menu" 
-                            class="px-2 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 transition-all">
+                            class="px-2 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 transition-all lang-ar">
                             عربي
                         </button>
                     </div>
                 </div>
                 
-                <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-                    <!-- Optional contact icon -->
+                <a href="cart.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <i data-feather="shopping-cart" class="h-5 w-5 text-gray-600"></i>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center hidden">0</span>
                 </a>
             </div>
             
@@ -212,6 +234,22 @@
         
         <!-- Main content -->
         <main class="px-4 pt-2 pb-4">
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-lg font-bold text-primary" id="total-items">0</div>
+                    <div class="text-xs text-gray-500" data-en="Items" data-ar="عنصر">Items</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-lg font-bold text-green-500" id="popular-count">0</div>
+                    <div class="text-xs text-gray-500" data-en="Popular" data-ar="شائع">Popular</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm text-center">
+                    <div class="text-lg font-bold text-blue-500" id="categories-count">0</div>
+                    <div class="text-xs text-gray-500" data-en="Categories" data-ar="فئات">Categories</div>
+                </div>
+            </div>
+            
             <!-- Popular items section -->
             <div class="mb-6" id="popular-section">
                 <h2 id="popular-items-title" class="text-lg font-semibold mb-3" data-en="Popular Items" data-ar="العناصر الشائعة">Popular Items</h2>
@@ -324,146 +362,51 @@
         </div>
     </div>
     
+    <!-- Language Manager Script -->
+    <script src="assets/js/language.js"></script>
+    
     <!-- Custom JavaScript -->
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
         
-        // Language system
-        let currentLanguage = localStorage.getItem('language') || 'en';
-        
-        const translations = {
-            en: {
-                menu: 'Menu',
-                home: 'Home',
-                popularItems: 'Popular Items',
-                allMenu: 'All Menu',
-                searchResults: 'Search Results',
-                noItemsFound: 'No items found',
-                tryDifferentSearch: 'Try a different search or category',
-                resetSearch: 'Reset Search',
-                itemAddedToCart: 'Item added to cart',
-                searchPlaceholder: 'Search menu items...',
-                all: 'All',
-                breakfast: 'Breakfast',
-                dishes: 'Dishes',
-                bread: 'Bread',
-                desserts: 'Desserts',
-                coldDrinks: 'Cold Drinks',
-                hotDrinks: 'Hot Drinks'
-            },
-            ar: {
-                menu: 'القائمة',
-                home: 'الرئيسية',
-                popularItems: 'العناصر الشائعة',
-                allMenu: 'جميع عناصر القائمة',
-                searchResults: 'نتائج البحث',
-                noItemsFound: 'لم يتم العثور على عناصر',
-                tryDifferentSearch: 'جرب بحثًا أو فئة مختلفة',
-                resetSearch: 'إعادة تعيين البحث',
-                itemAddedToCart: 'تمت إضافة العنصر إلى السلة',
-                searchPlaceholder: 'البحث في عناصر القائمة...',
-                all: 'الكل',
-                breakfast: 'فطور',
-                dishes: 'أطباق',
-                bread: 'خبز',
-                desserts: 'حلويات',
-                coldDrinks: 'مشروبات باردة',
-                hotDrinks: 'مشروبات ساخنة'
-            }
-        };
-
-        // Category translations mapping
-        const categoryTranslations = {
-            'Breakfast': { en: 'Breakfast', ar: 'فطور' },
-            'Dishes': { en: 'Dishes', ar: 'أطباق' },
-            'Bread': { en: 'Bread', ar: 'خبز' },
-            'Desserts': { en: 'Desserts', ar: 'حلويات' },
-            'Cold Drinks': { en: 'Cold Drinks', ar: 'مشروبات باردة' },
-            'Hot Drinks': { en: 'Hot Drinks', ar: 'مشروبات ساخنة' }
-        };
-
-        function updateLanguage(lang) {
-            currentLanguage = lang;
-            localStorage.setItem('language', lang);
-            
-            // Update HTML direction and font
-            const html = document.documentElement;
-            if (lang === 'ar') {
-                html.setAttribute('dir', 'rtl');
-                html.setAttribute('lang', 'ar');
-                document.body.classList.add('arabic-font');
-            } else {
-                html.setAttribute('dir', 'ltr');
-                html.setAttribute('lang', 'en');
-                document.body.classList.remove('arabic-font');
-            }
-
-            // Update all translatable elements
-            document.querySelectorAll('[data-en]').forEach(element => {
-                const enText = element.getAttribute('data-en');
-                const arText = element.getAttribute('data-ar');
-                
-                if (lang === 'ar' && arText) {
-                    element.textContent = arText;
-                } else if (lang === 'en' && enText) {
-                    element.textContent = enText;
+        // Register page-specific translations with Language Manager
+        if (window.languageManager) {
+            window.languageManager.registerTranslations({
+                en: {
+                    menu: 'Menu',
+                    home: 'Home',
+                    popularItems: 'Popular Items',
+                    allMenu: 'All Menu',
+                    searchResults: 'Search Results',
+                    noItemsFound: 'No items found',
+                    tryDifferentSearch: 'Try a different search or category',
+                    resetSearch: 'Reset Search',
+                    itemAddedToCart: 'Item added to cart',
+                    searchPlaceholder: 'Search menu items...',
+                    all: 'All',
+                    items: 'Items',
+                    popular: 'Popular',
+                    categories: 'Categories'
+                },
+                ar: {
+                    menu: 'القائمة',
+                    home: 'الرئيسية',
+                    popularItems: 'العناصر الشائعة',
+                    allMenu: 'جميع عناصر القائمة',
+                    searchResults: 'نتائج البحث',
+                    noItemsFound: 'لم يتم العثور على عناصر',
+                    tryDifferentSearch: 'جرب بحثًا أو فئة مختلفة',
+                    resetSearch: 'إعادة تعيين البحث',
+                    itemAddedToCart: 'تمت إضافة العنصر إلى السلة',
+                    searchPlaceholder: 'البحث في عناصر القائمة...',
+                    all: 'الكل',
+                    items: 'عنصر',
+                    popular: 'شائع',
+                    categories: 'فئات'
                 }
             });
-
-            // Update placeholders
-            const searchInput = document.getElementById('search-input');
-            if (searchInput) {
-                const placeholderEn = searchInput.getAttribute('data-placeholder-en');
-                const placeholderAr = searchInput.getAttribute('data-placeholder-ar');
-                
-                if (lang === 'ar' && placeholderAr) {
-                    searchInput.placeholder = placeholderAr;
-                } else if (lang === 'en' && placeholderEn) {
-                    searchInput.placeholder = placeholderEn;
-                }
-            }
-
-            // Update language button states
-            updateLanguageButtons();
-            
-            // Add animation class
-            document.body.classList.add('language-switch');
-            setTimeout(() => {
-                document.body.classList.remove('language-switch');
-            }, 300);
-
-            // Re-render categories with correct language
-            if (menuManager.initialized) {
-                renderCategories();
-            }
         }
-
-        function updateLanguageButtons() {
-            const enButton = document.getElementById('lang-en-menu');
-            const arButton = document.getElementById('lang-ar-menu');
-
-            if (currentLanguage === 'ar') {
-                arButton?.classList.add('bg-primary', 'text-white', 'border-primary');
-                arButton?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
-                
-                enButton?.classList.remove('bg-primary', 'text-white', 'border-primary');
-                enButton?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
-            } else {
-                enButton?.classList.add('bg-primary', 'text-white', 'border-primary');
-                enButton?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
-                
-                arButton?.classList.remove('bg-primary', 'text-white', 'border-primary');
-                arButton?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
-            }
-        }
-
-        // Initialize language on page load
-        updateLanguage(currentLanguage);
-
-        // Language button event listeners
-        document.getElementById('lang-en-menu')?.addEventListener('click', () => updateLanguage('en'));
-        document.getElementById('lang-ar-menu')?.addEventListener('click', () => updateLanguage('ar'));
         
         // Initialize icons
         feather.replace();
@@ -476,6 +419,10 @@
         async function initializeMenu() {
             try {
                 await menuManager.loadMenuData();
+                
+                // Update stats
+                updateStats();
+                
                 renderCategories();
                 
                 // If category param exists, filter by that category
@@ -507,7 +454,18 @@
             }
         }
         
-        // Render category buttons
+        // Update stats display
+        function updateStats() {
+            const allItems = menuManager.menuData;
+            const popularItems = menuManager.getPopularItems();
+            const categories = menuManager.getAllCategories();
+            
+            document.getElementById('total-items').textContent = allItems.length;
+            document.getElementById('popular-count').textContent = popularItems.length;
+            document.getElementById('categories-count').textContent = categories.length;
+        }
+        
+        // Enhanced render categories function
         function renderCategories() {
             const categories = menuManager.getAllCategories();
             const categoryContainer = document.getElementById('category-buttons');
@@ -515,23 +473,16 @@
             // Clear loading placeholders
             categoryContainer.innerHTML = '';
             
-            // Add category buttons
+            // Add category buttons with enhanced styling
             categories.forEach(category => {
                 const button = document.createElement('button');
-                button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button';
+                button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button border border-gray-200 hover:border-primary/30 transition-all';
                 
                 // Set both English and Arabic text attributes
                 button.setAttribute('data-en', category);
-                if (categoryTranslations[category]) {
-                    button.setAttribute('data-ar', categoryTranslations[category].ar);
-                }
-                
-                // Set display text based on current language
-                if (currentLanguage === 'ar' && categoryTranslations[category]) {
-                    button.textContent = categoryTranslations[category].ar;
-                } else {
-                    button.textContent = category;
-                }
+                const categoryTranslation = window.languageManager ? 
+                    window.languageManager.getCategoryTranslation(category) : category;
+                button.textContent = categoryTranslation;
                 
                 // If this is the category from URL param, make it active
                 if (category === categoryParam) {
@@ -557,19 +508,19 @@
             }
         }
         
-        // Activate category button
+        // Enhanced activate category function
         function activateCategory(button) {
             const categoryButtons = document.querySelectorAll('.category-btn');
             categoryButtons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('bg-gray-100', 'text-gray-700');
+                btn.classList.remove('active', 'bg-primary', 'text-white', 'border-primary');
+                btn.classList.add('bg-gray-100', 'text-gray-700', 'border-gray-200');
             });
             
-            button.classList.add('active', 'bg-primary', 'text-white');
-            button.classList.remove('bg-gray-100', 'text-gray-700');
+            button.classList.add('active', 'bg-primary', 'text-white', 'border-primary');
+            button.classList.remove('bg-gray-100', 'text-gray-700', 'border-gray-200');
         }
         
-        // Filter menu items by category
+        // Enhanced filter by category
         function filterByCategory(category) {
             const items = menuManager.getItemsByCategory(category);
             
@@ -578,11 +529,9 @@
             
             // Update section title
             const sectionTitle = document.querySelector('#all-menu-title');
-            if (categoryTranslations[category] && currentLanguage === 'ar') {
-                sectionTitle.textContent = categoryTranslations[category].ar;
-            } else {
-                sectionTitle.textContent = category;
-            }
+            const categoryTranslation = window.languageManager ? 
+                window.languageManager.getCategoryTranslation(category) : category;
+            sectionTitle.textContent = categoryTranslation;
             
             // Render filtered items
             renderMenuItems(items, 'menu-items-container');
@@ -591,7 +540,7 @@
             toggleNoResults(items.length === 0);
         }
         
-        // Render popular items
+        // Enhanced render popular items
         function renderPopularItems() {
             const popularItems = menuManager.getPopularItems();
             renderMenuItems(popularItems, 'popular-items-container');
@@ -601,10 +550,11 @@
             
             // Update all menu section title
             const sectionTitle = document.querySelector('#all-menu-title');
-            sectionTitle.textContent = translations[currentLanguage].allMenu;
+            sectionTitle.textContent = window.languageManager ? 
+                window.languageManager.getTranslation('allMenu') : 'All Menu';
         }
         
-        // Render all menu items
+        // Enhanced render all menu items
         function renderAllMenuItems() {
             const allItems = menuManager.menuData;
             renderMenuItems(allItems, 'menu-items-container');
@@ -616,7 +566,7 @@
             toggleNoResults(false);
         }
         
-        // Render menu items
+        // Enhanced render menu items with better styling
         function renderMenuItems(items, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
@@ -634,7 +584,7 @@
             
             items.forEach(item => {
                 const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex';
+                menuItem.className = 'menu-item menu-card rounded-xl shadow-sm overflow-hidden flex cursor-pointer';
                 menuItem.onclick = () => {
                     pageTransition(`menu-item-details.html?id=${item.id}`);
                 };
@@ -647,17 +597,26 @@
                     priceDisplay = formatPrice(item.price);
                 }
                 
+                // Popular badge
+                const popularBadge = item.isPopular ? 
+                    '<span class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">Popular</span>' : '';
+                
                 menuItem.innerHTML = `
-                    <div class="w-24 h-24 flex-shrink-0">
+                    <div class="w-24 h-24 flex-shrink-0 relative">
                         <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        ${popularBadge}
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
-                            <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
+                            <h3 class="font-medium text-sm mb-0.5 line-clamp-1">${item.name}</h3>
+                            <p class="text-gray-500 text-xs line-clamp-2 mb-2">${item.description}</p>
+                            <p class="text-gray-400 text-xs">${item.category}</p>
                         </div>
-                        <div class="flex justify-between items-center mt-1">
-                            <span class="text-primary font-semibold">${priceDisplay}</span>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="price-badge">${priceDisplay}</span>
+                            <button class="add-to-cart-btn w-8 h-8 rounded-full bg-primary/10 hover:bg-primary/20 flex items-center justify-center transition-colors" data-id="${item.id}">
+                                <i data-feather="plus" class="h-4 w-4 text-primary"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -667,11 +626,14 @@
             
             container.appendChild(itemsGrid);
             
+            // Re-initialize feather icons for new buttons
+            feather.replace();
+            
             // Add event listeners to add-to-cart buttons
             setupAddToCartButtons();
         }
         
-        // Setup add to cart buttons
+        // Enhanced setup add to cart buttons
         function setupAddToCartButtons() {
             const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
             
@@ -690,20 +652,26 @@
                             variants.size = 'half';
                         }
                         
-                        // Add to cart
+                        // Add to cart with animation
                         cartManager.addToCart(item, 1, variants);
                         
-                        // Show toast
+                        // Show toast with language support
                         showAddToCartToast();
                         
                         // Update cart badges
                         updateCartNavBadge();
+                        
+                        // Button animation feedback
+                        this.classList.add('animate-pulse');
+                        setTimeout(() => {
+                            this.classList.remove('animate-pulse');
+                        }, 600);
                     }
                 });
             });
         }
         
-        // Setup search functionality
+        // Enhanced search setup
         function setupSearch() {
             const searchInput = document.getElementById('search-input');
             const resetButton = document.getElementById('reset-search');
@@ -738,7 +706,8 @@
                 
                 // Update section title
                 const sectionTitle = document.querySelector('#all-menu-title');
-                sectionTitle.textContent = translations[currentLanguage].searchResults;
+                sectionTitle.textContent = window.languageManager ? 
+                    window.languageManager.getTranslation('searchResults') : 'Search Results';
                 
                 // Render filtered items
                 renderMenuItems(filteredItems, 'menu-items-container');
@@ -763,7 +732,7 @@
             });
         }
         
-        // Toggle no results message
+        // Enhanced toggle no results
         function toggleNoResults(show) {
             const noResultsElement = document.getElementById('no-results');
             const menuItemsContainer = document.getElementById('all-menu-section');
@@ -777,13 +746,14 @@
             }
         }
         
-        // Show add to cart toast notification
+        // Enhanced show add to cart toast notification
         function showAddToCartToast() {
             const toast = document.getElementById('add-cart-toast');
             const toastMessage = document.getElementById('toast-message');
             
             // Update toast message based on current language
-            toastMessage.textContent = translations[currentLanguage].itemAddedToCart;
+            toastMessage.textContent = window.languageManager ? 
+                window.languageManager.getTranslation('itemAddedToCart') : 'Item added to cart';
             
             toast.classList.remove('opacity-0');
             toast.classList.add('opacity-100');
@@ -794,7 +764,7 @@
             }, 2000);
         }
         
-        // Update cart badge in nav
+        // Enhanced update cart badge in nav
         function updateCartNavBadge() {
             const cartBadges = document.querySelectorAll('#cart-badge, .cart-nav-badge');
             const itemCount = cartManager.getItemCount();
@@ -817,6 +787,21 @@
                 }, wait);
             };
         }
+        
+        // Listen for language changes to update dynamic content
+        window.addEventListener('languageChanged', function(e) {
+            // Re-render categories with correct language
+            renderCategories();
+            
+            // Update stats labels if needed
+            updateStats();
+            
+            // Update search placeholder
+            const searchInput = document.getElementById('search-input');
+            const placeholder = e.detail.language === 'ar' ? 
+                'البحث في عناصر القائمة...' : 'Search menu items...';
+            searchInput.placeholder = placeholder;
+        });
         
         // Initialize menu on page load
         document.addEventListener('DOMContentLoaded', initializeMenu);
