@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Arabic Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
@@ -27,6 +29,54 @@
             -webkit-tap-highlight-color: transparent;
             line-height: 1.3;
         }
+        
+        /* Arabic font support */
+        .arabic-font {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .rtl .flex {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .justify-between {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .space-x-2 > * + * {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
+
+        .rtl .space-x-3 > * + * {
+            margin-left: 0;
+            margin-right: 0.75rem;
+        }
+
+        .rtl .mr-2 {
+            margin-right: 0;
+            margin-left: 0.5rem;
+        }
+
+        .rtl .ml-2 {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
+
+        .rtl .text-left {
+            text-align: right;
+        }
+
+        .rtl .text-right {
+            text-align: left;
+        }
+
         .app-container::-webkit-scrollbar {
             display: none;
         }
@@ -60,6 +110,10 @@
             color: #424242;
             transition: all 0.2s ease;
         }
+        .rtl .radio-container input[type="radio"] + label {
+            padding-left: 0;
+            padding-right: 28px;
+        }
         .radio-container input[type="radio"] + label:before {
             content: '';
             position: absolute;
@@ -72,6 +126,10 @@
             border-radius: 50%;
             transition: all 0.2s ease;
         }
+        .rtl .radio-container input[type="radio"] + label:before {
+            left: auto;
+            right: 0;
+        }
         .radio-container input[type="radio"]:checked + label:after {
             content: '';
             position: absolute;
@@ -83,6 +141,10 @@
             border-radius: 50%;
             background: #c45230;
             transition: all 0.2s ease;
+        }
+        .rtl .radio-container input[type="radio"]:checked + label:after {
+            left: auto;
+            right: 5px;
         }
         .radio-container input[type="radio"]:checked + label:before {
             border-color: #c45230;
@@ -98,6 +160,10 @@
             color: #424242;
             transition: all 0.2s ease;
         }
+        .rtl .checkbox-container input[type="checkbox"] + label {
+            padding-left: 0;
+            padding-right: 28px;
+        }
         .checkbox-container input[type="checkbox"] + label:before {
             content: '';
             position: absolute;
@@ -109,6 +175,10 @@
             border: 2px solid #e0e0e0;
             border-radius: 4px;
             transition: all 0.2s ease;
+        }
+        .rtl .checkbox-container input[type="checkbox"] + label:before {
+            left: auto;
+            right: 0;
         }
         .checkbox-container input[type="checkbox"]:checked + label:after {
             content: '✓';
@@ -123,9 +193,35 @@
             font-size: 12px;
             line-height: 20px;
         }
+        .rtl .checkbox-container input[type="checkbox"]:checked + label:after {
+            left: auto;
+            right: 0;
+        }
         .checkbox-container input[type="checkbox"]:checked + label:before {
             background: #c45230;
             border-color: #c45230;
+        }
+
+        /* Language Toggle Button */
+        .language-toggle {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* Animation for language switch */
+        .language-switch {
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -142,10 +238,17 @@
                 <i data-feather="arrow-left" class="h-5 w-5 text-white"></i>
             </a>
             
-            <!-- Share button -->
-            <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
-                <i data-feather="share-2" class="h-5 w-5 text-white"></i>
-            </button>
+            <!-- Language Toggle in top right -->
+            <div class="absolute top-4 right-4 flex space-x-2">
+                <button id="lang-en-details" 
+                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all">
+                    EN
+                </button>
+                <button id="lang-ar-details" 
+                    class="px-2 py-1 rounded-full text-xs font-medium bg-white/20 text-white border border-white/30 backdrop-blur-md transition-all">
+                    عربي
+                </button>
+            </div>
         </div>
         
         <!-- Item details -->
@@ -158,7 +261,7 @@
                         <p id="item-category" class="text-sm text-gray-500"></p>
                     </div>
                     <div class="flex items-center">
-                        <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Popular</span>
+                        <span id="popular-badge" class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium" data-en="Popular" data-ar="شائع">Popular</span>
                     </div>
                 </div>
             </div>
@@ -168,17 +271,17 @@
             
             <!-- Size options (if half/full available) -->
             <div id="size-options-container" class="mb-6 hidden">
-                <h3 class="text-base font-semibold mb-3">Select Size</h3>
+                <h3 class="text-base font-semibold mb-3" data-en="Select Size" data-ar="اختر الحجم">Select Size</h3>
                 <div class="flex space-x-3 radio-container">
                     <div>
                         <input type="radio" name="size" id="size-half" value="half" checked>
-                        <label for="size-half" class="text-sm">
+                        <label for="size-half" class="text-sm" data-en="Half" data-ar="نصف">
                             Half
                         </label>
                     </div>
                     <div>
                         <input type="radio" name="size" id="size-full" value="full">
-                        <label for="size-full" class="text-sm">
+                        <label for="size-full" class="text-sm" data-en="Full" data-ar="كامل">
                             Full
                         </label>
                     </div>
@@ -187,19 +290,19 @@
             
             <!-- Spice level -->
             <div id="spice-level-container" class="mb-6 hidden">
-                <h3 class="text-base font-semibold mb-3">Spice Level</h3>
+                <h3 class="text-base font-semibold mb-3" data-en="Spice Level" data-ar="مستوى الحرارة">Spice Level</h3>
                 <div class="flex flex-wrap gap-3 radio-container" id="spice-options"></div>
             </div>
             
             <!-- Add-ons -->
             <div id="addons-container" class="mb-6 hidden">
-                <h3 class="text-base font-semibold mb-3">Add-ons</h3>
+                <h3 class="text-base font-semibold mb-3" data-en="Add-ons" data-ar="إضافات">Add-ons</h3>
                 <div id="addons-list" class="space-y-3 checkbox-container"></div>
             </div>
             
             <!-- Quantity counter -->
-            <div class="mb-8 hidden">
-                <h3 class="text-base font-semibold mb-3">Quantity</h3>
+            <div class="mb-8">
+                <h3 class="text-base font-semibold mb-3" data-en="Quantity" data-ar="الكمية">Quantity</h3>
                 <div class="flex items-center">
                     <button id="decrease-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
                         <i data-feather="minus" class="h-5 w-5 text-gray-600"></i>
@@ -213,33 +316,39 @@
             
             <!-- Special instructions -->
             <div class="mb-8">
-                <div>
-                <p class="text-sm text-gray-500">Price</p>
-                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                <h3 class="text-base font-semibold mb-3" data-en="Special Instructions" data-ar="تعليمات خاصة">Special Instructions</h3>
+                <textarea id="special-instructions" data-placeholder-en="Any special requests..." data-placeholder-ar="أي طلبات خاصة..." placeholder="Any special requests..." class="w-full bg-gray-100 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none h-20"></textarea>
             </div>
+            
+            <!-- Price display -->
+            <div class="mb-8">
+                <div>
+                    <p class="text-sm text-gray-500" data-en="Price" data-ar="السعر">Price</p>
+                    <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                </div>
             </div>
         </div>
     </div>
     
     <!-- Add to cart sticky footer -->
-    <!-- <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
         <div class="flex justify-between items-center">
             <div>
-                <p class="text-sm text-gray-500">Price</p>
-                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                <p class="text-sm text-gray-500" data-en="Total Price" data-ar="السعر الإجمالي">Total Price</p>
+                <p id="footer-price" class="text-xl font-bold text-primary">QAR 0</p>
             </div>
             <button id="add-to-cart-btn" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center transform transition-transform active:scale-95">
-                Add to Cart
+                <span data-en="Add to Cart" data-ar="أضف إلى السلة">Add to Cart</span>
                 <i data-feather="shopping-cart" class="h-5 w-5 ml-2"></i>
             </button>
         </div>
-    </div> -->
+    </div>
     
     <!-- Success notification (hidden by default) -->
     <div id="success-toast" class="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">
         <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
             <i data-feather="check-circle" class="h-4 w-4 mr-2"></i>
-            <span>Added to cart!</span>
+            <span data-en="Added to cart!" data-ar="تمت الإضافة إلى السلة!">Added to cart!</span>
         </div>
     </div>
     
@@ -247,6 +356,131 @@
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        
+        // Language system
+        let currentLanguage = localStorage.getItem('language') || 'en';
+        
+        const translations = {
+            en: {
+                selectSize: 'Select Size',
+                half: 'Half',
+                full: 'Full',
+                spiceLevel: 'Spice Level',
+                addons: 'Add-ons',
+                quantity: 'Quantity',
+                specialInstructions: 'Special Instructions',
+                price: 'Price',
+                totalPrice: 'Total Price',
+                addToCart: 'Add to Cart',
+                addedToCart: 'Added to cart!',
+                popular: 'Popular',
+                mild: 'Mild',
+                medium: 'Medium',
+                spicy: 'Spicy',
+                specialRequestsPlaceholder: 'Any special requests...'
+            },
+            ar: {
+                selectSize: 'اختر الحجم',
+                half: 'نصف',
+                full: 'كامل',
+                spiceLevel: 'مستوى الحرارة',
+                addons: 'إضافات',
+                quantity: 'الكمية',
+                specialInstructions: 'تعليمات خاصة',
+                price: 'السعر',
+                totalPrice: 'السعر الإجمالي',
+                addToCart: 'أضف إلى السلة',
+                addedToCart: 'تمت الإضافة إلى السلة!',
+                popular: 'شائع',
+                mild: 'خفيف',
+                medium: 'متوسط',
+                spicy: 'حار',
+                specialRequestsPlaceholder: 'أي طلبات خاصة...'
+            }
+        };
+
+        // Spice level translations
+        const spiceLevelTranslations = {
+            'Mild': { en: 'Mild', ar: 'خفيف' },
+            'Medium': { en: 'Medium', ar: 'متوسط' },
+            'Spicy': { en: 'Spicy', ar: 'حار' }
+        };
+
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            
+            // Update HTML direction and font
+            const html = document.documentElement;
+            if (lang === 'ar') {
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+                document.body.classList.add('arabic-font');
+            } else {
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+                document.body.classList.remove('arabic-font');
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-en]').forEach(element => {
+                const enText = element.getAttribute('data-en');
+                const arText = element.getAttribute('data-ar');
+                
+                if (lang === 'ar' && arText) {
+                    element.textContent = arText;
+                } else if (lang === 'en' && enText) {
+                    element.textContent = enText;
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-en]').forEach(element => {
+                const placeholderEn = element.getAttribute('data-placeholder-en');
+                const placeholderAr = element.getAttribute('data-placeholder-ar');
+                
+                if (lang === 'ar' && placeholderAr) {
+                    element.placeholder = placeholderAr;
+                } else if (lang === 'en' && placeholderEn) {
+                    element.placeholder = placeholderEn;
+                }
+            });
+
+            // Update language button states
+            updateLanguageButtons();
+            
+            // Add animation class
+            document.body.classList.add('language-switch');
+            setTimeout(() => {
+                document.body.classList.remove('language-switch');
+            }, 300);
+        }
+
+        function updateLanguageButtons() {
+            const enButton = document.getElementById('lang-en-details');
+            const arButton = document.getElementById('lang-ar-details');
+
+            if (currentLanguage === 'ar') {
+                arButton?.classList.add('bg-white/40', 'border-white/60');
+                arButton?.classList.remove('bg-white/20', 'border-white/30');
+                
+                enButton?.classList.remove('bg-white/40', 'border-white/60');
+                enButton?.classList.add('bg-white/20', 'border-white/30');
+            } else {
+                enButton?.classList.add('bg-white/40', 'border-white/60');
+                enButton?.classList.remove('bg-white/20', 'border-white/30');
+                
+                arButton?.classList.remove('bg-white/40', 'border-white/60');
+                arButton?.classList.add('bg-white/20', 'border-white/30');
+            }
+        }
+
+        // Initialize language on page load
+        updateLanguage(currentLanguage);
+
+        // Language button event listeners
+        document.getElementById('lang-en-details')?.addEventListener('click', () => updateLanguage('en'));
+        document.getElementById('lang-ar-details')?.addEventListener('click', () => updateLanguage('ar'));
         
         // Initialize Feather icons
         feather.replace();
@@ -287,6 +521,14 @@
             itemImage.style.backgroundSize = 'cover';
             itemImage.style.backgroundPosition = 'center';
             
+            // Show/hide popular badge
+            const popularBadge = document.getElementById('popular-badge');
+            if (item.isPopular) {
+                popularBadge.classList.remove('hidden');
+            } else {
+                popularBadge.classList.add('hidden');
+            }
+            
             // Handle half/full pricing if available
             if (item.isHalfFull) {
                 document.getElementById('size-options-container').classList.remove('hidden');
@@ -302,6 +544,7 @@
             } else {
                 // Regular pricing
                 document.getElementById('item-price').textContent = formatPrice(item.price);
+                document.getElementById('footer-price').textContent = formatPrice(item.price);
             }
             
             // Handle spice level options if available
@@ -314,12 +557,17 @@
                 item.spiceLevelOptions.forEach((level, index) => {
                     const id = `spice-${level.toLowerCase().replace(' ', '-')}`;
                     
+                    // Get translated text
+                    const levelText = spiceLevelTranslations[level] 
+                        ? spiceLevelTranslations[level][currentLanguage] 
+                        : level;
+                    
                     // Create radio input for each spice level
                     const radioHtml = `
                         <div>
                             <input type="radio" name="spice-level" id="${id}" value="${level}" ${index === 0 ? 'checked' : ''}>
                             <label for="${id}" class="text-sm">
-                                ${level}
+                                ${levelText}
                             </label>
                         </div>
                     `;
@@ -427,12 +675,19 @@
                 cartManager.addToCart(item, quantity, variants);
                 
                 // Show success toast
-                toast.show('Added to cart successfully!', 'success');
+                const successToast = document.getElementById('success-toast');
+                successToast.classList.remove('opacity-0');
+                successToast.classList.add('opacity-100');
+                
+                setTimeout(() => {
+                    successToast.classList.remove('opacity-100');
+                    successToast.classList.add('opacity-0');
+                }, 2000);
                 
                 // Optional: Redirect to cart after short delay
                 setTimeout(() => {
                     pageTransition('cart.html');
-                }, 1000);
+                }, 1500);
             });
         }
         
@@ -456,10 +711,25 @@
             
             // Update price display
             document.getElementById('item-price').textContent = formatPrice(totalPrice);
+            document.getElementById('footer-price').textContent = formatPrice(totalPrice);
         }
         
         // Load item details on page load
         document.addEventListener('DOMContentLoaded', loadItemDetails);
+
+        // Update spice level translations when language changes
+        window.addEventListener('languageChanged', function(e) {
+            const lang = e.detail.language;
+            
+            // Update spice level options
+            document.querySelectorAll('input[name="spice-level"]').forEach(input => {
+                const level = input.value;
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                if (label && spiceLevelTranslations[level]) {
+                    label.textContent = spiceLevelTranslations[level][lang];
+                }
+            });
+        });
     </script>
 </body>
 </html>

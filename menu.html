@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Arabic Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
@@ -27,6 +29,74 @@
             -webkit-tap-highlight-color: transparent;
             line-height: 1.3;
         }
+        
+        /* Arabic font support */
+        .arabic-font {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        .rtl .flex {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .justify-between {
+            flex-direction: row-reverse;
+        }
+
+        .rtl .space-x-4 > * + * {
+            margin-left: 0;
+            margin-right: 1rem;
+        }
+
+        .rtl .space-x-3 > * + * {
+            margin-left: 0;
+            margin-right: 0.75rem;
+        }
+
+        .rtl .space-x-2 > * + * {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
+
+        .rtl .mr-2 {
+            margin-right: 0;
+            margin-left: 0.5rem;
+        }
+
+        .rtl .mr-3 {
+            margin-right: 0;
+            margin-left: 0.75rem;
+        }
+
+        .rtl .ml-2 {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
+
+        .rtl .text-left {
+            text-align: right;
+        }
+
+        .rtl .text-right {
+            text-align: left;
+        }
+
+        /* Language Toggle Button */
+        .language-toggle {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            transform: scale(1.05);
+        }
+
         .app-container::-webkit-scrollbar {
             display: none;
         }
@@ -70,6 +140,22 @@
         .scale-button:active {
             transform: scale(0.97);
         }
+
+        /* Animation for language switch */
+        .language-switch {
+            animation: fadeInScale 0.3s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -81,23 +167,38 @@
                 <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
                 </a>
-                <h1 class="text-xl font-semibold">Menu</h1>
-                <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-                    <!-- <i data-feather="phone" class="h-5 w-5 text-gray-600"></i> -->
+                
+                <div class="flex items-center space-x-4">
+                    <h1 id="page-title" class="text-xl font-semibold" data-en="Menu" data-ar="القائمة">Menu</h1>
                     
+                    <!-- Language Toggle Buttons -->
+                    <div class="flex space-x-2">
+                        <button id="lang-en-menu" 
+                            class="px-2 py-1 rounded-full text-xs font-medium bg-primary text-white border border-primary transition-all">
+                            EN
+                        </button>
+                        <button id="lang-ar-menu" 
+                            class="px-2 py-1 rounded-full text-xs font-medium text-gray-600 border border-gray-200 bg-white hover:bg-gray-50 transition-all">
+                            عربي
+                        </button>
+                    </div>
+                </div>
+                
+                <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <!-- Optional contact icon -->
                 </a>
             </div>
             
             <!-- Search bar -->
             <div class="relative mb-4">
-                <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <input type="text" id="search-input" data-placeholder-en="Search menu items..." data-placeholder-ar="البحث في عناصر القائمة..." placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
                 <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
             </div>
             
             <!-- Categories -->
             <div class="overflow-x-auto category-scroll">
                 <div class="flex space-x-2 py-1" id="category-container">
-                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button">All</button>
+                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button" data-en="All" data-ar="الكل">All</button>
                     <!-- Categories will be dynamically added here -->
                     <div class="flex space-x-2" id="category-buttons">
                         <div class="h-8 w-20 rounded-full shimmer"></div>
@@ -113,7 +214,7 @@
         <main class="px-4 pt-2 pb-4">
             <!-- Popular items section -->
             <div class="mb-6" id="popular-section">
-                <h2 class="text-lg font-semibold mb-3">Popular Items</h2>
+                <h2 id="popular-items-title" class="text-lg font-semibold mb-3" data-en="Popular Items" data-ar="العناصر الشائعة">Popular Items</h2>
                 <div id="popular-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
@@ -143,7 +244,7 @@
             
             <!-- All menu items -->
             <div id="all-menu-section">
-                <h2 class="text-lg font-semibold mb-3">All Menu</h2>
+                <h2 id="all-menu-title" class="text-lg font-semibold mb-3" data-en="All Menu" data-ar="جميع عناصر القائمة">All Menu</h2>
                 <div id="menu-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
@@ -186,9 +287,9 @@
                 <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                     <i data-feather="search" class="h-8 w-8 text-gray-400"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-700 mb-1">No items found</h3>
-                <p class="text-gray-500 text-sm text-center mb-4">Try a different search or category</p>
-                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button">
+                <h3 id="no-results-title" class="text-lg font-medium text-gray-700 mb-1" data-en="No items found" data-ar="لم يتم العثور على عناصر">No items found</h3>
+                <p id="no-results-subtitle" class="text-gray-500 text-sm text-center mb-4" data-en="Try a different search or category" data-ar="جرب بحثًا أو فئة مختلفة">Try a different search or category</p>
+                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button" data-en="Reset Search" data-ar="إعادة تعيين البحث">
                     Reset Search
                 </button>
             </div>
@@ -197,33 +298,29 @@
         <!-- Navigation bar -->
         <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
             <div class="h-16 flex justify-around items-center">
-                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400 ">
+                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
                     <i data-feather="home" class="h-5 w-5"></i>
-                    <span class="text-xs mt-0.5">Home</span>
-                    <div class="nav-indicator"></div>
+                    <span class="text-xs mt-0.5" id="nav-home" data-en="Home" data-ar="الرئيسية">Home</span>
                 </a>
                 
                 <a target="_blank" href="https://wa.me/+1234567890" class="whatsapp-trigger">
-                    <div
-            class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
-            <img src="fenyal-logo-1.png" width="65px;">
-        </div>
+                    <div class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+                        <img src="fenyal-logo-1.png" width="65px;">
+                    </div>
                 </a>
-                <a href="menu.html" class="flex flex-col items-center justify-center  text-primary relative">
+                
+                <a href="menu.html" class="flex flex-col items-center justify-center text-primary relative">
                     <i data-feather="menu" class="h-5 w-5"></i>
-                    <span class="text-xs mt-0.5">Menu</span>
+                    <span class="text-xs mt-0.5" id="nav-menu" data-en="Menu" data-ar="القائمة">Menu</span>
                 </a>
             </div>
         </nav>
-
-
-
     </div>
     
     <!-- Add to cart success notification (hidden by default) -->
     <div id="add-cart-toast" class="fixed bottom-20 left-0 right-0 flex justify-center items-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
         <div class="bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg">
-            <span>Item added to cart</span>
+            <span id="toast-message" data-en="Item added to cart" data-ar="تمت إضافة العنصر إلى السلة">Item added to cart</span>
         </div>
     </div>
     
@@ -231,6 +328,142 @@
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        
+        // Language system
+        let currentLanguage = localStorage.getItem('language') || 'en';
+        
+        const translations = {
+            en: {
+                menu: 'Menu',
+                home: 'Home',
+                popularItems: 'Popular Items',
+                allMenu: 'All Menu',
+                searchResults: 'Search Results',
+                noItemsFound: 'No items found',
+                tryDifferentSearch: 'Try a different search or category',
+                resetSearch: 'Reset Search',
+                itemAddedToCart: 'Item added to cart',
+                searchPlaceholder: 'Search menu items...',
+                all: 'All',
+                breakfast: 'Breakfast',
+                dishes: 'Dishes',
+                bread: 'Bread',
+                desserts: 'Desserts',
+                coldDrinks: 'Cold Drinks',
+                hotDrinks: 'Hot Drinks'
+            },
+            ar: {
+                menu: 'القائمة',
+                home: 'الرئيسية',
+                popularItems: 'العناصر الشائعة',
+                allMenu: 'جميع عناصر القائمة',
+                searchResults: 'نتائج البحث',
+                noItemsFound: 'لم يتم العثور على عناصر',
+                tryDifferentSearch: 'جرب بحثًا أو فئة مختلفة',
+                resetSearch: 'إعادة تعيين البحث',
+                itemAddedToCart: 'تمت إضافة العنصر إلى السلة',
+                searchPlaceholder: 'البحث في عناصر القائمة...',
+                all: 'الكل',
+                breakfast: 'فطور',
+                dishes: 'أطباق',
+                bread: 'خبز',
+                desserts: 'حلويات',
+                coldDrinks: 'مشروبات باردة',
+                hotDrinks: 'مشروبات ساخنة'
+            }
+        };
+
+        // Category translations mapping
+        const categoryTranslations = {
+            'Breakfast': { en: 'Breakfast', ar: 'فطور' },
+            'Dishes': { en: 'Dishes', ar: 'أطباق' },
+            'Bread': { en: 'Bread', ar: 'خبز' },
+            'Desserts': { en: 'Desserts', ar: 'حلويات' },
+            'Cold Drinks': { en: 'Cold Drinks', ar: 'مشروبات باردة' },
+            'Hot Drinks': { en: 'Hot Drinks', ar: 'مشروبات ساخنة' }
+        };
+
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            
+            // Update HTML direction and font
+            const html = document.documentElement;
+            if (lang === 'ar') {
+                html.setAttribute('dir', 'rtl');
+                html.setAttribute('lang', 'ar');
+                document.body.classList.add('arabic-font');
+            } else {
+                html.setAttribute('dir', 'ltr');
+                html.setAttribute('lang', 'en');
+                document.body.classList.remove('arabic-font');
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-en]').forEach(element => {
+                const enText = element.getAttribute('data-en');
+                const arText = element.getAttribute('data-ar');
+                
+                if (lang === 'ar' && arText) {
+                    element.textContent = arText;
+                } else if (lang === 'en' && enText) {
+                    element.textContent = enText;
+                }
+            });
+
+            // Update placeholders
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                const placeholderEn = searchInput.getAttribute('data-placeholder-en');
+                const placeholderAr = searchInput.getAttribute('data-placeholder-ar');
+                
+                if (lang === 'ar' && placeholderAr) {
+                    searchInput.placeholder = placeholderAr;
+                } else if (lang === 'en' && placeholderEn) {
+                    searchInput.placeholder = placeholderEn;
+                }
+            }
+
+            // Update language button states
+            updateLanguageButtons();
+            
+            // Add animation class
+            document.body.classList.add('language-switch');
+            setTimeout(() => {
+                document.body.classList.remove('language-switch');
+            }, 300);
+
+            // Re-render categories with correct language
+            if (menuManager.initialized) {
+                renderCategories();
+            }
+        }
+
+        function updateLanguageButtons() {
+            const enButton = document.getElementById('lang-en-menu');
+            const arButton = document.getElementById('lang-ar-menu');
+
+            if (currentLanguage === 'ar') {
+                arButton?.classList.add('bg-primary', 'text-white', 'border-primary');
+                arButton?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
+                
+                enButton?.classList.remove('bg-primary', 'text-white', 'border-primary');
+                enButton?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
+            } else {
+                enButton?.classList.add('bg-primary', 'text-white', 'border-primary');
+                enButton?.classList.remove('text-gray-600', 'border-gray-200', 'bg-white');
+                
+                arButton?.classList.remove('bg-primary', 'text-white', 'border-primary');
+                arButton?.classList.add('text-gray-600', 'border-gray-200', 'bg-white');
+            }
+        }
+
+        // Initialize language on page load
+        updateLanguage(currentLanguage);
+
+        // Language button event listeners
+        document.getElementById('lang-en-menu')?.addEventListener('click', () => updateLanguage('en'));
+        document.getElementById('lang-ar-menu')?.addEventListener('click', () => updateLanguage('ar'));
         
         // Initialize icons
         feather.replace();
@@ -252,7 +485,8 @@
                     // Highlight the category button
                     const categoryButtons = document.querySelectorAll('.category-btn');
                     categoryButtons.forEach(button => {
-                        if (button.textContent === categoryParam) {
+                        const buttonText = button.getAttribute('data-en') || button.textContent;
+                        if (buttonText === categoryParam) {
                             activateCategory(button);
                         }
                     });
@@ -281,20 +515,23 @@
             // Clear loading placeholders
             categoryContainer.innerHTML = '';
             
-            // Add "All" button if not already there
-            let allButton = document.querySelector('.category-btn.active');
-            if (!allButton) {
-                allButton = document.createElement('button');
-                allButton.className = 'category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button';
-                allButton.textContent = 'All';
-                categoryContainer.appendChild(allButton);
-            }
-            
             // Add category buttons
             categories.forEach(category => {
                 const button = document.createElement('button');
                 button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button';
-                button.textContent = category;
+                
+                // Set both English and Arabic text attributes
+                button.setAttribute('data-en', category);
+                if (categoryTranslations[category]) {
+                    button.setAttribute('data-ar', categoryTranslations[category].ar);
+                }
+                
+                // Set display text based on current language
+                if (currentLanguage === 'ar' && categoryTranslations[category]) {
+                    button.textContent = categoryTranslations[category].ar;
+                } else {
+                    button.textContent = category;
+                }
                 
                 // If this is the category from URL param, make it active
                 if (category === categoryParam) {
@@ -310,11 +547,14 @@
             });
             
             // Add event listener to "All" button
-            allButton.addEventListener('click', function() {
-                activateCategory(this);
-                renderPopularItems();
-                renderAllMenuItems();
-            });
+            const allButton = document.querySelector('.category-btn[data-en="All"]');
+            if (allButton) {
+                allButton.addEventListener('click', function() {
+                    activateCategory(this);
+                    renderPopularItems();
+                    renderAllMenuItems();
+                });
+            }
         }
         
         // Activate category button
@@ -337,8 +577,12 @@
             document.getElementById('popular-section').classList.add('hidden');
             
             // Update section title
-            const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.textContent = category;
+            const sectionTitle = document.querySelector('#all-menu-title');
+            if (categoryTranslations[category] && currentLanguage === 'ar') {
+                sectionTitle.textContent = categoryTranslations[category].ar;
+            } else {
+                sectionTitle.textContent = category;
+            }
             
             // Render filtered items
             renderMenuItems(items, 'menu-items-container');
@@ -356,8 +600,8 @@
             document.getElementById('popular-section').classList.remove('hidden');
             
             // Update all menu section title
-            const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.textContent = 'All Menu';
+            const sectionTitle = document.querySelector('#all-menu-title');
+            sectionTitle.textContent = translations[currentLanguage].allMenu;
         }
         
         // Render all menu items
@@ -414,7 +658,6 @@
                         </div>
                         <div class="flex justify-between items-center mt-1">
                             <span class="text-primary font-semibold">${priceDisplay}</span>
-                          
                         </div>
                     </div>
                 `;
@@ -471,11 +714,12 @@
                 if (searchTerm === '') {
                     // Reset to default view if search is cleared
                     const activeCategory = document.querySelector('.category-btn.active');
-                    if (activeCategory.textContent === 'All') {
+                    const activeCategoryText = activeCategory.getAttribute('data-en') || activeCategory.textContent;
+                    if (activeCategoryText === 'All') {
                         renderPopularItems();
                         renderAllMenuItems();
                     } else {
-                        filterByCategory(activeCategory.textContent);
+                        filterByCategory(activeCategoryText);
                     }
                     return;
                 }
@@ -493,8 +737,8 @@
                 document.getElementById('popular-section').classList.add('hidden');
                 
                 // Update section title
-                const sectionTitle = document.querySelector('#all-menu-section h2');
-                sectionTitle.textContent = 'Search Results';
+                const sectionTitle = document.querySelector('#all-menu-title');
+                sectionTitle.textContent = translations[currentLanguage].searchResults;
                 
                 // Render filtered items
                 renderMenuItems(filteredItems, 'menu-items-container');
@@ -509,11 +753,12 @@
                 
                 // Reset to default view
                 const activeCategory = document.querySelector('.category-btn.active');
-                if (activeCategory.textContent === 'All') {
+                const activeCategoryText = activeCategory.getAttribute('data-en') || activeCategory.textContent;
+                if (activeCategoryText === 'All') {
                     renderPopularItems();
                     renderAllMenuItems();
                 } else {
-                    filterByCategory(activeCategory.textContent);
+                    filterByCategory(activeCategoryText);
                 }
             });
         }
@@ -535,6 +780,11 @@
         // Show add to cart toast notification
         function showAddToCartToast() {
             const toast = document.getElementById('add-cart-toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Update toast message based on current language
+            toastMessage.textContent = translations[currentLanguage].itemAddedToCart;
+            
             toast.classList.remove('opacity-0');
             toast.classList.add('opacity-100');
             
