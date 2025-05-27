@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Payment - Fenyal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .payment-method {
+            transition: all 0.2s ease;
+        }
+        .payment-method.selected {
+            border-color: #c45230;
+            background-color: rgba(196, 82, 48, 0.05);
+        }
+        .payment-method.selected .check-icon {
+            display: flex;
+        }
+        .check-icon {
+            display: none;
+        }
+        .form-input:focus {
+            border-color: #c45230;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(196, 82, 48, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app container -->
+    <div class="app-container pt-4 pb-24 scroll-touch">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center">
+                <a href="../home-delivery.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mr-4 transform transition-transform active:scale-95">
+                    <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-semibold">Payment</h1>
+            </div>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4 pt-2">
+            <!-- Order Summary -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+                <h2 class="font-semibold mb-3">Order Summary</h2>
+                
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-500">Items Total</span>
+                    <span id="items-total">QAR 650</span>
+                </div>
+                
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-500">Tax (5%)</span>
+                    <span id="tax-amount">QAR 32.5</span>
+                </div>
+                
+                <div class="flex justify-between text-sm mb-3">
+                    <span class="text-gray-500">Delivery Fee</span>
+                    <span id="delivery-fee">QAR 30</span>
+                </div>
+                
+                <div class="border-t border-gray-100 pt-3 flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span id="order-total" class="text-primary">QAR 712.5</span>
+                </div>
+            </div>
+            
+            <!-- Payment Methods -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">Select Payment Method</h2>
+                
+                <!-- UPI Option -->
+                <div class="payment-method selected p-4 border-2 border-primary bg-primary/5 rounded-xl mb-3 relative">
+                    <div class="check-icon absolute top-4 right-4 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                        <i data-feather="check" class="h-3 w-3 text-white"></i>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-medium">UPI</h3>
+                            <p class="text-xs text-gray-500">Pay using any UPI app</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <div class="h-10 w-16 rounded-md bg-white shadow-sm flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1200px-UPI-Logo-vector.svg.png" alt="UPI" class="h-6">
+                        </div>
+                        <div class="h-10 w-16 rounded-md bg-white shadow-sm flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-4">
+                        </div>
+                        <div class="h-10 w-16 rounded-md bg-white shadow-sm flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/1200px-PhonePe_Logo.svg.png" alt="PhonePe" class="h-4">
+                        </div>
+                        <div class="h-10 w-16 rounded-md bg-white shadow-sm flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" class="h-4">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
+                        <input type="text" class="flex-1 h-12 px-3 border-none focus:outline-none" placeholder="Enter UPI ID (username@bankname)">
+                        <button class="h-12 px-4 bg-primary text-white font-medium">Verify</button>
+                    </div>
+                </div>
+                
+                <!-- Credit/Debit Card Option -->
+                <div class="payment-method p-4 border-2 border-gray-200 rounded-xl mb-3 relative">
+                    <div class="check-icon absolute top-4 right-4 w-5 h-5 rounded-full bg-primary items-center justify-center">
+                        <i data-feather="check" class="h-3 w-3 text-white"></i>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-medium">Credit/Debit Card</h3>
+                            <p class="text-xs text-gray-500">All major cards accepted</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3 mb-3">
+                        <input type="text" class="w-full h-12 px-3 border border-gray-200 rounded-lg focus:outline-none form-input" placeholder="Card Number">
+                        <div class="grid grid-cols-2 gap-3">
+                            <input type="text" class="h-12 px-3 border border-gray-200 rounded-lg focus:outline-none form-input" placeholder="MM/YY">
+                            <input type="text" class="h-12 px-3 border border-gray-200 rounded-lg focus:outline-none form-input" placeholder="CVV">
+                        </div>
+                        <input type="text" class="w-full h-12 px-3 border border-gray-200 rounded-lg focus:outline-none form-input" placeholder="Cardholder Name">
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <div class="h-8 w-12 rounded bg-gray-100 flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" alt="Mastercard" class="h-5">
+                        </div>
+                        <div class="h-8 w-12 rounded bg-gray-100 flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" class="h-3">
+                        </div>
+                        <div class="h-8 w-12 rounded bg-gray-100 flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/1200px-American_Express_logo_%282018%29.svg.png" alt="American Express" class="h-3">
+                        </div>
+                        <div class="h-8 w-12 rounded bg-gray-100 flex items-center justify-center">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/RuPay-Logo.png/1200px-RuPay-Logo.png" alt="RuPay" class="h-4">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Digital Wallets Option -->
+                <div class="payment-method p-4 border-2 border-gray-200 rounded-xl mb-3 relative">
+                    <div class="check-icon absolute top-4 right-4 w-5 h-5 rounded-full bg-primary items-center justify-center">
+                        <i data-feather="check" class="h-3 w-3 text-white"></i>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-medium">Digital Wallets</h3>
+                            <p class="text-xs text-gray-500">Pay using your digital wallet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm" class="h-5">
+                            </div>
+                            <span class="text-xs">Paytm</span>
+                        </div>
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/PhonePe_Logo.svg/1200px-PhonePe_Logo.svg.png" alt="PhonePe" class="h-5">
+                            </div>
+                            <span class="text-xs">PhonePe</span>
+                        </div>
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-4">
+                            </div>
+                            <span class="text-xs">Google Pay</span>
+                        </div>
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Amazon_Pay_logo.svg/2560px-Amazon_Pay_logo.svg.png" alt="Amazon Pay" class="h-4">
+                            </div>
+                            <span class="text-xs">Amazon Pay</span>
+                        </div>
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Freecharge_Logo.svg/1200px-Freecharge_Logo.svg.png" alt="Freecharge" class="h-4">
+                            </div>
+                            <span class="text-xs">Freecharge</span>
+                        </div>
+                        <div class="wallet-option h-20 rounded-lg border border-gray-100 flex flex-col items-center justify-center">
+                            <div class="h-10 w-10 mb-1 flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Mobikwik_Logo.svg/1200px-Mobikwik_Logo.svg.png" alt="MobiKwik" class="h-4">
+                            </div>
+                            <span class="text-xs">MobiKwik</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cash on Delivery Option -->
+                <div class="payment-method p-4 border-2 border-gray-200 rounded-xl relative">
+                    <div class="check-icon absolute top-4 right-4 w-5 h-5 rounded-full bg-primary items-center justify-center">
+                        <i data-feather="check" class="h-3 w-3 text-white"></i>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-lg bg-yellow-100 flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-600"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><circle cx="12" cy="12" r="3"></circle></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-medium">Cash on Delivery</h3>
+                            <p class="text-xs text-gray-500">Pay when your order arrives</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom action bar -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg rounded-t-xl bottom-safe-area z-40">
+            <div class="flex items-center justify-between mb-3">
+                <div>
+                    <span class="text-sm text-gray-500">Total Amount</span>
+                    <p class="text-xl font-semibold">QAR 712.5</p>
+                </div>
+                <a href="checkout-cod.html" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center">
+                    Pay Now
+                    <i data-feather="arrow-right" class="h-5 w-5 ml-2"></i>
+                </a>
+            </div>
+            <div class="flex items-center justify-center">
+                <div class="flex items-center space-x-1">
+                    <i data-feather="lock" class="h-3 w-3 text-gray-400"></i>
+                    <span class="text-xs text-gray-500">Secure payment powered by PaySecure</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from '../assets/js/app.js';
+        import { cartManager, formatPrice } from '../assets/js/menu.js';
+        
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Handle payment method selection
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', function() {
+                // Remove selected class from all methods
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                
+                // Add selected class to clicked method
+                this.classList.add('selected');
+                
+                // Update pay button text based on selection
+                const payButton = document.querySelector('.bottom-action-bar button');
+                if (this.textContent.includes('Cash on Delivery')) {
+                    payButton.textContent = 'Confirm Order';
+                } else {
+                    payButton.textContent = 'Pay Now';
+                }
+            });
+        });
+        
+        // Handle wallet option selection
+        const walletOptions = document.querySelectorAll('.wallet-option');
+        walletOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Toggle selected class
+                walletOptions.forEach(o => o.classList.remove('border-primary'));
+                this.classList.add('border-primary');
+                
+                // Show toast notification
+                const walletName = this.querySelector('span').textContent;
+                toast.show(`${walletName} selected as payment method`, 'success');
+            });
+        });
+        
+        // Load order data from cart
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Load cart data
+                await cartManager.loadCartItems();
+                const subtotal = cartManager.getCartTotal();
+                const tax = Math.round(subtotal * 0.05); // 5% tax
+                const deliveryFee = 30; // Fixed delivery fee
+                const total = subtotal + tax + deliveryFee;
+                
+                // Update summary
+                document.getElementById('items-total').textContent = formatPrice(subtotal);
+                document.getElementById('tax-amount').textContent = formatPrice(tax);
+                document.getElementById('order-total').textContent = formatPrice(total);
+                
+                // Also update the bottom total
+                document.querySelector('.bottom-action-bar p').textContent = formatPrice(total);
+            } catch (error) {
+                console.error('Error loading cart data:', error);
+                toast.show('Failed to load order data', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

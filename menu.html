@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Menu - Fenyal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .category-btn {
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .category-btn.active {
+            background-color: #c45230;
+            color: white;
+        }
+        .menu-item {
+            transition: transform 0.2s ease;
+        }
+        .menu-item:active {
+            transform: scale(0.98);
+        }
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .scale-button:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app container -->
+    <div class="app-container pt-0 pb-30">
+        <!-- Header -->
+        <header class="sticky-header pt-4 px-4 pb-2">
+            <div class="flex items-center justify-between mb-4">
+                <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-semibold">Menu</h1>
+                <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <!-- <i data-feather="phone" class="h-5 w-5 text-gray-600"></i> -->
+                    
+                </a>
+            </div>
+            
+            <!-- Search bar -->
+            <div class="relative mb-4">
+                <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+            </div>
+            
+            <!-- Categories -->
+            <div class="overflow-x-auto category-scroll">
+                <div class="flex space-x-2 py-1" id="category-container">
+                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button">All</button>
+                    <!-- Categories will be dynamically added here -->
+                    <div class="flex space-x-2" id="category-buttons">
+                        <div class="h-8 w-20 rounded-full shimmer"></div>
+                        <div class="h-8 w-24 rounded-full shimmer"></div>
+                        <div class="h-8 w-20 rounded-full shimmer"></div>
+                        <div class="h-8 w-22 rounded-full shimmer"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4 pt-2 pb-4">
+            <!-- Popular items section -->
+            <div class="mb-6" id="popular-section">
+                <h2 class="text-lg font-semibold mb-3">Popular Items</h2>
+                <div id="popular-items-container">
+                    <!-- Loading placeholders -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
+                            <div class="flex">
+                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="flex-1 p-3">
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
+                            <div class="flex">
+                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="flex-1 p-3">
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- All menu items -->
+            <div id="all-menu-section">
+                <h2 class="text-lg font-semibold mb-3">All Menu</h2>
+                <div id="menu-items-container">
+                    <!-- Loading placeholders -->
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
+                            <div class="flex">
+                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="flex-1 p-3">
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
+                            <div class="flex">
+                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="flex-1 p-3">
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
+                            <div class="flex">
+                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="flex-1 p-3">
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- No results -->
+            <div id="no-results" class="hidden flex flex-col items-center justify-center py-10">
+                <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                    <i data-feather="search" class="h-8 w-8 text-gray-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-700 mb-1">No items found</h3>
+                <p class="text-gray-500 text-sm text-center mb-4">Try a different search or category</p>
+                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button">
+                    Reset Search
+                </button>
+            </div>
+        </main>
+        
+        <!-- Navigation bar -->
+        <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
+            <div class="h-16 flex justify-around items-center">
+                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400 ">
+                    <i data-feather="home" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Home</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                
+                <a target="_blank" href="https://wa.me/+1234567890" class="whatsapp-trigger">
+                    <div
+            class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+            <img src="fenyal-logo-1.png" width="65px;">
+        </div>
+                </a>
+                <a href="menu.html" class="flex flex-col items-center justify-center  text-primary relative">
+                    <i data-feather="menu" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Menu</span>
+                </a>
+            </div>
+        </nav>
+
+
+
+    </div>
+    
+    <!-- Add to cart success notification (hidden by default) -->
+    <div id="add-cart-toast" class="fixed bottom-20 left-0 right-0 flex justify-center items-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
+        <div class="bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg">
+            <span>Item added to cart</span>
+        </div>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from './assets/js/app.js';
+        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        
+        // Initialize icons
+        feather.replace();
+        
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        
+        // Load menu data
+        async function initializeMenu() {
+            try {
+                await menuManager.loadMenuData();
+                renderCategories();
+                
+                // If category param exists, filter by that category
+                if (categoryParam) {
+                    filterByCategory(categoryParam);
+                    
+                    // Highlight the category button
+                    const categoryButtons = document.querySelectorAll('.category-btn');
+                    categoryButtons.forEach(button => {
+                        if (button.textContent === categoryParam) {
+                            activateCategory(button);
+                        }
+                    });
+                } else {
+                    renderPopularItems();
+                    renderAllMenuItems();
+                }
+                
+                // Setup search functionality
+                setupSearch();
+                
+                // Update cart badge
+                cartManager.updateCartBadge();
+                updateCartNavBadge();
+            } catch (error) {
+                console.error('Error initializing menu:', error);
+                toast.show('Failed to load menu data', 'error');
+            }
+        }
+        
+        // Render category buttons
+        function renderCategories() {
+            const categories = menuManager.getAllCategories();
+            const categoryContainer = document.getElementById('category-buttons');
+            
+            // Clear loading placeholders
+            categoryContainer.innerHTML = '';
+            
+            // Add "All" button if not already there
+            let allButton = document.querySelector('.category-btn.active');
+            if (!allButton) {
+                allButton = document.createElement('button');
+                allButton.className = 'category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button';
+                allButton.textContent = 'All';
+                categoryContainer.appendChild(allButton);
+            }
+            
+            // Add category buttons
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button';
+                button.textContent = category;
+                
+                // If this is the category from URL param, make it active
+                if (category === categoryParam) {
+                    activateCategory(button);
+                }
+                
+                button.addEventListener('click', function() {
+                    activateCategory(this);
+                    filterByCategory(category);
+                });
+                
+                categoryContainer.appendChild(button);
+            });
+            
+            // Add event listener to "All" button
+            allButton.addEventListener('click', function() {
+                activateCategory(this);
+                renderPopularItems();
+                renderAllMenuItems();
+            });
+        }
+        
+        // Activate category button
+        function activateCategory(button) {
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            
+            button.classList.add('active', 'bg-primary', 'text-white');
+            button.classList.remove('bg-gray-100', 'text-gray-700');
+        }
+        
+        // Filter menu items by category
+        function filterByCategory(category) {
+            const items = menuManager.getItemsByCategory(category);
+            
+            // Hide popular section when filtering
+            document.getElementById('popular-section').classList.add('hidden');
+            
+            // Update section title
+            const sectionTitle = document.querySelector('#all-menu-section h2');
+            sectionTitle.textContent = category;
+            
+            // Render filtered items
+            renderMenuItems(items, 'menu-items-container');
+            
+            // Show no results if needed
+            toggleNoResults(items.length === 0);
+        }
+        
+        // Render popular items
+        function renderPopularItems() {
+            const popularItems = menuManager.getPopularItems();
+            renderMenuItems(popularItems, 'popular-items-container');
+            
+            // Show popular section
+            document.getElementById('popular-section').classList.remove('hidden');
+            
+            // Update all menu section title
+            const sectionTitle = document.querySelector('#all-menu-section h2');
+            sectionTitle.textContent = 'All Menu';
+        }
+        
+        // Render all menu items
+        function renderAllMenuItems() {
+            const allItems = menuManager.menuData;
+            renderMenuItems(allItems, 'menu-items-container');
+            
+            // Show all menu section
+            document.getElementById('all-menu-section').classList.remove('hidden');
+            
+            // Hide no results
+            toggleNoResults(false);
+        }
+        
+        // Render menu items
+        function renderMenuItems(items, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (items.length === 0) {
+                if (containerId === 'popular-items-container') {
+                    // If no popular items, hide the section
+                    document.getElementById('popular-section').classList.add('hidden');
+                }
+                return;
+            }
+            
+            const itemsGrid = document.createElement('div');
+            itemsGrid.className = 'grid grid-cols-1 gap-4';
+            
+            items.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex';
+                menuItem.onclick = () => {
+                    pageTransition(`menu-item-details.html?id=${item.id}`);
+                };
+                
+                // Determine price display
+                let priceDisplay;
+                if (item.isHalfFull) {
+                    priceDisplay = `${formatPrice(item.halfPrice)} - ${formatPrice(item.fullPrice)}`;
+                } else {
+                    priceDisplay = formatPrice(item.price);
+                }
+                
+                menuItem.innerHTML = `
+                    <div class="w-24 h-24 flex-shrink-0">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
+                            <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="text-primary font-semibold">${priceDisplay}</span>
+                          
+                        </div>
+                    </div>
+                `;
+                
+                itemsGrid.appendChild(menuItem);
+            });
+            
+            container.appendChild(itemsGrid);
+            
+            // Add event listeners to add-to-cart buttons
+            setupAddToCartButtons();
+        }
+        
+        // Setup add to cart buttons
+        function setupAddToCartButtons() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Prevent propagation to parent (which navigates to details)
+                    e.stopPropagation();
+                    
+                    const itemId = this.getAttribute('data-id');
+                    const item = menuManager.getItemById(itemId);
+                    
+                    if (item) {
+                        // For half/full items, default to half
+                        let variants = {};
+                        if (item.isHalfFull) {
+                            variants.size = 'half';
+                        }
+                        
+                        // Add to cart
+                        cartManager.addToCart(item, 1, variants);
+                        
+                        // Show toast
+                        showAddToCartToast();
+                        
+                        // Update cart badges
+                        updateCartNavBadge();
+                    }
+                });
+            });
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            const resetButton = document.getElementById('reset-search');
+            
+            searchInput.addEventListener('input', debounce(function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                
+                if (searchTerm === '') {
+                    // Reset to default view if search is cleared
+                    const activeCategory = document.querySelector('.category-btn.active');
+                    if (activeCategory.textContent === 'All') {
+                        renderPopularItems();
+                        renderAllMenuItems();
+                    } else {
+                        filterByCategory(activeCategory.textContent);
+                    }
+                    return;
+                }
+                
+                // Filter menu items by search term
+                const filteredItems = menuManager.menuData.filter(item => {
+                    return (
+                        item.name.toLowerCase().includes(searchTerm) ||
+                        item.description.toLowerCase().includes(searchTerm) ||
+                        item.category.toLowerCase().includes(searchTerm)
+                    );
+                });
+                
+                // Hide popular section when searching
+                document.getElementById('popular-section').classList.add('hidden');
+                
+                // Update section title
+                const sectionTitle = document.querySelector('#all-menu-section h2');
+                sectionTitle.textContent = 'Search Results';
+                
+                // Render filtered items
+                renderMenuItems(filteredItems, 'menu-items-container');
+                
+                // Show no results if needed
+                toggleNoResults(filteredItems.length === 0);
+            }, 300));
+            
+            // Reset search button
+            resetButton.addEventListener('click', function() {
+                searchInput.value = '';
+                
+                // Reset to default view
+                const activeCategory = document.querySelector('.category-btn.active');
+                if (activeCategory.textContent === 'All') {
+                    renderPopularItems();
+                    renderAllMenuItems();
+                } else {
+                    filterByCategory(activeCategory.textContent);
+                }
+            });
+        }
+        
+        // Toggle no results message
+        function toggleNoResults(show) {
+            const noResultsElement = document.getElementById('no-results');
+            const menuItemsContainer = document.getElementById('all-menu-section');
+            
+            if (show) {
+                noResultsElement.classList.remove('hidden');
+                menuItemsContainer.classList.add('hidden');
+            } else {
+                noResultsElement.classList.add('hidden');
+                menuItemsContainer.classList.remove('hidden');
+            }
+        }
+        
+        // Show add to cart toast notification
+        function showAddToCartToast() {
+            const toast = document.getElementById('add-cart-toast');
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+        
+        // Update cart badge in nav
+        function updateCartNavBadge() {
+            const cartBadges = document.querySelectorAll('#cart-badge, .cart-nav-badge');
+            const itemCount = cartManager.getItemCount();
+            
+            cartBadges.forEach(badge => {
+                badge.textContent = itemCount;
+                badge.style.display = itemCount > 0 ? 'flex' : 'none';
+            });
+        }
+        
+        // Debounce function for search input
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+        
+        // Initialize menu on page load
+        document.addEventListener('DOMContentLoaded', initializeMenu);
+        
+        // iOS active state for buttons
+        const buttons = document.querySelectorAll('.scale-button');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(0.97)';
+            });
+            
+            button.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+    <script src="assets/js/global-search.js"></script>
+</body>
+</html>

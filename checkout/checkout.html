@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Checkout - Fenyal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="../assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .payment-option {
+            transition: all 0.2s ease;
+        }
+        .payment-option.selected {
+            border-color: #c45230;
+            background-color: rgba(196, 82, 48, 0.05);
+        }
+        .payment-option.selected .check-icon {
+            display: flex;
+        }
+        .check-icon {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app container -->
+    <div class="app-container pt-4 pb-24 scroll-touch">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center justify-between mb-1">
+                <a href="../cart.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center transform transition-transform active:scale-95">
+                    <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-semibold">Checkout</h1>
+                <div class="w-10 h-10"></div> <!-- Empty div for alignment -->
+            </div>
+        </header>
+        
+        <!-- Main content -->
+        <main class="px-4 pt-2">
+            <!-- Order summary card -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+                <h2 class="font-semibold mb-3">Order Summary</h2>
+                
+                <!-- Order items (limited to 2 with "see all" option) -->
+                <div class="space-y-3 mb-4">
+                    <div class="flex items-center" id="order-items-preview">
+                        <!-- Items will be dynamically added here -->
+                        <div class="animate-pulse flex items-center w-full">
+                            <div class="w-10 h-10 bg-gray-200 rounded mr-3"></div>
+                            <div class="flex-1">
+                                <div class="h-3.5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                                <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                            </div>
+                            <div class="h-3.5 bg-gray-200 rounded w-16"></div>
+                        </div>
+                    </div>
+                    
+                    <button id="view-all-items" class="text-primary text-sm font-medium w-full text-center py-1 hidden">
+                        View all items
+                    </button>
+                </div>
+                
+                <!-- Price breakdown -->
+                <div class="space-y-2 text-sm pt-3 border-t border-gray-100">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Subtotal</span>
+                        <span id="subtotal">QAR 0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">GST (5%)</span>
+                        <span id="tax">QAR 0</span>
+                    </div>
+                    <div class="flex justify-between" id="delivery-fee-row">
+                        <span class="text-gray-500">Delivery Fee</span>
+                        <span id="delivery-fee">QAR 30</span>
+                    </div>
+                    <div class="flex justify-between text-primary">
+                        <span class="text-gray-500">Discount</span>
+                        <span id="discount">-QAR 0</span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-100 mt-3 pt-3 flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span class="text-primary" id="order-total">QAR 0</span>
+                </div>
+            </div>
+            
+            <!-- Delivery/Order Type Information -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6" id="order-type-info">
+                <!-- This will be dynamically populated based on order type -->
+                <div class="animate-pulse">
+                    <div class="h-5 bg-gray-200 rounded w-1/2 mb-3"></div>
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+            </div>
+            
+            <!-- Payment methods -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">Payment Method</h2>
+                
+                <div class="space-y-3">
+                    <!-- Online Payment -->
+                    <a href="checkout-payment.html" class="payment-option block p-4 border border-gray-200 rounded-xl relative flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mr-3">
+                            <i data-feather="credit-card" class="h-5 w-5 text-blue-500"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">Online Payment</h3>
+                            <p class="text-xs text-gray-500">Cards, UPI, Wallets & more</p>
+                        </div>
+                        <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+                    </a>
+                    
+                    <!-- Cash on Delivery -->
+                    <a href="checkout-cod.html" class="payment-option block p-4 border border-gray-200 rounded-xl relative flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center mr-3">
+                            <i data-feather="dollar-sign" class="h-5 w-5 text-green-500"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">Cash on Delivery</h3>
+                            <p class="text-xs text-gray-500">Pay when your order arrives</p>
+                        </div>
+                        <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+                    </a>
+                    
+                    <!-- WhatsApp Order -->
+                    <a href="checkout-whatsapp.html" class="payment-option block p-4 border border-gray-200 rounded-xl relative flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-green-600/10 flex items-center justify-center mr-3">
+                            <i data-feather="message-circle" class="h-5 w-5 text-green-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">WhatsApp Order</h3>
+                            <p class="text-xs text-gray-500">Send order via WhatsApp</p>
+                        </div>
+                        <i data-feather="chevron-right" class="h-5 w-5 text-gray-400"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Promo code -->
+            <div class="bg-white rounded-xl p-4 shadow-sm mb-6">
+                <div class="flex items-center">
+                    <i data-feather="tag" class="h-5 w-5 text-primary mr-3"></i>
+                    <input type="text" placeholder="Apply Promo Code" class="flex-1 focus:outline-none text-sm">
+                    <button class="text-primary font-medium text-sm">Apply</button>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Bottom action bar -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg bottom-safe-area z-40">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-sm text-gray-500">Total Amount</span>
+                <span class="text-lg font-semibold text-primary" id="bottom-total">QAR 0</span>
+            </div>
+            <button id="place-order-btn" class="w-full bg-primary text-white font-medium py-3.5 rounded-xl flex items-center justify-center transform transition-transform active:scale-95">
+                Place Order
+                <i data-feather="arrow-right" class="h-5 w-5 ml-2"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- View all items modal (hidden by default) -->
+    <div id="items-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden fade-in">
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-4 slide-in">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold">Order Items</h2>
+                <button id="close-modal" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                    <i data-feather="x" class="h-5 w-5 text-gray-600"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3 max-h-[60vh] overflow-y-auto pb-4" id="modal-items-container">
+                <!-- Items will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from '../assets/js/app.js';
+        import { cartManager, formatPrice } from '../assets/js/menu.js';
+        
+        // Initialize Feather icons
+        feather.replace();
+        
+        // DOM elements
+        const orderItemsPreview = document.getElementById('order-items-preview');
+        const viewAllItemsBtn = document.getElementById('view-all-items');
+        const itemsModal = document.getElementById('items-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const modalItemsContainer = document.getElementById('modal-items-container');
+        const subtotalElement = document.getElementById('subtotal');
+        const taxElement = document.getElementById('tax');
+        const deliveryFeeElement = document.getElementById('delivery-fee');
+        const deliveryFeeRow = document.getElementById('delivery-fee-row');
+        const discountElement = document.getElementById('discount');
+        const orderTotalElement = document.getElementById('order-total');
+        const bottomTotalElement = document.getElementById('bottom-total');
+        const orderTypeInfo = document.getElementById('order-type-info');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        
+        // Load cart data and update UI
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Load cart items
+            await loadCartItems();
+            
+            // Load order type info
+            loadOrderTypeInfo();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        // Load cart items
+        async function loadCartItems() {
+            try {
+                // Get cart items
+                const cartItems = cartManager.getCartItems();
+                
+                // Clear loading placeholders
+                orderItemsPreview.innerHTML = '';
+                
+                if (cartItems.length === 0) {
+                    // No items in cart, redirect to cart page
+                    toast.show('Your cart is empty', 'error');
+                    setTimeout(() => {
+                        window.location.href = '../cart.html';
+                    }, 1000);
+                    return;
+                }
+                
+                // Show preview of items (first 2)
+                const previewItems = cartItems.slice(0, 2);
+                previewItems.forEach(item => {
+                    const itemElement = createOrderItemElement(item);
+                    orderItemsPreview.appendChild(itemElement);
+                });
+                
+                // Show "view all" button if there are more than 2 items
+                if (cartItems.length > 2) {
+                    viewAllItemsBtn.classList.remove('hidden');
+                    
+                    // Add all items to modal
+                    cartItems.forEach(item => {
+                        const itemElement = createOrderItemElement(item, true);
+                        modalItemsContainer.appendChild(itemElement);
+                    });
+                }
+                
+                // Calculate and update totals
+                updateOrderSummary();
+            } catch (error) {
+                console.error('Error loading cart items:', error);
+                toast.show('Failed to load cart data', 'error');
+            }
+        }
+        
+        // Create order item element
+        function createOrderItemElement(item, showDetails = false) {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'flex items-center';
+            
+            // Calculate item price
+            let itemPrice = 0;
+            let itemSizeLabel = '';
+            
+            // Handle half/full pricing
+            if (item.variants && item.variants.size === 'half') {
+                itemPrice = item.halfPrice;
+                itemSizeLabel = '(Half)';
+            } else if (item.variants && item.variants.size === 'full') {
+                itemPrice = item.fullPrice;
+                itemSizeLabel = '(Full)';
+            } else {
+                itemPrice = item.price;
+            }
+            
+            // Add addons price
+            if (item.variants && item.variants.addons && item.variants.addons.length > 0) {
+                item.variants.addons.forEach(addon => {
+                    itemPrice += addon.price;
+                });
+            }
+            
+            // Calculate total for this item
+            const itemTotal = itemPrice * item.quantity;
+            
+            // Basic item preview
+            itemElement.innerHTML = `
+                <div class="w-10 h-10 bg-gray-100 rounded-lg overflow-hidden mr-3 flex-shrink-0">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm font-medium">${item.name} ${itemSizeLabel}</p>
+                    <p class="text-xs text-gray-500">${item.quantity} × ${formatPrice(itemPrice)}</p>
+                </div>
+                <div class="font-medium text-sm">${formatPrice(itemTotal)}</div>
+            `;
+            
+            // Add details section if needed (for modal)
+            if (showDetails && item.variants) {
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'mt-1 ml-13 text-xs text-gray-500';
+                
+                let detailsHTML = '';
+                
+                // Add spice level if selected
+                if (item.variants.spiceLevel) {
+                    detailsHTML += `<div>Spice: ${item.variants.spiceLevel}</div>`;
+                }
+                
+                // Add addons if any
+                if (item.variants.addons && item.variants.addons.length > 0) {
+                    item.variants.addons.forEach(addon => {
+                        detailsHTML += `<div>+ ${addon.name} (${formatPrice(addon.price)})</div>`;
+                    });
+                }
+                
+                // Add special instructions if any
+                if (item.variants.specialInstructions) {
+                    detailsHTML += `<div class="mt-1 italic">Note: ${item.variants.specialInstructions}</div>`;
+                }
+                
+                detailsDiv.innerHTML = detailsHTML;
+                
+                if (detailsHTML) {
+                    itemElement.insertAdjacentElement('afterend', detailsDiv);
+                    // Create a wrapper to keep them together
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'mb-3';
+                    wrapper.appendChild(itemElement);
+                    wrapper.appendChild(detailsDiv);
+                    return wrapper;
+                }
+            }
+            
+            return itemElement;
+        }
+        
+        // Update order summary
+        function updateOrderSummary() {
+            // Calculate totals
+            const subtotal = cartManager.getCartTotal();
+            const tax = Math.round(subtotal * 0.05); // 5% GST
+            
+            // Get order type from session storage
+            const orderType = sessionStorage.getItem('orderType') || 'delivery';
+            
+            // Delivery fee only applies to delivery orders
+            let deliveryFee = 0;
+            if (orderType === 'delivery') {
+                deliveryFee = 30;
+                deliveryFeeRow.classList.remove('hidden');
+            } else {
+                deliveryFeeRow.classList.add('hidden');
+            }
+            
+            // Apply discount (if any)
+            const discount = 0; // For demo, no discount by default
+            
+            // Calculate total
+            const total = subtotal + tax + deliveryFee - discount;
+            
+            // Update UI
+            subtotalElement.textContent = formatPrice(subtotal);
+            taxElement.textContent = formatPrice(tax);
+            deliveryFeeElement.textContent = formatPrice(deliveryFee);
+            discountElement.textContent = `-${formatPrice(discount)}`;
+            orderTotalElement.textContent = formatPrice(total);
+            bottomTotalElement.textContent = formatPrice(total);
+        }
+        
+        // Load order type info
+        function loadOrderTypeInfo() {
+            // Get order type from session storage
+            const orderType = sessionStorage.getItem('orderType') || 'delivery';
+            
+            let title, content;
+            
+            if (orderType === 'delivery') {
+                // Load delivery details
+                const deliveryDetails = JSON.parse(sessionStorage.getItem('deliveryDetails') || '{}');
+                
+                title = 'Delivery Address';
+                content = `
+                    <p class="font-medium">${deliveryDetails.fullName || 'User'}</p>
+                    <p class="text-sm text-gray-600 mb-1">${deliveryDetails.phone || ''}</p>
+                    <p class="text-sm text-gray-600">${deliveryDetails.addressLine1 || ''}, ${deliveryDetails.addressLine2 || ''}</p>
+                    <p class="text-sm text-gray-600">${deliveryDetails.city || 'Malappuram'}, ${deliveryDetails.pincode || ''}</p>
+                `;
+                
+                // Set action for place order button
+                placeOrderBtn.addEventListener('click', () => {
+                    pageTransition('checkout-payment.html');
+                });
+            } else if (orderType === 'takeaway') {
+                // For takeaway
+                title = 'Takeaway Details';
+                content = `
+                    <div class="flex items-center mb-1">
+                        <i data-feather="clock" class="h-4 w-4 text-primary mr-2"></i>
+                        <p class="text-sm">Pickup Time: <span class="font-medium">ASAP (20 min)</span></p>
+                    </div>
+                    <div class="flex items-start">
+                        <i data-feather="map-pin" class="h-4 w-4 text-primary mr-2 mt-0.5"></i>
+                        <div>
+                            <p class="text-sm font-medium">Fenyal - Main Branch</p>
+                            <p class="text-xs text-gray-600">123 Park Street, Malappuram, Kerala</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Set action for place order button
+                placeOrderBtn.addEventListener('click', () => {
+                    pageTransition('checkout-payment.html');
+                });
+            } else if (orderType === 'dine-in') {
+                // For dine-in
+                const tableNumber = sessionStorage.getItem('selectedTable') || '01';
+                
+                title = 'Dine-in Details';
+                content = `
+                    <div class="flex items-center">
+                        <i data-feather="coffee" class="h-4 w-4 text-primary mr-2"></i>
+                        <p class="text-sm">Table Number: <span class="font-medium">${tableNumber}</span></p>
+                    </div>
+                `;
+                
+                // Set action for place order button
+                placeOrderBtn.addEventListener('click', () => {
+                    pageTransition('checkout-payment.html');
+                });
+            }
+            
+            // Update UI
+            orderTypeInfo.innerHTML = `
+                <h2 class="font-semibold mb-2">${title}</h2>
+                ${content}
+                <button class="text-primary text-sm font-medium mt-2 flex items-center">
+                    Change
+                    <i data-feather="edit-2" class="h-3.5 w-3.5 ml-1"></i>
+                </button>
+            `;
+            
+            // Reinitialize Feather icons
+            feather.replace();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // View all items button
+            viewAllItemsBtn.addEventListener('click', function() {
+                itemsModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal button
+            closeModalBtn.addEventListener('click', function() {
+                itemsModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Close modal when clicking outside
+            itemsModal.addEventListener('click', function(e) {
+                if (e.target === itemsModal) {
+                    itemsModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Default place order action
+            if (!placeOrderBtn.hasEventListeners) {
+                placeOrderBtn.addEventListener('click', function() {
+                    pageTransition('checkout-payment.html');
+                });
+            }
+        }
+    </script>
+</body>
+</html>

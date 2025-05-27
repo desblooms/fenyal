@@ -1,0 +1,750 @@
+[
+  {
+    "id": 9,
+    "name": "Fried Eggs & Crunchy Mozzarella",
+    "description": "Fried eggs served with crispy fried mozzarella cheese.",
+    "price": 38,
+    "category": "Breakfast",
+    "image": "uploads/menu/fried-eggs-crunch-mozz.webp",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": false,
+   "addons": [
+      {
+        "name": "Extra Mozzarella",
+        "price": 5
+      },
+      {
+        "name": "Avocado Slice",
+        "price": 6
+      }
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 10,
+    "name": "Zatar Omelette",
+    "description": "Fluffy omelette seasoned with aromatic za'atar spice blend.",
+    "price": 38,
+    "category": "Breakfast",
+    "image": "uploads/menu/zatar-omelette.webp",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 11,
+    "name": "Pastrami Scrambled Eggs",
+    "description": "Soft scrambled eggs mixed with slices of savory pastrami.",
+    "price": 38,
+    "category": "Breakfast",
+    "image": "https://images.pexels.com/photos/2067470/pexels-photo-2067470.jpeg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+
+        {
+        "name": "Extra Olive Oil",
+        "price": 5
+      },
+      {
+        "name": "Avocado Slice",
+        "price": 6
+      }
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 12,
+    "name": "Baith O Tomat",
+    "description": "Traditional Middle Eastern eggs cooked with fresh tomatoes.",
+    "price": 36,
+    "category": "Breakfast",
+    "image": "https://images.pexels.com/photos/7463312/pexels-photo-7463312.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+    {
+        "name": "Extra Olive Oil",
+        "price": 5
+      },
+      {
+        "name": "Avocado Slice",
+        "price": 6
+      }
+
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 13,
+    "name": "Lahsa",
+    "description": "Traditional Qatari breakfast dish with meat and porridge.",
+    "price": 38,
+    "category": "Breakfast",
+    "image": "https://makehealthyfoodrecipes.com/wp-content/uploads/2024/09/Yemeni-Lahsa-Recipe_-A-Spicy-Cheesy-Egg-Dish.jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 14,
+    "name": "Balaleet",
+    "description": "Sweet and savory vermicelli pasta dish, often topped with an omelette.",
+    "price": 32,
+    "category": "Breakfast",
+    "image": "uploads/menu/balaleet.webp",
+    "isPopular": true,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+    {
+        "name": "Extra Olive Oil",
+        "price": 5
+      },
+      {
+        "name": "Avocado Slice",
+        "price": 6
+      }
+
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 15,
+    "name": "Beef Nashif",
+    "description": "Dried beef cooked with spices in traditional Gulf style.",
+    "price": 38,
+    "category": "Dishes",
+    "image": "https://images.pexels.com/photos/23744962/pexels-photo-23744962/free-photo-of-meat-served-on-wooden-tray.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+          {
+        "name": "Extra Olive Oil",
+        "price": 5
+      },
+      {
+        "name": "Avocado Slice",
+        "price": 6
+      }
+    ],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 16,
+    "name": "Beef Liver",
+    "description": "Tender beef liver sautéed with spices and served hot.",
+    "price": 32,
+    "category": "Dishes",
+    "image": "https://images.pexels.com/photos/7627404/pexels-photo-7627404.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 17,
+    "name": "Chicken Nashif",
+    "description": "Dried chicken cooked with aromatic spices in Gulf style.",
+    "price": 36,
+    "category": "Dishes",
+    "image": "https://images.unsplash.com/photo-1604908177453-7462950a6a3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 18,
+    "name": "Chicken Liver",
+    "description": "Sautéed chicken liver with onions and Middle Eastern spices.",
+    "price": 32,
+    "category": "Dishes",
+    "image": "https://images.pexels.com/photos/7474372/pexels-photo-7474372.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 19,
+    "name": "Keema",
+    "description": "Minced meat dish cooked with peas and spices.",
+    "price": 34,
+    "category": "Dishes",
+    "image": "https://www.allrecipes.com/thmb/F_CiD1n72W2vI5ptt4bnwT8IIIA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/AR-231026-keema-aloo-DDMFS-beauty-2x1-ae744af9096c48e789dcaeadfa2f7507.jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 20,
+    "name": "Hamsat Haloumi",
+    "description": "Five pieces of grilled halloumi cheese with herbs.",
+    "price": 35,
+    "category": "Dishes",
+    "image": "uploads/menu/lahsat-haloumi.webp",
+    "isPopular": true,
+    "isSpecial": true,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 21,
+    "name": "Aash",
+    "description": "Hearty Persian soup with beans, grains, and herbs.",
+    "price": 28,
+    "category": "Dishes",
+    "image": "uploads/menu/aash.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+
+    ],
+    "spiceLevelOptions": ["Mild", "Medium"]
+  },
+  {
+    "id": 22,
+    "name": "Pakora",
+    "description": "Crispy vegetable fritters made with chickpea flour.",
+    "price": 24,
+    "category": "Dishes",
+    "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium", "Spicy"]
+  },
+  {
+    "id": 23,
+    "name": "Ribs on Hummus",
+    "description": "Tender meat ribs served on a bed of creamy hummus.",
+    "price": 32,
+    "category": "Dishes",
+    "image": "https://images.unsplash.com/photo-1606502973842-f64bc2785fe5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 24,
+    "name": "Falafel Plate",
+    "description": "Crispy chickpea fritters served with tahini sauce and accompaniments.",
+    "price": 26,
+    "category": "Dishes",
+    "image": "https://toriavey.com/images/2011/01/TOA109_18-1.jpeg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 25,
+    "name": "Qatari Foul",
+    "description": "Traditional fava bean dish seasoned with olive oil and spices.",
+    "price": 30,
+    "category": "Dishes",
+    "image": "uploads/menu/qatari-foul.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": ["Mild", "Medium"]
+  },
+  {
+    "id": 26,
+    "name": "Irani Bread",
+    "description": "Traditional Persian flatbread, light and fluffy.",
+    "price": 3,
+    "category": "Bread",
+    "image": "https://images.kosher.com/details.slide/n/a/naan_shutterstock_364884215.jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 27,
+    "name": "Paratha Plain",
+    "description": "Flaky, layered flatbread cooked on a griddle.",
+    "price": 3,
+    "category": "Bread",
+    "image": "https://www.myplantifulcooking.com/wp-content/uploads/2022/01/plain-parathas-featured.jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 28,
+    "name": "Sheermal Bread",
+    "description": "Saffron-flavored, slightly sweet flatbread.",
+    "price": 4,
+    "category": "Bread",
+    "image": "https://images.pexels.com/photos/1775043/pexels-photo-1775043.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 29,
+    "name": "Rahash Bomb",
+    "description": "Decadent dessert featuring rahash halva and chocolate.",
+    "price": 38,
+    "category": "Desserts",
+    "image": "uploads/menu/rahash-bomb.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 30,
+    "name": "Cake Balls - Oreo",
+    "description": "Sweet bite-sized cake balls with Oreo flavor.",
+    "price": 12,
+    "category": "Desserts",
+    "image": "uploads/menu/cake-balls-12.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 31,
+    "name": "Cake Balls - Pistachio",
+    "description": "Sweet bite-sized cake balls with pistachio flavor.",
+    "price": 12,
+    "category": "Desserts",
+    "image": "uploads/menu/cake-balls-12.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 32,
+    "name": "Cake Balls - Red Velvet",
+    "description": "Sweet bite-sized cake balls with red velvet flavor.",
+    "price": 12,
+    "category": "Desserts",
+    "image": "uploads/menu/cake-balls-12.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 33,
+    "name": "Cake Balls - Hail o Za'fraan",
+    "description": "Sweet bite-sized cake balls with cardamom and saffron flavor.",
+    "price": 12,
+    "category": "Desserts",
+    "image": "uploads/menu/cake-balls-12.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 34,
+    "name": "Cupcake - Halwa",
+    "description": "Soft cupcake inspired by traditional halwa flavors.",
+    "price": 20,
+    "category": "Desserts",
+    "image": "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 35,
+    "name": "Cupcake - Chocolate Peanut Butter",
+    "description": "Rich chocolate cupcake with peanut butter frosting.",
+    "price": 20,
+    "category": "Desserts",
+    "image": "https://images.unsplash.com/photo-1603532648955-039310d9ed75?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 36,
+    "name": "Luqaimat Cake",
+    "description": "Cake inspired by traditional Arabic sweet dumplings.",
+    "price": 30,
+    "category": "Desserts",
+    "image": "uploads/menu/luqaimat.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 37,
+    "name": "Dates Cake",
+    "description": "Moist cake made with dates and spices.",
+    "price": 30,
+    "category": "Desserts",
+    "image": "uploads/menu/dates-cake.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 38,
+    "name": "Om Ali",
+    "description": "Traditional Egyptian bread pudding with nuts and raisins.",
+    "price": 30,
+    "category": "Desserts",
+    "image": "uploads/menu/om-ali.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 39,
+    "name": "Elbah",
+    "description": "Traditional Middle Eastern dessert with cream and honey.",
+    "price": 28,
+    "category": "Desserts",
+    "image": "uploads/menu/elbah-1.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 40,
+    "name": "Asidah",
+    "description": "Sweet wheat pudding topped with honey and ghee.",
+    "price": 26,
+    "category": "Desserts",
+    "image": "https://images.pexels.com/photos/7474272/pexels-photo-7474272.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 41,
+    "name": "Hibiscus",
+    "description": "Refreshing cold drink made from hibiscus flowers.",
+    "price": 25,
+    "category": "Cold Drinks",
+    "image": "https://assets.clevelandclinic.org/transform/53cee1e5-d7b3-44b0-a5ad-bd37043429b5/HibiscusTea-1351167352-770x533-1_jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 42,
+    "name": "Cocktail Layers",
+    "description": "Layered fruit juice mocktail with vibrant colors.",
+    "price": 28,
+    "category": "Cold Drinks",
+    "image": "https://www.craftginclub.co.uk/_next/image?url=https%3A%2F%2Fimages.prismic.io%2Fcgc-web%2FZGVkZTU3NmQtOTI2Ni00MjM0LWE4Y2MtY2U2MTczNmFhNThj_layeredcocktail.jpg%3Fauto%3Dcompress%2Cformat%26rect%3D0%2C0%2C1200%2C600%26w%3D1200%26h%3D600&w=2058&q=75",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 43,
+    "name": "Lemon Mint",
+    "description": "Refreshing cold drink with fresh lemon juice and mint leaves.",
+    "price": 25,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 44,
+    "name": "Pomegranate",
+    "description": "Fresh-squeezed pomegranate juice.",
+    "price": 25,
+    "category": "Cold Drinks",
+    "image": "https://images.stockcake.com/public/6/c/7/6c700625-55b8-412e-8b6d-41b1826663d7_large/pomegranate-juice-glass-stockcake.jpg",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 45,
+    "name": "Raspberry Iced Tea",
+    "description": "Chilled tea infused with raspberry flavor.",
+    "price": 28,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 46,
+    "name": "Strawberry Cheesecake",
+    "description": "Creamy strawberry and cheesecake flavored cold drink.",
+    "price": 32,
+    "category": "Cold Drinks",
+    "image": "uploads/menu/strawberry-cheese-cake-juice.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 47,
+    "name": "Laban Airan",
+    "description": "Traditional yogurt-based drink with salt.",
+    "price": 20,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1565958011703-44f9829ba187?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 48,
+    "name": "Orange Juice",
+    "description": "Fresh-squeezed orange juice.",
+    "price": 25,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 49,
+    "name": "Still Water",
+    "description": "Bottle of natural still water.",
+    "price": 10,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1564419320461-6870880221ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 50,
+    "name": "Sparkling Water",
+    "description": "Bottle of carbonated sparkling water.",
+    "price": 10,
+    "category": "Cold Drinks",
+    "image": "https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 51,
+    "name": "Qatari Coffee Dallah",
+    "description": "Traditional Qatari coffee served in a dallah pot with dates.",
+    "price": 35,
+    "category": "Hot Drinks",
+    "image": "uploads/menu/qatari-coffee.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 52,
+    "name": "Karak",
+    "description": "Strong spiced tea with milk, popular in Qatar.",
+    "price": 18,
+    "category": "Hot Drinks",
+    "image": "uploads/menu/karak.webp",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [
+       {
+        "name": "Extra Cardamom",
+        "price": 2
+      },
+      {
+        "name": "Saffron",
+        "price": 3
+      }
+    ],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 53,
+    "name": "Red Tea",
+    "description": "Classic red tea served hot.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 54,
+    "name": "Loomi Tea",
+    "description": "Tea infused with dried black lime, a Gulf specialty.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.pexels.com/photos/1417945/pexels-photo-1417945.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 55,
+    "name": "Turkish Coffee",
+    "description": "Strong coffee prepared in the traditional Turkish method.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1611854779393-1b2da9d400fe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 56,
+    "name": "Black Coffee",
+    "description": "Simple hot black coffee.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 57,
+    "name": "Sahlab",
+    "description": "Warm, creamy drink made with orchid flour, topped with nuts and cinnamon.",
+    "price": 18,
+    "category": "Hot Drinks",
+    "image": "https://images.pexels.com/photos/4051555/pexels-photo-4051555.jpeg?auto=compress&cs=tinysrgb&w=800",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 58,
+    "name": "Ginger Honey",
+    "description": "Warming beverage with fresh ginger and honey.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 59,
+    "name": "Haleeb Hiso",
+    "description": "Traditional Gulf milk drink with cardamom and saffron.",
+    "price": 18,
+    "category": "Hot Drinks",
+    "image": "https://delishglobe.com/wp-content/uploads/2024/10/Riz-Bi-Haleeb.png",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 60,
+    "name": "Nescafe",
+    "description": "Instant coffee served hot.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1610632380989-680fe40816c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  },
+  {
+    "id": 61,
+    "name": "Capuccino",
+    "description": "Classic Italian coffee with steamed milk and foam.",
+    "price": 15,
+    "category": "Hot Drinks",
+    "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "isPopular": false,
+    "isSpecial": false,
+    "isHalfFull": false,
+    "addons": [],
+    "spiceLevelOptions": []
+  }
+]
