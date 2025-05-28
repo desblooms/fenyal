@@ -1,3 +1,0 @@
-<?php 
-// Admin login page 
-?> 

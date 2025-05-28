@@ -1,3 +1,0 @@
-<?php 
-// Category list template 
-?> 

@@ -1,8 +1,0 @@
-# Git Ignore 
-/vendor/ 
-/uploads/*.jpg 
-/uploads/*.png 
-.env 
-/logs/*.log 
-.DS_Store 
-Thumbs.db 

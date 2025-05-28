@@ -1,3 +1,0 @@
-<?php 
-// Menu grid template 
-?> 
