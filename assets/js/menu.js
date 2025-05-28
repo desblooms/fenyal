@@ -188,3 +188,18 @@ export const cartManager = new CartManager();
 document.addEventListener('DOMContentLoaded', function() {
     cartManager.updateCartBadge();
 });
+
+
+
+// Add language-aware helper functions
+export function getItemName(item, language = 'en') {
+    return language === 'ar' && item.nameAr ? item.nameAr : item.name;
+}
+
+export function getItemDescription(item, language = 'en') {
+    return language === 'ar' && item.descriptionAr ? item.descriptionAr : item.description;
+}
+
+export function getCategoryName(item, language = 'en') {
+    return language === 'ar' && item.categoryAr ? item.categoryAr : item.category;
+}
