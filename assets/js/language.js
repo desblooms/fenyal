@@ -1,4 +1,4 @@
-// Language Manager - Global Language Switching Utility
+// Enhanced Language Manager - Global Language Switching Utility
 // File: assets/js/language.js
 
 class LanguageManager {
@@ -13,15 +13,56 @@ class LanguageManager {
             'Cold Drinks': { en: 'Cold Drinks', ar: 'مشروبات باردة' },
             'Hot Drinks': { en: 'Hot Drinks', ar: 'مشروبات ساخنة' }
         };
+        this.isInitialized = false;
         this.initialize();
     }
 
     initialize() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.setupLanguage();
+            });
+        } else {
+            this.setupLanguage();
+        }
+    }
+
+    setupLanguage() {
         // Apply saved language on page load
         this.updateLanguage(this.currentLanguage);
         
         // Set up automatic button detection and event listeners
         this.setupLanguageButtons();
+        
+        // Set up mutation observer to handle dynamically added buttons
+        this.setupMutationObserver();
+        
+        this.isInitialized = true;
+    }
+
+    // Set up mutation observer to handle dynamically added language buttons
+    setupMutationObserver() {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Check if the added node or its children contain language buttons
+                        const newButtons = node.querySelectorAll ? 
+                            node.querySelectorAll('[class*="lang-"], [id*="lang-"]') : [];
+                        
+                        if (newButtons.length > 0) {
+                            this.setupLanguageButtons();
+                        }
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     }
 
     // Register translations for a specific page
@@ -63,7 +104,11 @@ class LanguageManager {
 
         // Trigger custom event for pages to listen to
         window.dispatchEvent(new CustomEvent('languageChanged', { 
-            detail: { language: lang, translations: this.translations[lang] || {} }
+            detail: { 
+                language: lang, 
+                translations: this.translations[lang] || {},
+                isRTL: lang === 'ar'
+            }
         }));
     }
 
@@ -97,9 +142,20 @@ class LanguageManager {
 
     // Update language button states across all pages
     updateLanguageButtons() {
-        // Find all English language buttons
-        const enButtons = document.querySelectorAll('[id*="lang-en"], .lang-en');
-        const arButtons = document.querySelectorAll('[id*="lang-ar"], .lang-ar');
+        // Find all language buttons with various selectors
+        const enButtons = document.querySelectorAll([
+            '[id*="lang-en"]', 
+            '.lang-en',
+            '[data-lang="en"]',
+            'button[data-language="en"]'
+        ].join(','));
+        
+        const arButtons = document.querySelectorAll([
+            '[id*="lang-ar"]', 
+            '.lang-ar',
+            '[data-lang="ar"]',
+            'button[data-language="ar"]'
+        ].join(','));
 
         if (this.currentLanguage === 'ar') {
             // Arabic active
@@ -128,23 +184,69 @@ class LanguageManager {
 
     // Automatically detect and setup language buttons
     setupLanguageButtons() {
-        // Find all language buttons and add event listeners
-        const enButtons = document.querySelectorAll('[id*="lang-en"], .lang-en');
-        const arButtons = document.querySelectorAll('[id*="lang-ar"], .lang-ar');
+        // Find all language buttons with various selectors
+        const enButtons = document.querySelectorAll([
+            '[id*="lang-en"]', 
+            '.lang-en',
+            '[data-lang="en"]',
+            'button[data-language="en"]'
+        ].join(','));
+        
+        const arButtons = document.querySelectorAll([
+            '[id*="lang-ar"]', 
+            '.lang-ar',
+            '[data-lang="ar"]',
+            'button[data-language="ar"]'
+        ].join(','));
 
-        enButtons.forEach(button => {
+        // Remove existing listeners by cloning and replacing elements
+        [...enButtons, ...arButtons].forEach(button => {
+            if (!button.hasAttribute('data-lang-listener')) {
+                button.setAttribute('data-lang-listener', 'true');
+                
+                const newButton = button.cloneNode(true);
+                if (button.parentNode) {
+                    button.parentNode.replaceChild(newButton, button);
+                }
+            }
+        });
+
+        // Re-query after cloning
+        const newEnButtons = document.querySelectorAll([
+            '[id*="lang-en"]', 
+            '.lang-en',
+            '[data-lang="en"]',
+            'button[data-language="en"]'
+        ].join(','));
+        
+        const newArButtons = document.querySelectorAll([
+            '[id*="lang-ar"]', 
+            '.lang-ar',
+            '[data-lang="ar"]',
+            'button[data-language="ar"]'
+        ].join(','));
+
+        // Add event listeners
+        newEnButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.updateLanguage('en');
             });
         });
 
-        arButtons.forEach(button => {
+        newArButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 this.updateLanguage('ar');
             });
         });
+
+        // Update button states immediately
+        setTimeout(() => {
+            this.updateLanguageButtons();
+        }, 50);
     }
 
     // Get translation for a key
@@ -170,6 +272,20 @@ class LanguageManager {
     isRTL() {
         return this.currentLanguage === 'ar';
     }
+
+    // Force refresh language buttons (useful for dynamically added content)
+    refreshLanguageButtons() {
+        setTimeout(() => {
+            this.setupLanguageButtons();
+        }, 100);
+    }
+
+    // Method to programmatically switch language
+    switchLanguage(lang) {
+        if (lang === 'en' || lang === 'ar') {
+            this.updateLanguage(lang);
+        }
+    }
 }
 
 // Create and export singleton instance
@@ -179,4 +295,18 @@ const languageManager = new LanguageManager();
 window.languageManager = languageManager;
 
 // Export for ES6 modules
-export default languageManager;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = languageManager;
+}
+
+// Auto-setup for immediate use
+if (typeof window !== 'undefined') {
+    // Ensure it works even if script is loaded after DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            languageManager.refreshLanguageButtons();
+        });
+    } else {
+        languageManager.refreshLanguageButtons();
+    }
+}
