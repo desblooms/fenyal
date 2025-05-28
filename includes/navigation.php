@@ -1,0 +1,3 @@
+<?php 
+// Navigation component 
+?> 
