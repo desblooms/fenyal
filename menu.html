@@ -9,7 +9,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Theme configuration -->
-    <script src="assets/js/themecolor.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c45230',
+                        accent: '#f96d43',
+                        background: '#f8f8f8',
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['"Poppins"', 'sans-serif'],
+                        arabic: ['"Cairo"', 'sans-serif']
+                    },
+                    borderRadius: {
+                        xl: '1.2rem'
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,43 +38,203 @@
     <!-- Arabic Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="stylesheet" href="assets/css/language.css">
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
     <style>
+        /* Base Styles */
         body {
             -webkit-tap-highlight-color: transparent;
             line-height: 1.3;
+            font-family: 'Poppins', sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
         }
-        .app-container::-webkit-scrollbar {
-            display: none;
-        }
-        .category-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        
+
         /* Arabic font support */
         [lang="ar"] {
             font-family: 'Cairo', 'Poppins', sans-serif;
         }
-        
-        /* RTL spacing adjustments */
+
+        /* App Container */
+        .app-container {
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* Category Buttons */
+        .category-btn {
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .category-btn.active {
+            background-color: #c45230;
+            color: white;
+        }
+
+        /* Menu Items */
+        .menu-item {
+            transition: transform 0.2s ease;
+        }
+        .menu-item:active {
+            transform: scale(0.98);
+        }
+
+        /* Loading Animation */
+        .shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* RTL Support */
+        [dir="rtl"] {
+            text-align: right;
+        }
+
+        [dir="rtl"] .flex-col {
+            flex-direction: column !important;
+        }
+
         [dir="rtl"] .space-x-2 > * + * {
             margin-left: 0;
             margin-right: 0.5rem;
         }
-        
+
         [dir="rtl"] .space-x-3 > * + * {
             margin-left: 0;
             margin-right: 0.75rem;
         }
-        
+
         [dir="rtl"] .space-x-4 > * + * {
             margin-left: 0;
             margin-right: 1rem;
+        }
+
+        /* Scale Button Effect */
+        .scale-button:active {
+            transform: scale(0.97);
+        }
+
+        /* Bottom Navigation Styles */
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 24px 24px 0 0;
+            padding: 10px 0px 15px !important;
+        }
+
+        .nav-item {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+            padding: 8px 12px;
+        }
+
+        .nav-item.active {
+            color: #c45230;
+        }
+
+        .nav-item.active .nav-text {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .nav-text {
+            transition: all 0.3s ease;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.4;
+        }
+
+        /* Center Logo Button */
+        .center-logo {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+            border: 3px solid rgba(196, 82, 48, 0.2);
+            box-shadow: 
+                0 10px 30px rgba(196, 82, 48, 0.2),
+                0 0 0 8px rgba(255, 255, 255, 1),
+                inset 0 2px 4px rgba(255, 255, 255, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            margin-top: -35px;
+        }
+
+        .center-logo:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 
+                0 20px 40px rgba(196, 82, 48, 0.3),
+                0 0 0 12px rgba(255, 255, 255, 0.9),
+                inset 0 2px 8px rgba(255, 255, 255, 1);
+            border-color: rgba(196, 82, 48, 0.4);
+        }
+
+        .center-logo:active {
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        /* Safe area for devices with notches */
+        .bottom-safe-area {
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+
+        /* Fade-in animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -67,7 +247,7 @@
                 <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
                 </a>
-                <h1 class="text-xl font-semibold" data-translate="menu">Menu</h1>
+                <h1 class="text-xl font-semibold" id="page-title">Menu</h1>
                 <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
                 </button>
@@ -75,20 +255,21 @@
             
             <!-- Search bar -->
             <div class="relative mb-4">
-                <input type="text" id="search-input" data-translate-placeholder="searchPlaceholder" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
                 <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 search-icon"></i>
             </div>
             
             <!-- Categories -->
             <div class="overflow-x-auto category-scroll">
                 <div class="flex space-x-2 py-1" id="category-container">
-                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button" data-translate="all">All</button>
+                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button" data-category="all" id="all-category-btn">All</button>
                     <!-- Categories will be dynamically added here -->
                     <div class="flex space-x-2" id="category-buttons">
-                        <div class="h-8 w-20 rounded-full Menushimmer"></div>
-                        <div class="h-8 w-24 rounded-full Menushimmer"></div>
-                        <div class="h-8 w-20 rounded-full Menushimmer"></div>
-                        <div class="h-8 w-22 rounded-full Menushimmer"></div>
+                        <!-- Loading placeholders -->
+                        <div class="h-8 w-20 rounded-full shimmer"></div>
+                        <div class="h-8 w-24 rounded-full shimmer"></div>
+                        <div class="h-8 w-20 rounded-full shimmer"></div>
+                        <div class="h-8 w-22 rounded-full shimmer"></div>
                     </div>
                 </div>
             </div>
@@ -98,27 +279,27 @@
         <main class="px-4 pt-2 pb-4">
             <!-- Popular items section -->
             <div class="mb-6" id="popular-section">
-                <h2 class="text-lg font-semibold mb-3" data-translate="popularItems">Popular Items</h2>
+                <h2 class="text-lg font-semibold mb-3" id="popular-title">Popular Items</h2>
                 <div id="popular-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 Menushimmer"></div>
+                                <div class="w-24 h-24 shimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 Menushimmer"></div>
+                                <div class="w-24 h-24 shimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
@@ -128,37 +309,37 @@
             
             <!-- All menu items -->
             <div id="all-menu-section">
-                <h2 class="text-lg font-semibold mb-3" data-translate="allMenu">All Menu</h2>
+                <h2 class="text-lg font-semibold mb-3" id="menu-section-title">All Menu</h2>
                 <div id="menu-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 Menushimmer"></div>
+                                <div class="w-24 h-24 shimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 Menushimmer"></div>
+                                <div class="w-24 h-24 shimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 Menushimmer"></div>
+                                <div class="w-24 h-24 shimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
+                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 shimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
@@ -171,9 +352,9 @@
                 <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                     <i data-feather="search" class="h-8 w-8 text-gray-400"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-700 mb-1" data-translate="noItemsFound">No items found</h3>
-                <p class="text-gray-500 text-sm text-center mb-4" data-translate="tryDifferentSearch">Try a different search or category</p>
-                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button" data-translate="resetSearch">
+                <h3 class="text-lg font-medium text-gray-700 mb-1" id="no-results-title">No items found</h3>
+                <p class="text-gray-500 text-sm text-center mb-4" id="no-results-text">Try a different search or category</p>
+                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button">
                     Reset Search
                 </button>
             </div>
@@ -184,103 +365,287 @@
             <div class="px-4 py-0">
                 <div class="flex justify-around items-center ">
                     <!-- Home -->
-                    <a href="index.html" class="nav-item  ripple flex flex-col items-center justify-center" data-page="home">
+                    <a href="index.html" class="nav-item ripple flex flex-col items-center justify-center" data-page="home">
                         <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
-                        <span class="nav-text" data-translate="home">Home</span>
+                        <span class="nav-text" id="nav-home">Home</span>
                     </a>
                     
                     <!-- Center Logo -->
                     <div class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" onclick="centerLogoAction()">
-                        <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
+                        <img src="https://via.placeholder.com/40x40/c45230/ffffff?text=F" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
                     </div>
                     
                     <!-- Menu -->
                     <a href="menu.html" class="nav-item active ripple flex flex-col items-center justify-center" data-page="menu-full">
                         <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
-                        <span class="nav-text" data-translate="menu">Menu</span>
+                        <span class="nav-text" id="nav-menu">Menu</span>
                     </a>
                 </div>
             </div>
         </nav>
     </div>
     
-    <!-- Language System -->
     <script>
-    // Translation data
-    const translations = {
-        en: {
-            menu: 'Menu',
-            searchPlaceholder: 'Search menu items...',
-            all: 'All',
-            popularItems: 'Popular Items',
-            allMenu: 'All Menu', 
-            noItemsFound: 'No items found',
-            tryDifferentSearch: 'Try a different search or category',
-            resetSearch: 'Reset Search',
-            home: 'Home',
-            // Categories
-            breakfast: 'Breakfast',
-            dishes: 'Dishes',
-            bread: 'Bread', 
-            desserts: 'Desserts',
-            coldDrinks: 'Cold Drinks',
-            hotDrinks: 'Hot Drinks'
-        },
-        ar: {
-            menu: 'القائمة',
-            searchPlaceholder: 'البحث في عناصر القائمة...',
-            all: 'الكل',
-            popularItems: 'العناصر الشائعة',
-            allMenu: 'جميع القائمة',
-            noItemsFound: 'لم يتم العثور على عناصر',
-            tryDifferentSearch: 'جرب بحثاً أو فئة مختلفة',
-            resetSearch: 'إعادة تعيين البحث',
-            home: 'الرئيسية',
-            // Categories
-            breakfast: 'الإفطار',
-            dishes: 'الأطباق',
-            bread: 'الخبز',
-            desserts: 'الحلويات',
-            coldDrinks: 'المشروبات الباردة',
-            hotDrinks: 'المشروبات الساخنة'
+    // Menu Data and Language System
+    class BilingualMenuManager {
+        constructor() {
+            this.menuData = [];
+            this.categories = [];
+            this.initialized = false;
+            this.currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+            this.translations = {
+                en: {
+                    menu: 'Menu',
+                    searchPlaceholder: 'Search menu items...',
+                    all: 'All',
+                    popularItems: 'Popular Items',
+                    allMenu: 'All Menu', 
+                    noItemsFound: 'No items found',
+                    tryDifferentSearch: 'Try a different search or category',
+                    resetSearch: 'Reset Search',
+                    home: 'Home',
+                    searchResults: 'Search Results',
+                    // Categories
+                    breakfast: 'Breakfast',
+                    dishes: 'Dishes',
+                    bread: 'Bread', 
+                    desserts: 'Desserts',
+                    coldDrinks: 'Cold Drinks',
+                    hotDrinks: 'Hot Drinks'
+                },
+                ar: {
+                    menu: 'القائمة',
+                    searchPlaceholder: 'البحث في عناصر القائمة...',
+                    all: 'الكل',
+                    popularItems: 'العناصر الشائعة',
+                    allMenu: 'جميع القائمة',
+                    noItemsFound: 'لم يتم العثور على عناصر',
+                    tryDifferentSearch: 'جرب بحثاً أو فئة مختلفة',
+                    resetSearch: 'إعادة تعيين البحث',
+                    home: 'الرئيسية',
+                    searchResults: 'نتائج البحث',
+                    // Categories
+                    breakfast: 'فطور',
+                    dishes: 'أطباق',
+                    bread: 'خبز',
+                    desserts: 'حلويات',
+                    coldDrinks: 'مشروبات باردة',
+                    hotDrinks: 'مشروبات ساخنة'
+                }
+            };
         }
-    };
 
-    // Language Manager Class
-    class LanguageManager {
+        async loadMenuData() {
+            if (this.initialized) return this.menuData;
+            
+            try {
+                console.log('Loading menu data from data/menu.json...');
+                
+                // Fetch data from your actual menu.json file
+                const response = await fetch('data/menu.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch menu data: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Validate that we received an array
+                if (!Array.isArray(data)) {
+                    throw new Error('Menu data is not in the expected format (should be an array)');
+                }
+                
+                this.menuData = data;
+                this.initialized = true;
+                
+                // Extract unique categories
+                const categorySet = new Set();
+                this.menuData.forEach(item => {
+                    if (item.category) {
+                        categorySet.add(item.category);
+                    }
+                });
+                this.categories = Array.from(categorySet);
+                
+                console.log('Menu loaded successfully:', this.menuData.length, 'items');
+                console.log('Categories found:', this.categories);
+                
+                return this.menuData;
+                
+            } catch (error) {
+                console.error('Error loading menu data:', error);
+                
+                // Show user-friendly error message
+                this.showLoadingError(error.message);
+                
+                // Return empty array as fallback
+                return [];
+            }
+        }
+
+        showLoadingError(errorMessage) {
+            // Display error message to user
+            const containers = [
+                document.getElementById('popular-items-container'),
+                document.getElementById('menu-items-container')
+            ];
+            
+            containers.forEach(container => {
+                if (container) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-8 text-center">
+                            <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Failed to Load Menu</h3>
+                            <p class="text-sm text-gray-500 mb-4 max-w-sm">
+                                ${errorMessage || 'Unable to load menu items. Please check your connection and try again.'}
+                            </p>
+                            <button onclick="location.reload()" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            
+            // Hide category loading placeholders
+            const categoryButtons = document.getElementById('category-buttons');
+            if (categoryButtons) {
+                categoryButtons.innerHTML = `
+                    <div class="text-sm text-gray-500 px-4 py-2">
+                        Unable to load categories
+                    </div>
+                `;
+            }
+        }
+
+        setLanguage(language) {
+            this.currentLanguage = language;
+            localStorage.setItem('selectedLanguage', language);
+        }
+
+        getTranslation(key) {
+            return this.translations[this.currentLanguage][key] || this.translations.en[key] || key;
+        }
+
+        getItemName(item) {
+            return this.currentLanguage === 'ar' && item.nameAr ? item.nameAr : item.name;
+        }
+
+        getItemDescription(item) {
+            return this.currentLanguage === 'ar' && item.descriptionAr ? item.descriptionAr : item.description;
+        }
+
+        getItemCategory(item) {
+            return this.currentLanguage === 'ar' && item.categoryAr ? item.categoryAr : item.category;
+        }
+
+        formatPrice(price) {
+            if (this.currentLanguage === 'ar') {
+                return price.toFixed(0) + ' ريال قطري';
+            }
+            return 'QAR ' + price.toFixed(0);
+        }
+
+        getPopularItems() {
+            return this.menuData.filter(item => item.isPopular);
+        }
+
+        getItemsByCategory(category) {
+            return this.menuData.filter(item => {
+                return item.category === category || item.categoryAr === category;
+            });
+        }
+
+        getAllCategories() {
+            return this.categories;
+        }
+
+        searchItems(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            
+            return this.menuData.filter(item => {
+                const name = this.getItemName(item).toLowerCase();
+                const description = this.getItemDescription(item).toLowerCase();
+                const category = this.getItemCategory(item).toLowerCase();
+                
+                // Search in both English and Arabic
+                const nameEn = item.name.toLowerCase();
+                const descriptionEn = item.description.toLowerCase();
+                const categoryEn = item.category.toLowerCase();
+                
+                const nameAr = item.nameAr ? item.nameAr.toLowerCase() : '';
+                const descriptionAr = item.descriptionAr ? item.descriptionAr.toLowerCase() : '';
+                const categoryAr = item.categoryAr ? item.categoryAr.toLowerCase() : '';
+                
+                return (
+                    name.includes(term) ||
+                    description.includes(term) ||
+                    category.includes(term) ||
+                    nameEn.includes(term) ||
+                    descriptionEn.includes(term) ||
+                    categoryEn.includes(term) ||
+                    nameAr.includes(term) ||
+                    descriptionAr.includes(term) ||
+                    categoryAr.includes(term)
+                );
+            });
+        }
+
+        translateCategoryName(categoryName) {
+            const categoryMap = {
+                'Breakfast': 'breakfast',
+                'Dishes': 'dishes', 
+                'Bread': 'bread',
+                'Desserts': 'desserts',
+                'Cold Drinks': 'coldDrinks',
+                'Hot Drinks': 'hotDrinks'
+            };
+            
+            const key = categoryMap[categoryName];
+            return key ? this.getTranslation(key) : categoryName;
+        }
+    }
+
+    // Initialize menu manager
+    const menuManager = new BilingualMenuManager();
+
+    // Language and UI Management
+    class UIManager {
         constructor() {
             this.currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
-            this.init();
+            this.activeCategory = 'all';
+            this.isSearchActive = false;
         }
 
         init() {
+            this.setupLanguageToggle();
+            this.setupSearch();
+            this.setupCategories();
             this.applyLanguage(this.currentLanguage);
-            this.setupToggle();
+            this.loadInitialContent();
         }
 
-        setupToggle() {
+        setupLanguageToggle() {
             const toggle = document.getElementById('language-toggle');
             const currentLangSpan = document.getElementById('current-language');
             
-            this.updateLanguageDisplay(this.currentLanguage);
+            currentLangSpan.textContent = this.currentLanguage.toUpperCase();
             
             toggle.addEventListener('click', () => {
                 this.currentLanguage = this.currentLanguage === 'en' ? 'ar' : 'en';
                 localStorage.setItem('selectedLanguage', this.currentLanguage);
-                this.applyLanguage(this.currentLanguage);
-                this.updateLanguageDisplay(this.currentLanguage);
                 
-                // Show success message
-                if (window.toast && typeof window.toast.show === 'function') {
-                    const langName = this.currentLanguage === 'ar' ? 'العربية' : 'English';
-                    window.toast.show(`Language: ${langName}`, 'success');
-                }
+                menuManager.setLanguage(this.currentLanguage);
+                this.applyLanguage(this.currentLanguage);
+                this.refreshContent();
+                
+                // Show language change notification
+                this.showToast(`Language: ${this.currentLanguage === 'ar' ? 'العربية' : 'English'}`, 'success');
             });
-        }
-
-        updateLanguageDisplay(lang) {
-            const currentLangSpan = document.getElementById('current-language');
-            currentLangSpan.textContent = lang.toUpperCase();
         }
 
         applyLanguage(lang) {
@@ -288,23 +653,20 @@
             document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
             document.documentElement.setAttribute('lang', lang);
             
-            // Update all translatable elements
-            const elements = document.querySelectorAll('[data-translate]');
-            elements.forEach(element => {
-                const key = element.getAttribute('data-translate');
-                if (translations[lang] && translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                }
-            });
+            // Update language display
+            document.getElementById('current-language').textContent = lang.toUpperCase();
             
-            // Update placeholder texts
-            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
-            placeholderElements.forEach(element => {
-                const key = element.getAttribute('data-translate-placeholder');
-                if (translations[lang] && translations[lang][key]) {
-                    element.setAttribute('placeholder', translations[lang][key]);
-                }
-            });
+            // Update all text elements
+            document.getElementById('page-title').textContent = menuManager.getTranslation('menu');
+            document.getElementById('search-input').placeholder = menuManager.getTranslation('searchPlaceholder');
+            document.getElementById('all-category-btn').textContent = menuManager.getTranslation('all');
+            document.getElementById('popular-title').textContent = menuManager.getTranslation('popularItems');
+            document.getElementById('menu-section-title').textContent = menuManager.getTranslation('allMenu');
+            document.getElementById('no-results-title').textContent = menuManager.getTranslation('noItemsFound');
+            document.getElementById('no-results-text').textContent = menuManager.getTranslation('tryDifferentSearch');
+            document.getElementById('reset-search').textContent = menuManager.getTranslation('resetSearch');
+            document.getElementById('nav-home').textContent = menuManager.getTranslation('home');
+            document.getElementById('nav-menu').textContent = menuManager.getTranslation('menu');
             
             // Handle RTL-specific styling
             this.adjustRTLStyling(lang);
@@ -312,6 +674,7 @@
 
         adjustRTLStyling(lang) {
             const searchIcon = document.querySelector('.search-icon');
+            const searchInput = document.getElementById('search-input');
             
             if (lang === 'ar') {
                 // Adjust search icon position for RTL
@@ -321,7 +684,6 @@
                 }
                 
                 // Adjust input padding for RTL
-                const searchInput = document.getElementById('search-input');
                 if (searchInput) {
                     searchInput.classList.remove('pl-10', 'pr-4');
                     searchInput.classList.add('pr-10', 'pl-4');
@@ -333,7 +695,6 @@
                     searchIcon.classList.add('left-3');
                 }
                 
-                const searchInput = document.getElementById('search-input');
                 if (searchInput) {
                     searchInput.classList.remove('pr-10', 'pl-4');
                     searchInput.classList.add('pl-10', 'pr-4');
@@ -341,178 +702,181 @@
             }
         }
 
-        translateCategory(categoryName) {
-            const categoryMap = {
-                'Breakfast': 'breakfast',
-                'Dishes': 'dishes', 
-                'Bread': 'bread',
-                'Desserts': 'desserts',
-                'Cold Drinks': 'coldDrinks',
-                'Hot Drinks': 'hotDrinks'
-            };
+        async loadInitialContent() {
+            // Show loading state
+            this.showLoadingState();
             
-            const key = categoryMap[categoryName];
-            if (key && translations[this.currentLanguage] && translations[this.currentLanguage][key]) {
-                return translations[this.currentLanguage][key];
-            }
-            return categoryName;
-        }
-    }
-
-    // Initialize language manager
-    const languageManager = new LanguageManager();
-    
-    // Make it globally accessible
-    window.languageManager = languageManager;
-    </script>
-
-    <!-- Custom JavaScript -->
-    <script type="module">
-        import { pageTransition, toast } from './assets/js/app.js';
-        import menuManager, { formatPrice } from './assets/js/menu.js';
-        
-        // Initialize icons
-        feather.replace();
-        
-        // Get URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryParam = urlParams.get('category');
-        
-        // Load menu data
-        async function initializeMenu() {
             try {
                 await menuManager.loadMenuData();
-                renderCategories();
                 
-                // If category param exists, filter by that category
-                if (categoryParam) {
-                    filterByCategory(categoryParam);
-                    
-                    // Highlight the category button
-                    const categoryButtons = document.querySelectorAll('.category-btn');
-                    categoryButtons.forEach(button => {
-                        if (button.textContent === categoryParam || 
-                            button.getAttribute('data-original') === categoryParam) {
-                            activateCategory(button);
-                        }
-                    });
-                } else {
-                    renderPopularItems();
-                    renderAllMenuItems();
+                // Check if we have data
+                if (menuManager.menuData.length === 0) {
+                    this.showEmptyState();
+                    return;
                 }
                 
-                // Setup search functionality
-                setupSearch();
+                // Render content with a slight delay to show loading effect
+                setTimeout(() => {
+                    this.renderCategories();
+                    this.renderPopularItems();
+                    this.renderAllMenuItems();
+                }, 500);
+                
             } catch (error) {
-                console.error('Error initializing menu:', error);
-                toast.show('Failed to load menu data', 'error');
+                console.error('Failed to load initial content:', error);
+                this.showErrorState();
             }
         }
-        
-        // Render category buttons with translation support
-        function renderCategories() {
+
+        showLoadingState() {
+            // Categories loading
+            const categoryButtons = document.getElementById('category-buttons');
+            categoryButtons.innerHTML = `
+                <div class="h-8 w-20 rounded-full shimmer"></div>
+                <div class="h-8 w-24 rounded-full shimmer"></div>
+                <div class="h-8 w-20 rounded-full shimmer"></div>
+                <div class="h-8 w-22 rounded-full shimmer"></div>
+            `;
+        }
+
+        showEmptyState() {
+            const containers = [
+                document.getElementById('popular-items-container'),
+                document.getElementById('menu-items-container')
+            ];
+            
+            containers.forEach(container => {
+                if (container) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-8 text-center">
+                            <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">No Menu Items</h3>
+                            <p class="text-sm text-gray-500">Menu data is empty or not available.</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        showErrorState() {
+            const containers = [
+                document.getElementById('popular-items-container'),
+                document.getElementById('menu-items-container')
+            ];
+            
+            containers.forEach(container => {
+                if (container) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center py-8 text-center">
+                            <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+                                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Unable to Load Menu</h3>
+                            <p class="text-sm text-gray-500 mb-4">Please check your connection and try again.</p>
+                            <button onclick="location.reload()" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        refreshContent() {
+            this.renderCategories();
+            if (this.activeCategory === 'all') {
+                this.renderPopularItems();
+                this.renderAllMenuItems();
+            } else {
+                this.filterByCategory(this.activeCategory);
+            }
+        }
+
+        renderCategories() {
+            const container = document.getElementById('category-buttons');
+            container.innerHTML = '';
+            
             const categories = menuManager.getAllCategories();
-            const categoryContainer = document.getElementById('category-buttons');
             
-            // Clear loading placeholders
-            categoryContainer.innerHTML = '';
-            
-            // Add category buttons
             categories.forEach(category => {
                 const button = document.createElement('button');
                 button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button';
-                button.setAttribute('data-original', category); // Store original English name
-                button.textContent = window.languageManager.translateCategory(category);
+                button.setAttribute('data-category', category);
+                button.textContent = menuManager.translateCategoryName(category);
                 
-                // If this is the category from URL param, make it active
-                if (category === categoryParam) {
-                    activateCategory(button);
-                }
-                
-                button.addEventListener('click', function() {
-                    activateCategory(this);
-                    const originalCategory = this.getAttribute('data-original');
-                    filterByCategory(originalCategory);
+                button.addEventListener('click', () => {
+                    this.activateCategory(button, category);
+                    this.filterByCategory(category);
                 });
                 
-                categoryContainer.appendChild(button);
+                container.appendChild(button);
             });
-            
-            // Add event listener to "All" button
-            const allButton = document.querySelector('.category-btn[data-translate="all"]');
-            if (allButton) {
-                allButton.addEventListener('click', function() {
-                    activateCategory(this);
-                    renderPopularItems();
-                    renderAllMenuItems();
-                });
-            }
         }
-        
-        // Activate category button
-        function activateCategory(button) {
-            const categoryButtons = document.querySelectorAll('.category-btn');
-            categoryButtons.forEach(btn => {
+
+        activateCategory(button, category) {
+            // Update active states
+            document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-primary', 'text-white');
                 btn.classList.add('bg-gray-100', 'text-gray-700');
             });
             
             button.classList.add('active', 'bg-primary', 'text-white');
             button.classList.remove('bg-gray-100', 'text-gray-700');
+            
+            this.activeCategory = category;
         }
-        
-        // Filter menu items by category
-        function filterByCategory(category) {
+
+        filterByCategory(category) {
             const items = menuManager.getItemsByCategory(category);
             
             // Hide popular section when filtering
             document.getElementById('popular-section').classList.add('hidden');
             
-            // Update section title with translation
-            const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.textContent = window.languageManager.translateCategory(category);
+            // Update section title
+            const sectionTitle = document.getElementById('menu-section-title');
+            sectionTitle.textContent = menuManager.translateCategoryName(category);
             
             // Render filtered items
-            renderMenuItems(items, 'menu-items-container');
+            this.renderMenuItems(items, 'menu-items-container');
             
             // Show no results if needed
-            toggleNoResults(items.length === 0);
+            this.toggleNoResults(items.length === 0);
         }
-        
-        // Render popular items
-        function renderPopularItems() {
+
+        renderPopularItems() {
             const popularItems = menuManager.getPopularItems();
-            renderMenuItems(popularItems, 'popular-items-container');
+            this.renderMenuItems(popularItems, 'popular-items-container');
             
             // Show popular section
             document.getElementById('popular-section').classList.remove('hidden');
-            
-            // Update all menu section title
-            const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.setAttribute('data-translate', 'allMenu');
-            sectionTitle.textContent = translations[window.languageManager.currentLanguage]['allMenu'];
         }
-        
-        // Render all menu items
-        function renderAllMenuItems() {
+
+        renderAllMenuItems() {
             const allItems = menuManager.menuData;
-            renderMenuItems(allItems, 'menu-items-container');
+            this.renderMenuItems(allItems, 'menu-items-container');
+            
+            // Update section title
+            document.getElementById('menu-section-title').textContent = menuManager.getTranslation('allMenu');
             
             // Show all menu section
             document.getElementById('all-menu-section').classList.remove('hidden');
             
             // Hide no results
-            toggleNoResults(false);
+            this.toggleNoResults(false);
         }
-        
-        // Render menu items
-        function renderMenuItems(items, containerId) {
+
+        renderMenuItems(items, containerId) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
             
             if (items.length === 0) {
                 if (containerId === 'popular-items-container') {
-                    // If no popular items, hide the section
                     document.getElementById('popular-section').classList.add('hidden');
                 }
                 return;
@@ -523,30 +887,28 @@
             
             items.forEach(item => {
                 const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex';
+                menuItem.className = 'menu-item bg-white rounded-xl shadow-sm overflow-hidden flex cursor-pointer';
                 menuItem.onclick = () => {
-                    pageTransition(`menu-item-details.html?id=${item.id}`);
+                    window.location.href = `menu-item-details.html?id=${item.id}`;
                 };
                 
-                // Determine price display
-                let priceDisplay;
-                if (item.isHalfFull) {
-                    priceDisplay = `${formatPrice(item.halfPrice)} - ${formatPrice(item.fullPrice)}`;
-                } else {
-                    priceDisplay = formatPrice(item.price);
-                }
+                const itemName = menuManager.getItemName(item);
+                const itemDescription = menuManager.getItemDescription(item);
+                const itemCategory = menuManager.getItemCategory(item);
+                const priceDisplay = menuManager.formatPrice(item.price);
                 
                 menuItem.innerHTML = `
                     <div class="w-24 h-24 flex-shrink-0">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        <img src="${item.image}" alt="${itemName}" class="w-full h-full object-cover" loading="lazy">
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-medium text-sm mb-0.5">${item.name}</h3>
-                            <p class="text-gray-500 text-xs line-clamp-1">${item.description}</p>
+                            <h3 class="font-medium text-sm mb-0.5">${itemName}</h3>
+                            <p class="text-gray-500 text-xs line-clamp-1">${itemDescription}</p>
                         </div>
                         <div class="flex justify-between items-center mt-1">
                             <span class="text-primary font-semibold">${priceDisplay}</span>
+                            <span class="text-xs text-gray-400">${itemCategory}</span>
                         </div>
                     </div>
                 `;
@@ -556,71 +918,53 @@
             
             container.appendChild(itemsGrid);
         }
-        
-        // Setup search functionality
-        function setupSearch() {
+
+        setupSearch() {
             const searchInput = document.getElementById('search-input');
             const resetButton = document.getElementById('reset-search');
             
-            searchInput.addEventListener('input', debounce(function() {
-                const searchTerm = this.value.toLowerCase().trim();
+            searchInput.addEventListener('input', this.debounce((e) => {
+                const searchTerm = e.target.value.toLowerCase().trim();
                 
                 if (searchTerm === '') {
-                    // Reset to default view if search is cleared
-                    const activeCategory = document.querySelector('.category-btn.active');
-                    const activeCategoryOriginal = activeCategory.getAttribute('data-original');
-                    
-                    if (!activeCategoryOriginal || activeCategory.hasAttribute('data-translate')) {
-                        renderPopularItems();
-                        renderAllMenuItems();
-                    } else {
-                        filterByCategory(activeCategoryOriginal);
-                    }
+                    this.isSearchActive = false;
+                    this.resetToDefaultView();
                     return;
                 }
                 
-                // Filter menu items by search term
-                const filteredItems = menuManager.menuData.filter(item => {
-                    return (
-                        item.name.toLowerCase().includes(searchTerm) ||
-                        item.description.toLowerCase().includes(searchTerm) ||
-                        item.category.toLowerCase().includes(searchTerm)
-                    );
-                });
+                this.isSearchActive = true;
+                const filteredItems = menuManager.searchItems(searchTerm);
                 
                 // Hide popular section when searching
                 document.getElementById('popular-section').classList.add('hidden');
                 
                 // Update section title
-                const sectionTitle = document.querySelector('#all-menu-section h2');
-                sectionTitle.textContent = window.languageManager.currentLanguage === 'ar' ? 'نتائج البحث' : 'Search Results';
+                document.getElementById('menu-section-title').textContent = menuManager.getTranslation('searchResults');
                 
                 // Render filtered items
-                renderMenuItems(filteredItems, 'menu-items-container');
+                this.renderMenuItems(filteredItems, 'menu-items-container');
                 
                 // Show no results if needed
-                toggleNoResults(filteredItems.length === 0);
+                this.toggleNoResults(filteredItems.length === 0);
             }, 300));
             
-            // Reset search button
-            resetButton.addEventListener('click', function() {
+            resetButton.addEventListener('click', () => {
                 searchInput.value = '';
-                
-                // Reset to default view
-                const activeCategory = document.querySelector('.category-btn.active');
-                const activeCategoryOriginal = activeCategory.getAttribute('data-original');
-                
-                if (!activeCategoryOriginal || activeCategory.hasAttribute('data-translate')) {
-                    renderPopularItems();
-                    renderAllMenuItems();
-                } else {
-                    filterByCategory(activeCategoryOriginal);
-                }
+                this.isSearchActive = false;
+                this.resetToDefaultView();
             });
         }
-        
-        // Toggle no results message
-        function toggleNoResults(show) {
+
+        resetToDefaultView() {
+            if (this.activeCategory === 'all') {
+                this.renderPopularItems();
+                this.renderAllMenuItems();
+            } else {
+                this.filterByCategory(this.activeCategory);
+            }
+        }
+
+        toggleNoResults(show) {
             const noResultsElement = document.getElementById('no-results');
             const menuItemsContainer = document.getElementById('all-menu-section');
             
@@ -632,24 +976,60 @@
                 menuItemsContainer.classList.remove('hidden');
             }
         }
-        
-        // Debounce function for search input
-        function debounce(func, wait) {
+
+        setupCategories() {
+            const allButton = document.getElementById('all-category-btn');
+            allButton.addEventListener('click', () => {
+                this.activateCategory(allButton, 'all');
+                this.renderPopularItems();
+                this.renderAllMenuItems();
+            });
+        }
+
+        debounce(func, wait) {
             let timeout;
-            return function() {
-                const context = this;
-                const args = arguments;
+            return function(...args) {
                 clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    func.apply(context, args);
-                }, wait);
+                timeout = setTimeout(() => func.apply(this, args), wait);
             };
         }
+
+        showToast(message, type) {
+            // Simple toast implementation
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-24 left-4 right-4 bg-${type === 'success' ? 'green' : 'red'}-500 text-white px-4 py-2 rounded-lg text-center text-sm z-50`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    }
+
+    // Initialize everything when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Feather icons
+        feather.replace();
         
-        // Initialize menu on page load
-        document.addEventListener('DOMContentLoaded', initializeMenu);
+        // Set mobile viewport height
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
         
-        // iOS active state for buttons
+        // Initialize UI Manager
+        const uiManager = new UIManager();
+        uiManager.init();
+        
+        // Add touch feedback for buttons
         const buttons = document.querySelectorAll('.scale-button');
         buttons.forEach(button => {
             button.addEventListener('touchstart', function() {
@@ -660,7 +1040,13 @@
                 this.style.transform = 'scale(1)';
             });
         });
-    </script>
+    });
 
+    // Center logo action
+    function centerLogoAction() {
+        console.log('Center logo clicked');
+        // Add your custom action here
+    }
+    </script>
 </body>
 </html>
