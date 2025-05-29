@@ -323,3 +323,93 @@ color: #c45230;
         .scale-button:active {
             transform: scale(0.97);
         }
+
+
+
+        
+        .item-img-container {
+            height: 340px;
+        }
+        @media (max-height: 700px) {
+            .item-img-container {
+                height: 180px;
+            }
+        }
+        .radio-container input[type="radio"] {
+            display: none;
+        }
+        .radio-container input[type="radio"] + label {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            display: inline-block;
+            color: #424242;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"] + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"]:checked + label:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #c45230;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"]:checked + label:before {
+            border-color: #c45230;
+        }
+        .checkbox-container input[type="checkbox"] {
+            display: none;
+        }
+        .checkbox-container input[type="checkbox"] + label {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            display: inline-block;
+            color: #424242;
+            transition: all 0.2s ease;
+        }
+        .checkbox-container input[type="checkbox"] + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .checkbox-container input[type="checkbox"]:checked + label:after {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        .checkbox-container input[type="checkbox"]:checked + label:before {
+            background: #c45230;
+            border-color: #c45230;
+        }

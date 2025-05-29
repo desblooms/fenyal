@@ -18,111 +18,11 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" href="assets/css/language.css">
     
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
-    <style>
-        body {
-            -webkit-tap-highlight-color: transparent;
-            line-height: 1.3;
-        }
-        .app-container::-webkit-scrollbar {
-            display: none;
-        }
-        .special-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .bottom-safe-area {
-            padding-bottom: env(safe-area-inset-bottom, 16px);
-        }
-        .item-img-container {
-            height: 340px;
-        }
-        @media (max-height: 700px) {
-            .item-img-container {
-                height: 180px;
-            }
-        }
-        .radio-container input[type="radio"] {
-            display: none;
-        }
-        .radio-container input[type="radio"] + label {
-            position: relative;
-            padding-left: 28px;
-            cursor: pointer;
-            display: inline-block;
-            color: #424242;
-            transition: all 0.2s ease;
-        }
-        .radio-container input[type="radio"] + label:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-        }
-        .radio-container input[type="radio"]:checked + label:after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #c45230;
-            transition: all 0.2s ease;
-        }
-        .radio-container input[type="radio"]:checked + label:before {
-            border-color: #c45230;
-        }
-        .checkbox-container input[type="checkbox"] {
-            display: none;
-        }
-        .checkbox-container input[type="checkbox"] + label {
-            position: relative;
-            padding-left: 28px;
-            cursor: pointer;
-            display: inline-block;
-            color: #424242;
-            transition: all 0.2s ease;
-        }
-        .checkbox-container input[type="checkbox"] + label:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-        .checkbox-container input[type="checkbox"]:checked + label:after {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            text-align: center;
-            color: white;
-            font-size: 12px;
-            line-height: 20px;
-        }
-        .checkbox-container input[type="checkbox"]:checked + label:before {
-            background: #c45230;
-            border-color: #c45230;
-        }
-    </style>
 </head>
 <body class="bg-background font-sans text-dark">
     <!-- Main app container -->
@@ -138,9 +38,12 @@
             </a>
             
             <!-- Share button -->
-            <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+            <button class=" ">
                 <i data-feather="share-2" class="h-5 w-5 text-white"></i>
             </button>
+                        <button id="language-toggle" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
+</button>
         </div>
         
         <!-- Item details -->
@@ -203,6 +106,7 @@
     </div>
     
     <!-- Custom JavaScript -->
+      <script src="assets/js/language-toggle.js"></script>
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice } from './assets/js/menu.js';
@@ -373,5 +277,6 @@
         // Load item details on page load
         document.addEventListener('DOMContentLoaded', loadItemDetails);
     </script>
+    
 </body>
 </html>
