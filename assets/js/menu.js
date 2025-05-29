@@ -188,7 +188,7 @@ export function formatPrice(price, language = null) {
     const lang = language || localStorage.getItem('selectedLanguage') || 'en';
     
     if (lang === 'ar') {
-        return price.toFixed(0) + ' QAR';
+        return price.toFixed(0) + ' ريال قطري';
     }
     return 'QAR ' + price.toFixed(0);
 }
