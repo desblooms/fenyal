@@ -44,16 +44,15 @@
     <!-- Main App Container -->
     <div class="app-container pt-4 pb-30 scroll-touch fade-in">
         <!-- Header -->
-        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <img src="fenyal-logo-1.png" width="100px" alt="Fenyal Logo">
+          <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-4 px-4">
+            <div class="flex items-center justify-center relative">
+                <!-- Centered Logo -->
+                <div class="flex items-center justify-center flex-1">
+                    <img src="fenyal-logo-1.png" width="100px" alt="Fenyal Logo" class="h-12 object-contain">
                 </div>
-             
-                <div>
-                 
-                </div>
-                <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                
+                <!-- Language Toggle - Positioned Absolutely -->
+                <button id="language-toggle" class="absolute right-0 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
                 </button>
             </div>
@@ -63,7 +62,7 @@
         <main class="px-4">
             <!-- Categories -->
             <div class="mb-2">
-                <div class="flex space-x-4 overflow-x-auto py-1 special-scroll" id="categories-container">
+                <div class="flex space-x-4 overflow-x-auto py-1 special-scroll " id="categories-container">
                     <a href="menu.html?category=Breakfast" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/1.png" alt="Breakfast" class="h-14 w-14 object-cover rounded-full" />
@@ -104,7 +103,7 @@
             </div>
 
             <!-- Popular Items -->
-            <div class="mb-5">
+            <div class="mb-5 pt-4">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="text-base font-semibold" id="popular-title">Popular Items</h2>
                     <a href="menu.html" class="text-primary text-xs" id="view-all-link">View all</a>
@@ -112,7 +111,7 @@
 
                 <div class="special-items-container" id="special-items-container">
                     <!-- Shimmer loading effect for items -->
-                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll">
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper">
                         <div class="flex-shrink-0 w-36 rounded-lg h-44 bg-gray-200 shimmer-wrapper">
                             <div class="shimmer"></div>
                         </div>
@@ -276,7 +275,7 @@
                         container.innerHTML = '';
 
                         const itemsWrapper = document.createElement('div');
-                        itemsWrapper.className = 'flex space-x-3 overflow-x-auto py-1 special-scroll';
+                        itemsWrapper.className = 'flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper';
 
                         popularItems.forEach(item => {
                             console.log('Creating item card for:', item.name);

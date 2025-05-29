@@ -40,7 +40,7 @@
     
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-
+     
     <style>
         /* Base Styles */
         body {
@@ -65,6 +65,7 @@
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
+               padding-bottom: 100px;
         }
 
         .app-container::-webkit-scrollbar {
@@ -236,6 +237,10 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+        [dir="rtl"] .feather-arrow-left{
+  transform: scaleX(-1) !important;
+
+}
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -372,7 +377,7 @@
                     
                     <!-- Center Logo -->
                     <div class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" onclick="centerLogoAction()">
-                        <img src="https://via.placeholder.com/40x40/c45230/ffffff?text=F" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
+                        <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
                     </div>
                     
                     <!-- Menu -->
@@ -900,15 +905,18 @@
                 menuItem.innerHTML = `
                     <div class="w-24 h-24 flex-shrink-0">
                         <img src="${item.image}" alt="${itemName}" class="w-full h-full object-cover" loading="lazy">
+                      
                     </div>
                     <div class="p-3 flex-1 flex flex-col justify-between">
                         <div>
+                             
                             <h3 class="font-medium text-sm mb-0.5">${itemName}</h3>
                             <p class="text-gray-500 text-xs line-clamp-1">${itemDescription}</p>
                         </div>
                         <div class="flex justify-between items-center mt-1">
                             <span class="text-primary font-semibold">${priceDisplay}</span>
-                            <span class="text-xs text-gray-400">${itemCategory}</span>
+                              
+                           
                         </div>
                     </div>
                 `;

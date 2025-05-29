@@ -27,7 +27,7 @@
 }
 
 [dir="rtl"] .space-x-reverse {
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
 }
 
 /* RTL support for form elements in menu-item-details */
@@ -128,7 +128,7 @@
 
 /* Flex justify adjustments for RTL */
 [dir="rtl"] .justify-between {
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
 }
 
 [dir="rtl"] .justify-start {
@@ -173,7 +173,7 @@
 
 /* Menu item cards RTL support */
 [dir="rtl"] .menu-item .flex {
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
 }
 
 [dir="rtl"] .special-item {
@@ -291,7 +291,7 @@
 
 /* Special RTL handling for specific layouts */
 [dir="rtl"] .category-container {
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
 }
 
 [dir="rtl"] .popular-items-container {
@@ -384,7 +384,7 @@
 
 /* Price and addon layout fixes */
 [dir="rtl"] .addon-item {
-    flex-direction: row-reverse;
+  /* flex-direction: row-reverse; */
 }
 
 [dir="rtl"] .size-options {
@@ -403,4 +403,13 @@
 /* Error state text alignment */
 [dir="rtl"] .error-state .flex-col {
     text-align: center; /* Keep error text centered */
+}
+
+[dir="rtl"] .feather-arrow-left{
+  transform: scaleX(-1) !important;
+
+}
+
+[dir="rtl"] .special-items-wrapper{
+    flex-flow: row-reverse !important ;
 }
