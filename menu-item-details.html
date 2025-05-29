@@ -36,11 +36,6 @@
         .bottom-safe-area {
             padding-bottom: env(safe-area-inset-bottom, 16px);
         }
-        .quantity-input::-webkit-inner-spin-button,
-        .quantity-input::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
         .item-img-container {
             height: 340px;
         }
@@ -131,7 +126,7 @@
 </head>
 <body class="bg-background font-sans text-dark">
     <!-- Main app container -->
-    <div class="app-container h-full overflow-y-auto scroll-touch pb-24">
+    <div class="app-container h-full overflow-y-auto scroll-touch pb-8">
         <!-- Item image (sticky at top) -->
         <div class="relative item-img-container">
             <div id="item-image" class="w-full h-full bg-gray-200 object-cover"></div>
@@ -149,7 +144,7 @@
         </div>
         
         <!-- Item details -->
-        <div class="px-4 pt-4 pb-20">
+        <div class="px-4 pt-4 pb-8">
             <!-- Item title and category -->
             <div class="mb-3">
                 <div class="flex justify-between items-start">
@@ -197,56 +192,20 @@
                 <div id="addons-list" class="space-y-3 checkbox-container"></div>
             </div>
             
-            <!-- Quantity counter -->
-            <div class="mb-8 hidden">
-                <h3 class="text-base font-semibold mb-3">Quantity</h3>
-                <div class="flex items-center">
-                    <button id="decrease-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                        <i data-feather="minus" class="h-5 w-5 text-gray-600"></i>
-                    </button>
-                    <input type="number" id="item-quantity" value="1" min="1" class="mx-3 w-12 h-10 text-center border-none quantity-input text-lg font-medium focus:outline-none" readonly>
-                    <button id="increase-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                        <i data-feather="plus" class="h-5 w-5 text-gray-600"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Special instructions -->
+            <!-- Price display -->
             <div class="mb-8">
                 <div>
-                <p class="text-sm text-gray-500">Price</p>
-                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                    <p class="text-sm text-gray-500">Price</p>
+                    <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+                </div>
             </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add to cart sticky footer -->
-    <!-- <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
-        <div class="flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-500">Price</p>
-                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
-            </div>
-            <button id="add-to-cart-btn" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center transform transition-transform active:scale-95">
-                Add to Cart
-                <i data-feather="shopping-cart" class="h-5 w-5 ml-2"></i>
-            </button>
-        </div>
-    </div> -->
-    
-    <!-- Success notification (hidden by default) -->
-    <div id="success-toast" class="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">
-        <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
-            <i data-feather="check-circle" class="h-4 w-4 mr-2"></i>
-            <span>Added to cart!</span>
         </div>
     </div>
     
     <!-- Custom JavaScript -->
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
-        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        import menuManager, { formatPrice } from './assets/js/menu.js';
         
         // Initialize Feather icons
         feather.replace();
@@ -388,52 +347,6 @@
             
             // Set initial price
             updatePrice(item);
-            
-            // Handle quantity buttons
-            const quantityInput = document.getElementById('item-quantity');
-            
-            document.getElementById('decrease-qty').addEventListener('click', function() {
-                const currentVal = parseInt(quantityInput.value);
-                if (currentVal > 1) {
-                    quantityInput.value = currentVal - 1;
-                    updatePrice(item);
-                }
-            });
-            
-            document.getElementById('increase-qty').addEventListener('click', function() {
-                const currentVal = parseInt(quantityInput.value);
-                quantityInput.value = currentVal + 1;
-                updatePrice(item);
-            });
-            
-            // Handle add to cart button
-            document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-                const quantity = parseInt(document.getElementById('item-quantity').value);
-                const specialInstructions = document.getElementById('special-instructions').value;
-                
-                // Prepare variants object
-                const variants = {
-                    addons: selectedAddons.length > 0 ? [...selectedAddons] : undefined,
-                    spiceLevel: selectedSpiceLevel || undefined,
-                    specialInstructions: specialInstructions || undefined
-                };
-                
-                // Add size if half/full is available
-                if (item.isHalfFull) {
-                    variants.size = selectedSize;
-                }
-                
-                // Add to cart
-                cartManager.addToCart(item, quantity, variants);
-                
-                // Show success toast
-                toast.show('Added to cart successfully!', 'success');
-                
-                // Optional: Redirect to cart after short delay
-                setTimeout(() => {
-                    pageTransition('cart.html');
-                }, 1000);
-            });
         }
         
         // Update price based on selections
@@ -450,9 +363,8 @@
             // Add add-on prices
             const addonsPrice = selectedAddons.reduce((total, addon) => total + addon.price, 0);
             
-            // Calculate total price including quantity
-            const quantity = parseInt(document.getElementById('item-quantity').value);
-            const totalPrice = (basePrice + addonsPrice) * quantity;
+            // Calculate total price
+            const totalPrice = basePrice + addonsPrice;
             
             // Update price display
             document.getElementById('item-price').textContent = formatPrice(totalPrice);
