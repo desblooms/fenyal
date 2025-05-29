@@ -15,6 +15,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Arabic Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
@@ -33,7 +35,27 @@
         .category-scroll::-webkit-scrollbar {
             display: none;
         }
-      
+        
+        /* Arabic font support */
+        [lang="ar"] {
+            font-family: 'Cairo', 'Poppins', sans-serif;
+        }
+        
+        /* RTL spacing adjustments */
+        [dir="rtl"] .space-x-2 > * + * {
+            margin-left: 0;
+            margin-right: 0.5rem;
+        }
+        
+        [dir="rtl"] .space-x-3 > * + * {
+            margin-left: 0;
+            margin-right: 0.75rem;
+        }
+        
+        [dir="rtl"] .space-x-4 > * + * {
+            margin-left: 0;
+            margin-right: 1rem;
+        }
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -45,22 +67,22 @@
                 <a href="index.html" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
                 </a>
-                <h1 class="text-xl font-semibold">Menu</h1>
+                <h1 class="text-xl font-semibold" data-translate="menu">Menu</h1>
                 <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
-</button>
+                    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
+                </button>
             </div>
             
             <!-- Search bar -->
             <div class="relative mb-4">
-                <input type="text" id="search-input" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
-                <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"></i>
+                <input type="text" id="search-input" data-translate-placeholder="searchPlaceholder" placeholder="Search menu items..." class="w-full bg-gray-200 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                <i data-feather="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 search-icon"></i>
             </div>
             
             <!-- Categories -->
             <div class="overflow-x-auto category-scroll">
                 <div class="flex space-x-2 py-1" id="category-container">
-                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button">All</button>
+                    <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button" data-translate="all">All</button>
                     <!-- Categories will be dynamically added here -->
                     <div class="flex space-x-2" id="category-buttons">
                         <div class="h-8 w-20 rounded-full Menushimmer"></div>
@@ -76,7 +98,7 @@
         <main class="px-4 pt-2 pb-4">
             <!-- Popular items section -->
             <div class="mb-6" id="popular-section">
-                <h2 class="text-lg font-semibold mb-3">Popular Items</h2>
+                <h2 class="text-lg font-semibold mb-3" data-translate="popularItems">Popular Items</h2>
                 <div id="popular-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
@@ -106,7 +128,7 @@
             
             <!-- All menu items -->
             <div id="all-menu-section">
-                <h2 class="text-lg font-semibold mb-3">All Menu</h2>
+                <h2 class="text-lg font-semibold mb-3" data-translate="allMenu">All Menu</h2>
                 <div id="menu-items-container">
                     <!-- Loading placeholders -->
                     <div class="grid grid-cols-1 gap-4">
@@ -149,44 +171,202 @@
                 <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                     <i data-feather="search" class="h-8 w-8 text-gray-400"></i>
                 </div>
-                <h3 class="text-lg font-medium text-gray-700 mb-1">No items found</h3>
-                <p class="text-gray-500 text-sm text-center mb-4">Try a different search or category</p>
-                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button">
+                <h3 class="text-lg font-medium text-gray-700 mb-1" data-translate="noItemsFound">No items found</h3>
+                <p class="text-gray-500 text-sm text-center mb-4" data-translate="tryDifferentSearch">Try a different search or category</p>
+                <button id="reset-search" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button" data-translate="resetSearch">
                     Reset Search
                 </button>
             </div>
         </main>
         
         <!-- Navigation bar -->
-       <!-- Navigation bar -->
-<nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-40">
-     <div class="px-4 py-0">
-        <div class="flex justify-around items-center ">
-            <!-- Home -->
-            <a href="index.html" class="nav-item  ripple flex flex-col items-center justify-center" data-page="home">
-                <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
-                <span class="nav-text">Home</span>
-            </a>
-            
-            <!-- Center Logo -->
-            <div class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" onclick="centerLogoAction()">
-                <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
+        <nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-40">
+            <div class="px-4 py-0">
+                <div class="flex justify-around items-center ">
+                    <!-- Home -->
+                    <a href="index.html" class="nav-item  ripple flex flex-col items-center justify-center" data-page="home">
+                        <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
+                        <span class="nav-text" data-translate="home">Home</span>
+                    </a>
+                    
+                    <!-- Center Logo -->
+                    <div class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" onclick="centerLogoAction()">
+                        <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
+                    </div>
+                    
+                    <!-- Menu -->
+                    <a href="menu.html" class="nav-item active ripple flex flex-col items-center justify-center" data-page="menu-full">
+                        <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
+                        <span class="nav-text" data-translate="menu">Menu</span>
+                    </a>
+                </div>
             </div>
-            
-            <!-- Menu -->
-            <a href="menu.html" class="nav-item active ripple flex flex-col items-center justify-center" data-page="menu-full">
-                <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
-                <span class="nav-text ">Menu</span>
-                <!-- Optional notification badge -->
-                <!-- <div class="notification-badge">3</div> -->
-            </a>
-        </div>
-    </div>
-</nav>
+        </nav>
     </div>
     
+    <!-- Language System -->
+    <script>
+    // Translation data
+    const translations = {
+        en: {
+            menu: 'Menu',
+            searchPlaceholder: 'Search menu items...',
+            all: 'All',
+            popularItems: 'Popular Items',
+            allMenu: 'All Menu', 
+            noItemsFound: 'No items found',
+            tryDifferentSearch: 'Try a different search or category',
+            resetSearch: 'Reset Search',
+            home: 'Home',
+            // Categories
+            breakfast: 'Breakfast',
+            dishes: 'Dishes',
+            bread: 'Bread', 
+            desserts: 'Desserts',
+            coldDrinks: 'Cold Drinks',
+            hotDrinks: 'Hot Drinks'
+        },
+        ar: {
+            menu: 'القائمة',
+            searchPlaceholder: 'البحث في عناصر القائمة...',
+            all: 'الكل',
+            popularItems: 'العناصر الشائعة',
+            allMenu: 'جميع القائمة',
+            noItemsFound: 'لم يتم العثور على عناصر',
+            tryDifferentSearch: 'جرب بحثاً أو فئة مختلفة',
+            resetSearch: 'إعادة تعيين البحث',
+            home: 'الرئيسية',
+            // Categories
+            breakfast: 'الإفطار',
+            dishes: 'الأطباق',
+            bread: 'الخبز',
+            desserts: 'الحلويات',
+            coldDrinks: 'المشروبات الباردة',
+            hotDrinks: 'المشروبات الساخنة'
+        }
+    };
+
+    // Language Manager Class
+    class LanguageManager {
+        constructor() {
+            this.currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+            this.init();
+        }
+
+        init() {
+            this.applyLanguage(this.currentLanguage);
+            this.setupToggle();
+        }
+
+        setupToggle() {
+            const toggle = document.getElementById('language-toggle');
+            const currentLangSpan = document.getElementById('current-language');
+            
+            this.updateLanguageDisplay(this.currentLanguage);
+            
+            toggle.addEventListener('click', () => {
+                this.currentLanguage = this.currentLanguage === 'en' ? 'ar' : 'en';
+                localStorage.setItem('selectedLanguage', this.currentLanguage);
+                this.applyLanguage(this.currentLanguage);
+                this.updateLanguageDisplay(this.currentLanguage);
+                
+                // Show success message
+                if (window.toast && typeof window.toast.show === 'function') {
+                    const langName = this.currentLanguage === 'ar' ? 'العربية' : 'English';
+                    window.toast.show(`Language: ${langName}`, 'success');
+                }
+            });
+        }
+
+        updateLanguageDisplay(lang) {
+            const currentLangSpan = document.getElementById('current-language');
+            currentLangSpan.textContent = lang.toUpperCase();
+        }
+
+        applyLanguage(lang) {
+            // Set document direction and language
+            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+            
+            // Update all translatable elements
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update placeholder texts
+            const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+            placeholderElements.forEach(element => {
+                const key = element.getAttribute('data-translate-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    element.setAttribute('placeholder', translations[lang][key]);
+                }
+            });
+            
+            // Handle RTL-specific styling
+            this.adjustRTLStyling(lang);
+        }
+
+        adjustRTLStyling(lang) {
+            const searchIcon = document.querySelector('.search-icon');
+            
+            if (lang === 'ar') {
+                // Adjust search icon position for RTL
+                if (searchIcon) {
+                    searchIcon.classList.remove('left-3');
+                    searchIcon.classList.add('right-3');
+                }
+                
+                // Adjust input padding for RTL
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.classList.remove('pl-10', 'pr-4');
+                    searchInput.classList.add('pr-10', 'pl-4');
+                }
+            } else {
+                // Reset to LTR positioning
+                if (searchIcon) {
+                    searchIcon.classList.remove('right-3');
+                    searchIcon.classList.add('left-3');
+                }
+                
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.classList.remove('pr-10', 'pl-4');
+                    searchInput.classList.add('pl-10', 'pr-4');
+                }
+            }
+        }
+
+        translateCategory(categoryName) {
+            const categoryMap = {
+                'Breakfast': 'breakfast',
+                'Dishes': 'dishes', 
+                'Bread': 'bread',
+                'Desserts': 'desserts',
+                'Cold Drinks': 'coldDrinks',
+                'Hot Drinks': 'hotDrinks'
+            };
+            
+            const key = categoryMap[categoryName];
+            if (key && translations[this.currentLanguage] && translations[this.currentLanguage][key]) {
+                return translations[this.currentLanguage][key];
+            }
+            return categoryName;
+        }
+    }
+
+    // Initialize language manager
+    const languageManager = new LanguageManager();
+    
+    // Make it globally accessible
+    window.languageManager = languageManager;
+    </script>
+
     <!-- Custom JavaScript -->
-       <script src="assets/js/language-toggle.js"></script>
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
         import menuManager, { formatPrice } from './assets/js/menu.js';
@@ -211,7 +391,8 @@
                     // Highlight the category button
                     const categoryButtons = document.querySelectorAll('.category-btn');
                     categoryButtons.forEach(button => {
-                        if (button.textContent === categoryParam) {
+                        if (button.textContent === categoryParam || 
+                            button.getAttribute('data-original') === categoryParam) {
                             activateCategory(button);
                         }
                     });
@@ -228,7 +409,7 @@
             }
         }
         
-        // Render category buttons
+        // Render category buttons with translation support
         function renderCategories() {
             const categories = menuManager.getAllCategories();
             const categoryContainer = document.getElementById('category-buttons');
@@ -236,20 +417,12 @@
             // Clear loading placeholders
             categoryContainer.innerHTML = '';
             
-            // Add "All" button if not already there
-            let allButton = document.querySelector('.category-btn.active');
-            if (!allButton) {
-                allButton = document.createElement('button');
-                allButton.className = 'category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button';
-                allButton.textContent = 'All';
-                categoryContainer.appendChild(allButton);
-            }
-            
             // Add category buttons
             categories.forEach(category => {
                 const button = document.createElement('button');
                 button.className = 'category-btn px-4 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-700 scale-button';
-                button.textContent = category;
+                button.setAttribute('data-original', category); // Store original English name
+                button.textContent = window.languageManager.translateCategory(category);
                 
                 // If this is the category from URL param, make it active
                 if (category === categoryParam) {
@@ -258,18 +431,22 @@
                 
                 button.addEventListener('click', function() {
                     activateCategory(this);
-                    filterByCategory(category);
+                    const originalCategory = this.getAttribute('data-original');
+                    filterByCategory(originalCategory);
                 });
                 
                 categoryContainer.appendChild(button);
             });
             
             // Add event listener to "All" button
-            allButton.addEventListener('click', function() {
-                activateCategory(this);
-                renderPopularItems();
-                renderAllMenuItems();
-            });
+            const allButton = document.querySelector('.category-btn[data-translate="all"]');
+            if (allButton) {
+                allButton.addEventListener('click', function() {
+                    activateCategory(this);
+                    renderPopularItems();
+                    renderAllMenuItems();
+                });
+            }
         }
         
         // Activate category button
@@ -291,9 +468,9 @@
             // Hide popular section when filtering
             document.getElementById('popular-section').classList.add('hidden');
             
-            // Update section title
+            // Update section title with translation
             const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.textContent = category;
+            sectionTitle.textContent = window.languageManager.translateCategory(category);
             
             // Render filtered items
             renderMenuItems(items, 'menu-items-container');
@@ -312,7 +489,8 @@
             
             // Update all menu section title
             const sectionTitle = document.querySelector('#all-menu-section h2');
-            sectionTitle.textContent = 'All Menu';
+            sectionTitle.setAttribute('data-translate', 'allMenu');
+            sectionTitle.textContent = translations[window.languageManager.currentLanguage]['allMenu'];
         }
         
         // Render all menu items
@@ -390,11 +568,13 @@
                 if (searchTerm === '') {
                     // Reset to default view if search is cleared
                     const activeCategory = document.querySelector('.category-btn.active');
-                    if (activeCategory.textContent === 'All') {
+                    const activeCategoryOriginal = activeCategory.getAttribute('data-original');
+                    
+                    if (!activeCategoryOriginal || activeCategory.hasAttribute('data-translate')) {
                         renderPopularItems();
                         renderAllMenuItems();
                     } else {
-                        filterByCategory(activeCategory.textContent);
+                        filterByCategory(activeCategoryOriginal);
                     }
                     return;
                 }
@@ -413,7 +593,7 @@
                 
                 // Update section title
                 const sectionTitle = document.querySelector('#all-menu-section h2');
-                sectionTitle.textContent = 'Search Results';
+                sectionTitle.textContent = window.languageManager.currentLanguage === 'ar' ? 'نتائج البحث' : 'Search Results';
                 
                 // Render filtered items
                 renderMenuItems(filteredItems, 'menu-items-container');
@@ -428,11 +608,13 @@
                 
                 // Reset to default view
                 const activeCategory = document.querySelector('.category-btn.active');
-                if (activeCategory.textContent === 'All') {
+                const activeCategoryOriginal = activeCategory.getAttribute('data-original');
+                
+                if (!activeCategoryOriginal || activeCategory.hasAttribute('data-translate')) {
                     renderPopularItems();
                     renderAllMenuItems();
                 } else {
-                    filterByCategory(activeCategory.textContent);
+                    filterByCategory(activeCategoryOriginal);
                 }
             });
         }
