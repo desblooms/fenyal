@@ -1,117 +1,15 @@
 <?php
-// index.php - Complete Bilingual Home Page
-session_start();
+// index.php - Optimized Bilingual Home Page with Dynamic Categories
+require_once 'config/app.php';
 
-// Include admin config for database connection
-require_once 'admin/config.php';
+// Get menu data with caching
+$categories = $db->getCategories();
+$popularItems = $db->getMenuItems(['popular' => true, 'limit' => 6]);
 
-// Language Management
-$supportedLanguages = ['en', 'ar'];
-$defaultLanguage = 'en';
-
-// Get current language from URL parameter, session, or default
-$currentLang = $_GET['lang'] ?? $_SESSION['language'] ?? $defaultLanguage;
-
-// Validate and set language
-if (!in_array($currentLang, $supportedLanguages)) {
-    $currentLang = $defaultLanguage;
-}
-
-// Store in session
-$_SESSION['language'] = $currentLang;
-
-// Get database connection
-$pdo = getConnection();
-
-// Get categories with caching simulation
-$categoriesStmt = $pdo->query("
-    SELECT DISTINCT category, category_ar, COUNT(*) as item_count
-    FROM menu_items 
-    WHERE category IS NOT NULL 
-    GROUP BY category, category_ar
-    ORDER BY 
-        CASE category
-            WHEN 'Breakfast' THEN 1
-            WHEN 'Dishes' THEN 2  
-            WHEN 'Bread' THEN 3
-            WHEN 'Desserts' THEN 4
-            WHEN 'Cold Drinks' THEN 5
-            WHEN 'Hot Drinks' THEN 6
-            ELSE 7
-        END
-");
-$categories = $categoriesStmt->fetchAll();
-
-// Get popular items
-$popularStmt = $pdo->prepare("
-    SELECT * FROM menu_items 
-    WHERE is_popular = 1 
-    ORDER BY id DESC 
-    LIMIT 6
-");
-$popularStmt->execute();
-$popularItems = $popularStmt->fetchAll();
-
-// Translation arrays
-$translations = [
-    'en' => [
-        'home' => 'Home',
-        'menu' => 'Menu',
-        'popular_items' => 'Popular Items',
-        'view_all' => 'View all',
-        'categories' => 'Categories',
-        'no_items_found' => 'No items found',
-        'popular' => 'Popular',
-        'special' => 'Special'
-    ],
-    'ar' => [
-        'home' => 'الرئيسية',
-        'menu' => 'القائمة',
-        'popular_items' => 'الأصناف الشائعة',
-        'view_all' => 'عرض الكل',
-        'categories' => 'الفئات',
-        'no_items_found' => 'لم يتم العثور على أصناف',
-        'popular' => 'شائع',
-        'special' => 'مميز'
-    ]
-];
-
-// Helper functions
-function __($key) {
-    global $translations, $currentLang;
-    return $translations[$currentLang][$key] ?? $translations['en'][$key] ?? $key;
-}
-
-function isRTL() {
-    global $currentLang;
-    return $currentLang === 'ar';
-}
-
-function getLocalizedText($item, $field) {
-    global $currentLang;
-    $arField = $field . '_ar';
-    
-    if ($currentLang === 'ar' && isset($item[$arField]) && !empty($item[$arField])) {
-        return $item[$arField];
-    }
-    
-    return $item[$field] ?? '';
-}
-
-function formatPrice($price) {
-    global $currentLang;
-    return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
-}
-
-function buildUrl($path, $params = []) {
-    global $currentLang;
-    $params['lang'] = $currentLang;
-    $queryString = http_build_query($params);
-    return $path . ($queryString ? '?' . $queryString : '');
-}
-
-$alternativeLang = $currentLang === 'ar' ? 'en' : 'ar';
+// Current language and direction
+$currentLang = getCurrentLanguage();
 $direction = isRTL() ? 'rtl' : 'ltr';
+$alternativeLang = getAlternativeLanguage();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
@@ -119,16 +17,24 @@ $direction = isRTL() ? 'rtl' : 'ltr';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title><?php echo __('home'); ?> - Fenyal</title>
+    <title><?php echo __('home'); ?> - <?php echo APP_NAME; ?></title>
     
     <!-- PWA Icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Fenyal">
+    <meta name="apple-mobile-web-app-title" content="<?php echo APP_NAME; ?>">
     <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="manifest.json">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/css/app.css" as="style">
+    <link rel="preload" href="assets/css/language.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    <?php if ($currentLang === 'ar'): ?>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" as="style">
+    <?php endif; ?>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -151,7 +57,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
     <style>
-        /* Arabic font support */
+        /* Critical CSS for faster loading */
         [lang="ar"] {
             font-family: 'Cairo', 'Poppins', sans-serif;
         }
@@ -166,6 +72,18 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         
         .category-item:active, .menu-item:active {
             transform: scale(0.98);
+        }
+        
+        /* Optimized loading animation */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         
         /* Fast fade-in */
@@ -188,12 +106,12 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             <div class="flex items-center justify-center relative">
                 <!-- Centered Logo -->
                 <div class="flex items-center justify-center flex-1">
-                    <img src="fenyal-logo-1.png" width="100" height="48" alt="Fenyal Logo" class="h-12 object-contain">
+                    <img src="fenyal-logo-1.png" width="100" height="48" alt="<?php echo APP_NAME; ?> Logo" class="h-12 object-contain">
                 </div>
                 
                 <!-- Language Toggle -->
                 <div class="absolute <?php echo isRTL() ? 'left-0' : 'right-0'; ?>">
-                    <a href="?lang=<?php echo $alternativeLang; ?>" 
+                    <a href="<?php echo buildUrl('index.php', ['lang' => $alternativeLang]); ?>" 
                        class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button"
                        aria-label="Switch to <?php echo $alternativeLang === 'ar' ? 'Arabic' : 'English'; ?>">
                         <span class="text-sm font-medium text-gray-700">
@@ -211,25 +129,16 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll <?php echo isRTL() ? 'space-x-reverse' : ''; ?>" 
                      style="direction: <?php echo $direction; ?>">
                     <?php 
-                    $categoryImages = [
-                        'Breakfast' => 'uploads/menu/1.png',
-                        'Dishes' => 'uploads/menu/2.png',
-                        'Bread' => 'uploads/menu/3.png',
-                        'Desserts' => 'uploads/menu/4.png',
-                        'Cold Drinks' => 'uploads/menu/5.png',
-                        'Hot Drinks' => 'uploads/menu/6.png'
-                    ];
-                    
                     foreach ($categories as $category): 
-                        $categoryName = getLocalizedText($category, 'category');
-                        $categoryImage = $categoryImages[$category['category']] ?? 'uploads/menu/1.png';
+                        $categoryName = getLocalizedText($category, 'name', $currentLang);
+                        $categoryImage = !empty($category['image']) ? $category['image'] : 'uploads/menu/placeholder.jpg';
                     ?>
-                    <a href="<?php echo buildUrl('menu.php', ['category' => $category['category']]); ?>" 
+                    <a href="<?php echo buildUrl('menu.php', ['category' => $category['name']]); ?>" 
                        class="category-item flex flex-col items-center flex-shrink-0"
                        aria-label="<?php echo $categoryName; ?> category">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="<?php echo $categoryImage; ?>" 
-                                 alt="<?php echo $categoryName; ?>" 
+                            <img src="<?php echo htmlspecialchars($categoryImage); ?>" 
+                                 alt="<?php echo htmlspecialchars($categoryName); ?>" 
                                  class="h-14 w-14 object-cover rounded-full"
                                  loading="lazy" 
                                  onerror="this.src='uploads/menu/placeholder.jpg'" />
@@ -259,15 +168,15 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     <?php else: ?>
                     <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
-                            $itemName = getLocalizedText($item, 'name');
-                            $itemCategory = getLocalizedText($item, 'category');
+                            $itemName = getLocalizedText($item, 'name', $currentLang);
+                            $itemCategory = getLocalizedText($item, 'category', $currentLang);
                             $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
                         ?>
                         <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
                                  onclick="window.location.href='<?php echo buildUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
                                  role="button"
                                  tabindex="0"
-                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
+                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice, $currentLang); ?>">
                             <div class="h-24 overflow-hidden">
                                 <img src="<?php echo htmlspecialchars($item['image']); ?>" 
                                      alt="<?php echo htmlspecialchars($itemName); ?>" 
@@ -284,7 +193,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                                 </p>
                                 <div class="flex justify-between items-center mt-2">
                                     <span class="text-primary font-semibold text-sm">
-                                        <?php echo formatPrice($displayPrice); ?>
+                                        <?php echo formatPrice($displayPrice, $currentLang); ?>
                                     </span>
                                     <?php if ($item['is_popular']): ?>
                                     <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
@@ -319,8 +228,8 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     <!-- Center Logo -->
                     <button class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" 
                             onclick="centerLogoAction()"
-                            aria-label="Fenyal logo">
-                        <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
+                            aria-label="<?php echo APP_NAME; ?> logo">
+                        <img src="fenyal-logo-1.png" alt="<?php echo APP_NAME; ?> Logo" class="w-10 h-10 rounded-full">
                     </button>
                     
                     <!-- Menu -->
@@ -341,7 +250,9 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         // Configuration
         const APP_CONFIG = {
             language: '<?php echo $currentLang; ?>',
-            isRTL: <?php echo isRTL() ? 'true' : 'false'; ?>
+            isRTL: <?php echo isRTL() ? 'true' : 'false'; ?>,
+            apiBaseUrl: '/api/',
+            enableCache: <?php echo ENABLE_CACHE ? 'true' : 'false'; ?>
         };
 
         // Initialize icons
@@ -359,6 +270,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         // Center logo action
         function centerLogoAction() {
             console.log('Center logo clicked');
+            // Custom action here
         }
 
         // Performance optimized touch feedback
@@ -386,7 +298,37 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             });
         }
 
-      
+        // Lazy loading for images
+        function initLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src || img.src;
+                            img.classList.remove('loading-skeleton');
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            addTouchFeedback();
+            initLazyLoading();
+            
+            // Check if user is new and should see welcome page
+            if (!localStorage.getItem('hasVisited')) {
+                window.location.href = 'welcome.html';
+                return;
+            }
+        });
 
         // Register service worker for PWA support
         if ('serviceWorker' in navigator) {
@@ -400,6 +342,24 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     });
             });
         }
+
+        // Preload critical pages
+        function preloadCriticalPages() {
+            const criticalPages = [
+                '<?php echo buildUrl('menu.php'); ?>',
+                '<?php echo buildUrl('api/menu.php', ['action' => 'categories']); ?>'
+            ];
+            
+            criticalPages.forEach(url => {
+                const link = document.createElement('link');
+                link.rel = 'prefetch';
+                link.href = url;
+                document.head.appendChild(link);
+            });
+        }
+
+        // Preload after initial load
+        setTimeout(preloadCriticalPages, 1000);
     </script>
 
     <!-- PWA Installer -->

@@ -1,5 +1,5 @@
 <?php
-// config.php - Database configuration and setup
+// admin/config.php - Database configuration and setup with enhanced categories support
 
 // Database configuration
 define('DB_HOST', 'localhost');
@@ -86,32 +86,78 @@ function initializeDatabase() {
         
         $pdo->exec($createSpiceLevelsTable);
         
-        // Create categories table for better management
+        // Create enhanced categories table with image support
         $createCategoriesTable = "
         CREATE TABLE IF NOT EXISTS categories (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL UNIQUE,
             name_ar VARCHAR(100),
             display_order INT DEFAULT 0,
+            image VARCHAR(500) NULL,
             is_active BOOLEAN DEFAULT TRUE,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_display_order (display_order),
+            INDEX idx_active (is_active)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         
         $pdo->exec($createCategoriesTable);
         
-        // Insert default categories if they don't exist
+        // Check if image column exists, if not add it (for existing installations)
+        $checkImageColumn = $pdo->query("SHOW COLUMNS FROM categories LIKE 'image'");
+        if ($checkImageColumn->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE categories ADD COLUMN image VARCHAR(500) NULL AFTER display_order");
+        }
+        
+        // Check if updated_at column exists, if not add it
+        $checkUpdatedAtColumn = $pdo->query("SHOW COLUMNS FROM categories LIKE 'updated_at'");
+        if ($checkUpdatedAtColumn->rowCount() == 0) {
+            $pdo->exec("ALTER TABLE categories ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER created_at");
+        }
+        
+        // Insert default categories if they don't exist (with default images)
         $defaultCategories = [
-            ['name' => 'Breakfast', 'name_ar' => 'فطور', 'display_order' => 1],
-            ['name' => 'Dishes', 'name_ar' => 'أطباق', 'display_order' => 2],
-            ['name' => 'Bread', 'name_ar' => 'خبز', 'display_order' => 3],
-            ['name' => 'Desserts', 'name_ar' => 'حلويات', 'display_order' => 4],
-            ['name' => 'Cold Drinks', 'name_ar' => 'مشروبات باردة', 'display_order' => 5],
-            ['name' => 'Hot Drinks', 'name_ar' => 'مشروبات ساخنة', 'display_order' => 6]
+            [
+                'name' => 'Breakfast', 
+                'name_ar' => 'فطور', 
+                'display_order' => 1,
+                'image' => 'uploads/categories/breakfast.png'
+            ],
+            [
+                'name' => 'Dishes', 
+                'name_ar' => 'أطباق', 
+                'display_order' => 2,
+                'image' => 'uploads/categories/dishes.png'
+            ],
+            [
+                'name' => 'Bread', 
+                'name_ar' => 'خبز', 
+                'display_order' => 3,
+                'image' => 'uploads/categories/bread.png'
+            ],
+            [
+                'name' => 'Desserts', 
+                'name_ar' => 'حلويات', 
+                'display_order' => 4,
+                'image' => 'uploads/categories/desserts.png'
+            ],
+            [
+                'name' => 'Cold Drinks', 
+                'name_ar' => 'مشروبات باردة', 
+                'display_order' => 5,
+                'image' => 'uploads/categories/cold-drinks.png'
+            ],
+            [
+                'name' => 'Hot Drinks', 
+                'name_ar' => 'مشروبات ساخنة', 
+                'display_order' => 6,
+                'image' => 'uploads/categories/hot-drinks.png'
+            ]
         ];
         
         foreach ($defaultCategories as $category) {
-            $stmt = $pdo->prepare("INSERT IGNORE INTO categories (name, name_ar, display_order) VALUES (?, ?, ?)");
-            $stmt->execute([$category['name'], $category['name_ar'], $category['display_order']]);
+            $stmt = $pdo->prepare("INSERT IGNORE INTO categories (name, name_ar, display_order, image) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$category['name'], $category['name_ar'], $category['display_order'], $category['image']]);
         }
         
         return true;
@@ -284,6 +330,22 @@ function exportToJSON() {
     }
     
     return json_encode($menuItems, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+}
+
+// Get categories with images for frontend
+function getCategoriesWithImages() {
+    $pdo = getConnection();
+    
+    $stmt = $pdo->query("
+        SELECT c.*, COUNT(m.id) as item_count
+        FROM categories c
+        LEFT JOIN menu_items m ON c.name = m.category
+        WHERE c.is_active = 1
+        GROUP BY c.id
+        ORDER BY c.display_order, c.name
+    ");
+    
+    return $stmt->fetchAll();
 }
 
 // Simple authentication function

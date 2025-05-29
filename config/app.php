@@ -1,11 +1,11 @@
 <?php
-// config/app.php - Application Configuration and Optimization
+// config/app.php - Application Configuration and Optimization with Dynamic Categories
 session_start();
 
 // Application Constants
 define('APP_NAME', 'Fenyal');
 define('APP_VERSION', '2.0.0');
-define('APP_URL', 'https://fenya.desblooms.in');
+define('APP_URL', 'https://fenyal.com');
 define('DEFAULT_LANGUAGE', 'en');
 define('SUPPORTED_LANGUAGES', ['en', 'ar']);
 
@@ -55,6 +55,7 @@ class LanguageManager {
                 'menu' => 'Menu',
                 'about' => 'About',
                 'contact' => 'Contact',
+                'categories' => 'Categories',
                 
                 // Menu Items
                 'popular_items' => 'Popular Items',
@@ -113,6 +114,7 @@ class LanguageManager {
                 'menu' => 'القائمة',
                 'about' => 'حولنا',
                 'contact' => 'اتصل بنا',
+                'categories' => 'الفئات',
                 
                 // Menu Items
                 'popular_items' => 'الأصناف الشائعة',
@@ -310,6 +312,12 @@ class DatabaseHelper {
             $whereConditions[] = "is_special = 1";
         }
         
+        if (isset($filters['limit']) && is_numeric($filters['limit'])) {
+            $limit = "LIMIT " . (int)$filters['limit'];
+        } else {
+            $limit = "";
+        }
+        
         $whereClause = !empty($whereConditions) ? 'WHERE ' . implode(' AND ', $whereConditions) : '';
         
         $sql = "SELECT * FROM menu_items $whereClause ORDER BY 
@@ -321,7 +329,7 @@ class DatabaseHelper {
                     WHEN 'Cold Drinks' THEN 5
                     WHEN 'Hot Drinks' THEN 6
                     ELSE 7
-                END, name ASC";
+                END, name ASC $limit";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
@@ -363,7 +371,7 @@ class DatabaseHelper {
     }
     
     public function getCategories() {
-        $cacheKey = 'categories';
+        $cacheKey = 'categories_with_images';
         $cache = CacheManager::getInstance();
         
         if ($cached = $cache->get($cacheKey)) {
@@ -371,25 +379,23 @@ class DatabaseHelper {
         }
         
         $stmt = $this->pdo->query("
-            SELECT DISTINCT category, category_ar, COUNT(*) as item_count
-            FROM menu_items 
-            WHERE category IS NOT NULL 
-            GROUP BY category, category_ar
-            ORDER BY 
-                CASE category
-                    WHEN 'Breakfast' THEN 1
-                    WHEN 'Dishes' THEN 2  
-                    WHEN 'Bread' THEN 3
-                    WHEN 'Desserts' THEN 4
-                    WHEN 'Cold Drinks' THEN 5
-                    WHEN 'Hot Drinks' THEN 6
-                    ELSE 7
-                END
+            SELECT c.*, COUNT(m.id) as item_count
+            FROM categories c
+            LEFT JOIN menu_items m ON c.name = m.category
+            WHERE c.is_active = 1
+            GROUP BY c.id
+            ORDER BY c.display_order, c.name
         ");
         $categories = $stmt->fetchAll();
         
         $cache->set($cacheKey, $categories);
         return $categories;
+    }
+    
+    public function getCategoryByName($categoryName) {
+        $stmt = $this->pdo->prepare("SELECT * FROM categories WHERE name = ? AND is_active = 1");
+        $stmt->execute([$categoryName]);
+        return $stmt->fetch();
     }
 }
 
@@ -421,6 +427,28 @@ function buildUrl($path, $params = []) {
 function redirect($url, $params = []) {
     header('Location: ' . buildUrl($url, $params));
     exit;
+}
+
+// Get category image with fallback
+function getCategoryImage($category) {
+    $db = DatabaseHelper::getInstance();
+    $categoryData = $db->getCategoryByName($category);
+    
+    if ($categoryData && !empty($categoryData['image'])) {
+        return $categoryData['image'];
+    }
+    
+    // Fallback to default images
+    $defaultImages = [
+        'Breakfast' => 'uploads/menu/1.png',
+        'Dishes' => 'uploads/menu/2.png',
+        'Bread' => 'uploads/menu/3.png',
+        'Desserts' => 'uploads/menu/4.png',
+        'Cold Drinks' => 'uploads/menu/5.png',
+        'Hot Drinks' => 'uploads/menu/6.png'
+    ];
+    
+    return $defaultImages[$category] ?? 'uploads/menu/placeholder.jpg';
 }
 
 // Initialize global instances

@@ -1,10 +1,51 @@
 <?php
-// categories.php - Categories management
+// admin/categories.php - Enhanced Categories management with image upload
 require_once 'config.php';
 checkAuth();
 
 $pdo = getConnection();
 $message = '';
+
+// Create uploads directory if it doesn't exist
+$uploadsDir = '../uploads/categories/';
+if (!is_dir($uploadsDir)) {
+    mkdir($uploadsDir, 0755, true);
+}
+
+// Handle file upload
+function handleImageUpload($file) {
+    global $uploadsDir;
+    
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception('File upload failed');
+    }
+    
+    // Check if file is an image
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
+        throw new Exception('Only image files (JPEG, PNG, GIF, WebP) are allowed');
+    }
+    
+    // Check file size (max 5MB)
+    if ($file['size'] > 5 * 1024 * 1024) {
+        throw new Exception('File size must be less than 5MB');
+    }
+    
+    // Generate unique filename
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = 'category_' . uniqid() . '.' . $extension;
+    $targetPath = $uploadsDir . $filename;
+    
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        throw new Exception('Failed to save uploaded file');
+    }
+    
+    return 'uploads/categories/' . $filename;
+}
 
 // Handle actions
 if ($_POST) {
@@ -13,14 +54,25 @@ if ($_POST) {
             $name = trim($_POST['name']);
             $nameAr = trim($_POST['name_ar']) ?: null;
             $displayOrder = (int)$_POST['display_order'];
+            $image = null;
+            
+            // Handle image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                try {
+                    $image = handleImageUpload($_FILES['image']);
+                } catch (Exception $e) {
+                    $message = 'Image upload error: ' . $e->getMessage();
+                    break;
+                }
+            }
             
             if ($name) {
                 try {
-                    $stmt = $pdo->prepare("INSERT INTO categories (name, name_ar, display_order) VALUES (?, ?, ?)");
-                    $stmt->execute([$name, $nameAr, $displayOrder]);
+                    $stmt = $pdo->prepare("INSERT INTO categories (name, name_ar, display_order, image) VALUES (?, ?, ?, ?)");
+                    $stmt->execute([$name, $nameAr, $displayOrder, $image]);
                     $message = 'Category added successfully!';
                 } catch (PDOException $e) {
-                    if ($e->getCode() == 23000) { // Duplicate entry
+                    if ($e->getCode() == 23000) {
                         $message = 'Category already exists!';
                     } else {
                         $message = 'Error adding category: ' . $e->getMessage();
@@ -36,13 +88,37 @@ if ($_POST) {
             $displayOrder = (int)$_POST['display_order'];
             $isActive = isset($_POST['is_active']) ? 1 : 0;
             
+            // Get current category data
+            $currentStmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
+            $currentStmt->execute([$id]);
+            $currentCategory = $currentStmt->fetch();
+            
+            $image = $currentCategory['image']; // Keep existing image by default
+            
+            // Handle image upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                try {
+                    $newImage = handleImageUpload($_FILES['image']);
+                    
+                    // Delete old image if it exists
+                    if ($currentCategory['image'] && file_exists('../' . $currentCategory['image'])) {
+                        unlink('../' . $currentCategory['image']);
+                    }
+                    
+                    $image = $newImage;
+                } catch (Exception $e) {
+                    $message = 'Image upload error: ' . $e->getMessage();
+                    break;
+                }
+            }
+            
             if ($name) {
                 try {
-                    $stmt = $pdo->prepare("UPDATE categories SET name = ?, name_ar = ?, display_order = ?, is_active = ? WHERE id = ?");
-                    $stmt->execute([$name, $nameAr, $displayOrder, $isActive, $id]);
+                    $stmt = $pdo->prepare("UPDATE categories SET name = ?, name_ar = ?, display_order = ?, is_active = ?, image = ? WHERE id = ?");
+                    $stmt->execute([$name, $nameAr, $displayOrder, $isActive, $image, $id]);
                     $message = 'Category updated successfully!';
                 } catch (PDOException $e) {
-                    if ($e->getCode() == 23000) { // Duplicate entry
+                    if ($e->getCode() == 23000) {
                         $message = 'Category name already exists!';
                     } else {
                         $message = 'Error updating category: ' . $e->getMessage();
@@ -62,8 +138,18 @@ if ($_POST) {
             if ($itemCount > 0) {
                 $message = "Cannot delete category: $itemCount items are using this category.";
             } else {
+                // Get category data to delete image
+                $categoryStmt = $pdo->prepare("SELECT image FROM categories WHERE id = ?");
+                $categoryStmt->execute([$id]);
+                $category = $categoryStmt->fetch();
+                
+                // Delete the category
                 $stmt = $pdo->prepare("DELETE FROM categories WHERE id = ?");
                 if ($stmt->execute([$id])) {
+                    // Delete associated image file
+                    if ($category['image'] && file_exists('../' . $category['image'])) {
+                        unlink('../' . $category['image']);
+                    }
                     $message = 'Category deleted successfully!';
                 }
             }
@@ -120,6 +206,12 @@ if (isset($_GET['edit'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -152,7 +244,7 @@ if (isset($_GET['edit'])) {
         <!-- Header -->
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-900">Category Management</h2>
-            <p class="text-gray-600">Manage menu categories and their display order</p>
+            <p class="text-gray-600">Manage menu categories, their display order, and images</p>
         </div>
 
         <?php if ($message): ?>
@@ -168,7 +260,7 @@ if (isset($_GET['edit'])) {
                     <?php echo $editingCategory ? 'Edit Category' : 'Add New Category'; ?>
                 </h3>
                 
-                <form method="POST" class="space-y-4">
+                <form method="POST" enctype="multipart/form-data" class="space-y-4">
                     <input type="hidden" name="action" value="<?php echo $editingCategory ? 'edit' : 'add'; ?>">
                     <?php if ($editingCategory): ?>
                     <input type="hidden" name="id" value="<?php echo $editingCategory['id']; ?>">
@@ -194,6 +286,20 @@ if (isset($_GET['edit'])) {
                                value="<?php echo $editingCategory ? $editingCategory['display_order'] : '0'; ?>"
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
                         <p class="text-xs text-gray-500 mt-1">Lower numbers appear first</p>
+                    </div>
+                    
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Category Image</label>
+                        <?php if ($editingCategory && $editingCategory['image']): ?>
+                        <div class="mb-2">
+                            <img src="../<?php echo htmlspecialchars($editingCategory['image']); ?>" 
+                                 alt="Current image" class="image-preview">
+                            <p class="text-xs text-gray-500 mt-1">Current image</p>
+                        </div>
+                        <?php endif; ?>
+                        <input type="file" id="image" name="image" accept="image/*"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Upload image (JPEG, PNG, GIF, WebP, max 5MB)</p>
                     </div>
                     
                     <?php if ($editingCategory): ?>
@@ -231,6 +337,7 @@ if (isset($_GET['edit'])) {
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
@@ -241,13 +348,24 @@ if (isset($_GET['edit'])) {
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php if (empty($categories)): ?>
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                                     No categories found. Add your first category using the form on the left.
                                 </td>
                             </tr>
                             <?php else: ?>
                             <?php foreach ($categories as $category): ?>
                             <tr class="hover:bg-gray-50 <?php echo $editingCategory && $editingCategory['id'] == $category['id'] ? 'bg-blue-50' : ''; ?>">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <?php if ($category['image']): ?>
+                                    <img src="../<?php echo htmlspecialchars($category['image']); ?>" 
+                                         alt="<?php echo htmlspecialchars($category['name']); ?>" 
+                                         class="w-12 h-12 object-cover rounded-lg">
+                                    <?php else: ?>
+                                    <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                        <span class="text-gray-400 text-xs">No image</span>
+                                    </div>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-100 text-gray-600 font-medium">
                                         <?php echo $category['display_order']; ?>
@@ -287,7 +405,7 @@ if (isset($_GET['edit'])) {
                                         </form>
                                         
                                         <?php if ($category['item_count'] == 0): ?>
-                                        <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                        <form method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category? This will also delete the associated image.')">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<?php echo $category['id']; ?>">
                                             <button type="submit" class="text-red-600 hover:text-red-800 text-left">Delete</button>
@@ -312,11 +430,40 @@ if (isset($_GET['edit'])) {
             <ul class="text-sm text-blue-800 space-y-1">
                 <li>• Categories are displayed in the order specified by the "Display Order" field</li>
                 <li>• Arabic names are optional but recommended for bilingual support</li>
+                <li>• You can upload images for each category (JPEG, PNG, GIF, WebP up to 5MB)</li>
+                <li>• Images will be automatically resized and optimized for display</li>
                 <li>• You cannot delete categories that have menu items assigned to them</li>
                 <li>• Inactive categories won't appear in the frontend but existing items remain accessible</li>
                 <li>• Consider organizing categories logically: Breakfast → Main Dishes → Desserts → Drinks</li>
             </ul>
         </div>
     </div>
+
+    <script>
+        // Preview image before upload
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Remove existing preview if any
+                    const existingPreview = document.getElementById('image-preview');
+                    if (existingPreview) {
+                        existingPreview.remove();
+                    }
+                    
+                    // Create new preview
+                    const preview = document.createElement('img');
+                    preview.id = 'image-preview';
+                    preview.src = e.target.result;
+                    preview.className = 'image-preview mt-2';
+                    
+                    // Insert after the file input
+                    e.target.parentNode.insertBefore(preview, e.target.nextSibling);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </body>
 </html>
