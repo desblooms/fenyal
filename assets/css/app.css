@@ -177,3 +177,149 @@ color: #c45230;
 .bottom-safe-area {
     padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
+
+
+
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .special-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 40px);
+        }
+
+        .nav-indicator {
+            position: absolute;
+            height: 3px;
+            width: 3px;
+            border-radius: 50%;
+            background-color: currentColor;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Shimmer effect styles */
+        .shimmer {
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.5) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            background-size: 200% 100%;
+            animation: shimmerAnimation 1.5s infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes shimmerAnimation {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .shimmer-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .special-item {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .special-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .special-item:active {
+            transform: scale(0.98);
+        }
+
+        .line-clamp-1 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+
+
+
+  .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: rgba(248, 248, 248, 0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .category-btn {
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+        .category-btn.active {
+            background-color: #c45230;
+            color: white;
+        }
+        .menu-item {
+            transition: transform 0.2s ease;
+        }
+        .menu-item:active {
+            transform: scale(0.98);
+        }
+        .Menushimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .scale-button:active {
+            transform: scale(0.97);
+        }

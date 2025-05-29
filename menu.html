@@ -33,43 +33,7 @@
         .category-scroll::-webkit-scrollbar {
             display: none;
         }
-        .sticky-header {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background-color: rgba(248, 248, 248, 0.95);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .bottom-safe-area {
-            padding-bottom: env(safe-area-inset-bottom, 16px);
-        }
-        .category-btn {
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-        .category-btn.active {
-            background-color: #c45230;
-            color: white;
-        }
-        .menu-item {
-            transition: transform 0.2s ease;
-        }
-        .menu-item:active {
-            transform: scale(0.98);
-        }
-        .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .scale-button:active {
-            transform: scale(0.97);
-        }
+      
     </style>
 </head>
 <body class="bg-background font-sans text-dark">
@@ -82,9 +46,7 @@
                     <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
                 </a>
                 <h1 class="text-xl font-semibold">Menu</h1>
-                <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-                    <i data-feather="phone" class="h-5 w-5 text-gray-600"></i>
-                </a>
+               
             </div>
             
             <!-- Search bar -->
@@ -99,10 +61,10 @@
                     <button class="category-btn active px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white scale-button">All</button>
                     <!-- Categories will be dynamically added here -->
                     <div class="flex space-x-2" id="category-buttons">
-                        <div class="h-8 w-20 rounded-full shimmer"></div>
-                        <div class="h-8 w-24 rounded-full shimmer"></div>
-                        <div class="h-8 w-20 rounded-full shimmer"></div>
-                        <div class="h-8 w-22 rounded-full shimmer"></div>
+                        <div class="h-8 w-20 rounded-full Menushimmer"></div>
+                        <div class="h-8 w-24 rounded-full Menushimmer"></div>
+                        <div class="h-8 w-20 rounded-full Menushimmer"></div>
+                        <div class="h-8 w-22 rounded-full Menushimmer"></div>
                     </div>
                 </div>
             </div>
@@ -118,21 +80,21 @@
                     <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="w-24 h-24 Menushimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="w-24 h-24 Menushimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
@@ -148,31 +110,31 @@
                     <div class="grid grid-cols-1 gap-4">
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="w-24 h-24 Menushimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="w-24 h-24 Menushimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="h-24 rounded-xl bg-white shadow-sm overflow-hidden">
                             <div class="flex">
-                                <div class="w-24 h-24 shimmer"></div>
+                                <div class="w-24 h-24 Menushimmer"></div>
                                 <div class="flex-1 p-3">
-                                    <div class="h-4 w-3/4 shimmer rounded mb-2"></div>
-                                    <div class="h-3 w-1/2 shimmer rounded mb-3"></div>
-                                    <div class="h-4 w-1/4 shimmer rounded"></div>
+                                    <div class="h-4 w-3/4 Menushimmer rounded mb-2"></div>
+                                    <div class="h-3 w-1/2 Menushimmer rounded mb-3"></div>
+                                    <div class="h-4 w-1/4 Menushimmer rounded"></div>
                                 </div>
                             </div>
                         </div>
