@@ -1,20 +1,406 @@
-/* RTL support */
+/* Enhanced RTL and bilingual support for Fenyal Food App */
+
+/* Base RTL Support */
 [dir="rtl"] {
     text-align: right;
 }
 
-
-[dir="rtl"] .flex-col{
- flex-direction: column !important;
+/* Flex direction fixes for RTL */
+[dir="rtl"] .flex-col {
+    flex-direction: column !important;
 }
 
-[dir="rtl"] .space-x-3 > * {
+/* Spacing fixes for RTL */
+[dir="rtl"] .space-x-2 > * + * {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+[dir="rtl"] .space-x-reverse {
+    flex-direction: row-reverse;
+}
+
+/* RTL support for form elements in menu-item-details */
+[dir="rtl"] .radio-container input[type="radio"] + label,
+[dir="rtl"] .checkbox-container input[type="checkbox"] + label {
+    padding-left: 0;
+    padding-right: 28px;
+    text-align: right;
+}
+
+[dir="rtl"] .radio-container input[type="radio"] + label:before,
+[dir="rtl"] .checkbox-container input[type="checkbox"] + label:before {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .radio-container input[type="radio"]:checked + label:after {
+    left: auto;
+    right: 5px;
+}
+
+[dir="rtl"] .checkbox-container input[type="checkbox"]:checked + label:after {
+    left: auto;
+    right: 0;
+}
+
+/* RTL support for positioned elements */
+[dir="rtl"] .absolute.left-3 {
+    left: auto;
+    right: 0.75rem;
+}
+
+[dir="rtl"] .absolute.right-3 {
+    right: auto;
+    left: 0.75rem;
+}
+
+[dir="rtl"] .absolute.left-4 {
+    left: auto;
+    right: 1rem;
+}
+
+[dir="rtl"] .absolute.right-4 {
+    right: auto;
+    left: 1rem;
+}
+
+/* Padding adjustments for RTL */
+[dir="rtl"] .pl-10 {
+    padding-left: 0;
+    padding-right: 2.5rem;
+}
+
+[dir="rtl"] .pr-4 {
+    padding-right: 0;
+    padding-left: 1rem;
+}
+
+[dir="rtl"] .pr-10 {
+    padding-right: 0;
+    padding-left: 2.5rem;
+}
+
+[dir="rtl"] .pl-4 {
+    padding-left: 0;
+    padding-right: 1rem;
+}
+
+/* Margin adjustments for RTL */
+[dir="rtl"] .ml-3 {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .mr-3 {
+    margin-right: 0;
     margin-left: 0.75rem;
-    margin-right: 0;
 }
 
-[dir="rtl"] .space-x-4 > * {
-    margin-left: 1rem;
-    margin-right: 0;
+[dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
 }
 
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+/* Text alignment for RTL */
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left;
+}
+
+/* Flex justify adjustments for RTL */
+[dir="rtl"] .justify-between {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* Grid and layout fixes for RTL */
+[dir="rtl"] .grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .flex {
+    direction: rtl;
+}
+
+/* Navigation fixes for RTL */
+[dir="rtl"] .bottom-nav .flex {
+    direction: ltr; /* Keep navigation LTR for consistency */
+}
+
+/* Category scroll container RTL */
+[dir="rtl"] .category-scroll {
+    direction: rtl;
+}
+
+[dir="rtl"] .category-scroll .flex {
+    direction: rtl;
+}
+
+/* Special handling for horizontal scrollable content */
+[dir="rtl"] .special-scroll {
+    direction: rtl;
+}
+
+[dir="rtl"] .overflow-x-auto {
+    direction: rtl;
+}
+
+/* Menu item cards RTL support */
+[dir="rtl"] .menu-item .flex {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .special-item {
+    direction: ltr; /* Keep item cards consistent */
+}
+
+/* Price display RTL */
+[dir="rtl"] .price-display {
+    text-align: right;
+}
+
+/* Button content RTL */
+[dir="rtl"] button {
+    direction: rtl;
+}
+
+[dir="rtl"] .scale-button {
+    direction: rtl;
+}
+
+/* Input field RTL support */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="search"] {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] input::placeholder {
+    text-align: right;
+}
+
+/* Toast notifications RTL */
+[dir="rtl"] .toast {
+    text-align: right;
+}
+
+/* Loading states RTL */
+[dir="rtl"] .loading-overlay {
+    text-align: right;
+}
+
+/* Error states RTL */
+[dir="rtl"] .error-state {
+    text-align: right;
+}
+
+/* Arabic font improvements */
+[lang="ar"] {
+    font-family: 'Cairo', 'Poppins', sans-serif;
+    line-height: 1.6;
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+[lang="ar"] .text-sm {
+    font-size: 0.9rem;
+}
+
+[lang="ar"] .text-xs {
+    font-size: 0.8rem;
+}
+
+/* Improved spacing for Arabic text */
+[lang="ar"] p {
+    line-height: 1.7;
+}
+
+[lang="ar"] .leading-tight {
+    line-height: 1.4;
+}
+
+[lang="ar"] .leading-relaxed {
+    line-height: 1.8;
+}
+
+/* Better number rendering for Arabic */
+[lang="ar"] .price,
+[lang="ar"] .item-price {
+    font-family: 'Cairo', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Icon adjustments for RTL */
+[dir="rtl"] .feather {
+    transform: scaleX(-1);
+}
+
+[dir="rtl"] [data-feather="arrow-left"],
+[dir="rtl"] [data-feather="arrow-right"] {
+    transform: scaleX(-1);
+}
+
+/* Search icon specific RTL handling */
+[dir="rtl"] .search-icon {
+    transform: none; /* Keep search icon normal */
+}
+
+/* Menu icon RTL */
+[dir="rtl"] [data-feather="menu"] {
+    transform: none;
+}
+
+/* Home icon RTL */
+[dir="rtl"] [data-feather="home"] {
+    transform: none;
+}
+
+/* Special RTL handling for specific layouts */
+[dir="rtl"] .category-container {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .popular-items-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .menu-items-container {
+    direction: rtl;
+}
+
+/* Responsive RTL adjustments */
+@media (max-width: 640px) {
+    [dir="rtl"] .px-4 {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    [dir="rtl"] .space-x-3 > * + * {
+        margin-right: 0.5rem;
+    }
+}
+
+/* Animation adjustments for RTL */
+[dir="rtl"] .slide-in {
+    animation: slideInRTL 0.3s ease-out forwards;
+}
+
+@keyframes slideInRTL {
+    from { 
+        transform: translateX(20px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
+}
+
+/* Shimmer effect RTL */
+[dir="rtl"] .shimmer {
+    background: linear-gradient(to left,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    background-size: 200% 100%;
+    animation: shimmerRTL 1.5s infinite;
+}
+
+@keyframes shimmerRTL {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Center logo positioning fix for RTL */
+[dir="rtl"] .center-logo {
+    margin-top: -35px; /* Keep consistent */
+}
+
+/* Badge positioning for RTL */
+[dir="rtl"] .notification-badge {
+    left: -2px;
+    right: auto;
+}
+
+/* Fix for overlapping content in RTL */
+[dir="rtl"] .relative {
+    direction: ltr;
+}
+
+[dir="rtl"] .absolute {
+    direction: rtl;
+}
+
+/* Specific fixes for menu item details page */
+[dir="rtl"] .item-img-container .absolute {
+    direction: ltr; /* Keep positioned elements consistent */
+}
+
+[dir="rtl"] .item-details {
+    text-align: right;
+}
+
+[dir="rtl"] .flex-1 {
+    text-align: right;
+}
+
+/* Price and addon layout fixes */
+[dir="rtl"] .addon-item {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .size-options {
+    direction: rtl;
+}
+
+[dir="rtl"] .spice-options {
+    direction: rtl;
+}
+
+/* Loading overlay text alignment */
+[dir="rtl"] .loading-overlay .flex-col {
+    text-align: center; /* Keep loading text centered */
+}
+
+/* Error state text alignment */
+[dir="rtl"] .error-state .flex-col {
+    text-align: center; /* Keep error text centered */
+}
