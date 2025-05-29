@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Fenyal</title>
+    <!-- PWA Icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fenyal">
+    <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        @font-face {
+            font-family: 'FoodIcons';
+            src: url('assets/icons/icons.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        [data-food-icons="true"] {
+            font-family: 'FoodIcons' !important;
+            line-height: 40px;
+            font-size: 40px !important;
+            text-align: center;
+            text-decoration: none;
+            font-style: normal !important;
+        }
+
+
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .special-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .status-bar {
+            height: 24px;
+            font-size: 12px;
+        }
+
+        .scroll-touch {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        .nav-indicator {
+            position: absolute;
+            height: 3px;
+            width: 3px;
+            border-radius: 50%;
+            background-color: currentColor;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Shimmer effect styles */
+        .shimmer {
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.5) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            background-size: 200% 100%;
+            animation: shimmerAnimation 1.5s infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes shimmerAnimation {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .shimmer-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="bg-background font-sans text-dark">
+
+
+    <!-- Welcome overlay -->
+    <div id="welcome-overlay"
+        class="fixed inset-0 bg-primary z-40 flex flex-col items-center justify-center text-white p-4 slide-in pt-10">
+        <div
+            class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+            <img src="fenyal-logo-1.png" width="100px">
+        </div>
+        <h1 class="text-2xl font-bold mb-1">Fenyal</h1>
+        <p class="text-center text-white/80 text-sm mb-8">Delicious food at your fingertips</p>
+        <button id="get-started-btn"
+            class="bg-white text-primary font-medium text-sm py-3 px-8 rounded-full shadow-lg transform transition-transform active:scale-95 flex items-center">
+            Get Started
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Main app (initially hidden) -->
+    <div id="main-app" class="app-container pt-4 pb-30 hidden scroll-touch">
+        <!-- Header -->
+        <header class="sticky top-0 z-30 bg-background/95 backdrop-blur-sm pt-4 pb-2 px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <!-- <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                            <line x1="6" y1="1" x2="6" y2="4"></line>
+                            <line x1="10" y1="1" x2="10" y2="4"></line>
+                            <line x1="14" y1="1" x2="14" y2="4"></line>
+                        </svg>
+                    </div> -->
+                    <!-- <h1 class="text-lg font-semibold">Fenyala</h1> -->
+                    <img src="fenyal-logo-1.png" width="100px">
+                </div>
+                <div>
+                    <!-- <a href="login.html" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i data-feather="user" class="h-4 w-4 text-gray-600"></i>
+                    </a> -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="px-4">
+            <!-- Welcome banner -->
+            <!-- <div class="mb-4 mt-2">
+                <h2 class="text-xl font-semibold">Hi, there! 👋</h2>
+                <p class="text-gray-500 text-xs">What would you like to order today?</p>
+            </div> -->
+
+            <!-- Categories -->
+          <div class="mb-2">
+    <div class="flex space-x-4 overflow-x-auto py-1 special-scroll">
+        <a href="menu.html?category=Breakfast" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/1.png" alt="Breakfast" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Breakfast</span>
+        </a>
+        <a href="menu.html?category=Dishes" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/2.png" alt="Dishes" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Dishes</span>
+        </a>
+        <a href="menu.html?category=Bread" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/3.png" alt="Bread" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Bread</span>
+        </a>
+        <a href="menu.html?category=Desserts" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/4.png" alt="Desserts" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Desserts</span>
+        </a>
+        <a href="menu.html?category=Cold Drinks" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/5.png" alt="Cold Drinks" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Cold Drinks</span>
+        </a>
+        <a href="menu.html?category=Hot Drinks" class="flex flex-col items-center flex-shrink-0">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                <img src="uploads/menu/6.png" alt="Hot Drinks" class="h-10 w-10 object-cover rounded-full" />
+            </div>
+            <span class="text-xs font-medium">Hot Drinks</span>
+        </a>
+    </div>
+</div>
+
+
+
+            <!-- Special offers -->
+            <!-- <div class="rounded-xl overflow-hidden shadow-sm bg-gradient-to-r from-primary/80 to-primary mb-6">
+                <div class="p-4 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-medium uppercase tracking-wide opacity-80">Special offer</h3>
+                            <h2 class="text-xl font-bold mb-1">30% OFF</h2>
+                            <p class="text-xs text-white/90 mb-2">On your first order</p>
+                            <a href="menu.html" class="inline-block bg-white text-primary text-xs font-medium px-4 py-1.5 rounded-full">Our Menu</a>
+                        </div>
+                        <div class="w-20 h-20 relative">
+                            <div class="absolute inset-0 rounded-full bg-white/20 backdrop-blur-sm"></div> 
+                            <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover rounded-full" alt="Special item">
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Trending items -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-base font-semibold">Popular Items</h2>
+                    <a href="menu.html" class="text-primary text-xs">View all</a>
+                </div>
+
+                <div class="special-items-container" id="special-items-container">
+                    <!-- Shimmer loading effect for items -->
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll">
+                        <div class="flex-shrink-0 w-36 rounded-lg h-44 bg-gray-200 shimmer-wrapper">
+                            <div class="shimmer"></div>
+                        </div>
+                        <div class="flex-shrink-0 w-36 rounded-lg h-44 bg-gray-200 shimmer-wrapper">
+                            <div class="shimmer"></div>
+                        </div>
+                        <div class="flex-shrink-0 w-36 rounded-lg h-44 bg-gray-200 shimmer-wrapper">
+                            <div class="shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Categories -->
+
+
+        </main>
+
+        <!-- Navigation bar -->
+        <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
+            <div class="h-16 flex justify-around items-center">
+                <a href="index.html" class="flex flex-col items-center justify-center text-primary relative">
+                    <i data-feather="home" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Home</span>
+                    <div class="nav-indicator"></div>
+                </a>
+               
+                <a target="_blank" href="https://wa.me/+1234567890" class="whatsapp-trigger">
+                    <div
+            class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+            <img src="fenyal-logo-1.png" width="65px;">
+        </div>
+                </a>
+                 <a href="menu.html" class="flex flex-col items-center justify-center text-gray-400">
+                    <i data-feather="menu" class="h-5 w-5"></i>
+                    <span class="text-xs mt-0.5">Menu</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from './assets/js/app.js';
+        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+
+        // Initialize icons
+        feather.replace();
+
+        // Handle getting started button
+        document.getElementById('get-started-btn').addEventListener('click', function () {
+            // Hide welcome overlay and show main app
+            document.getElementById('welcome-overlay').classList.add('opacity-0');
+            document.getElementById('welcome-overlay').style.transition = 'opacity 0.3s ease-out';
+
+            setTimeout(() => {
+                document.getElementById('welcome-overlay').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('fade-in');
+
+                // Set flag in localStorage to remember user has visited
+                localStorage.setItem('hasVisited', 'true');
+
+                // Load special items
+                loadSpecialItems();
+            }, 300);
+        });
+
+        // Load special items from menu with shimmer effect
+        async function loadSpecialItems() {
+            try {
+                // Display shimmer loading while loading data
+                const container = document.getElementById('special-items-container');
+
+                await menuManager.loadMenuData();
+                const specialItems = menuManager.getSpecialItems();
+
+                // Short delay to show shimmer effect
+                setTimeout(() => {
+                    if (specialItems.length > 0) {
+                        container.innerHTML = '';
+
+                        const itemsWrapper = document.createElement('div');
+                        itemsWrapper.className = 'flex space-x-3 overflow-x-auto py-1 special-scroll';
+
+                        specialItems.forEach(item => {
+                            const specialItem = document.createElement('div');
+                            specialItem.className = 'flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white';
+                            specialItem.onclick = () => {
+                                pageTransition(`menu-item-details.html?id=${item.id}`);
+                            };
+
+                            const price = item.isHalfFull ? formatPrice(item.halfPrice) : formatPrice(item.price);
+
+                            specialItem.innerHTML = `
+                                <div class="h-24 overflow-hidden">
+                                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="p-2.5">
+                                    <h3 class="font-medium text-sm leading-tight line-clamp-1">${item.name}</h3>
+                                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">${item.category}</p>
+                                    <div class="flex justify-between items-center mt-2">
+                                        <span class="text-primary font-semibold text-sm">${price}</span>
+                                    </div>
+                                </div>
+                            `;
+
+                            itemsWrapper.appendChild(specialItem);
+                        });
+
+                        container.appendChild(itemsWrapper);
+                    }
+                }, 800); // Small delay to show shimmer effect
+            } catch (error) {
+                console.error('Error loading special items:', error);
+
+                // If error, show error message in container
+                const container = document.getElementById('special-items-container');
+                container.innerHTML = `
+                    <div class="p-4 text-center text-gray-500">
+                        <p>Failed to load items. Try again later.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Apply shimmer effect to other loading elements
+        function applyShimmerToLoadingElements() {
+            // Find all elements with animate-pulse class and convert them to shimmer
+            const pulseElements = document.querySelectorAll('.animate-pulse');
+            pulseElements.forEach(el => {
+                // Replace animate-pulse with shimmer wrapper
+                el.classList.remove('animate-pulse');
+                el.classList.add('shimmer-wrapper');
+
+                // Add shimmer element
+                const shimmerDiv = document.createElement('div');
+                shimmerDiv.className = 'shimmer';
+                el.appendChild(shimmerDiv);
+            });
+        }
+
+        // Set mobile viewport height fix
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+
+        // Check if user has visited before
+        if (localStorage.getItem('hasVisited')) {
+            document.getElementById('welcome-overlay').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+
+            // Apply shimmer effect to loading elements
+            applyShimmerToLoadingElements();
+
+            // Load special items
+            loadSpecialItems();
+        }
+        // Register service worker for PWA support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function (registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(function (err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        // Add iOS-like active state for buttons
+        const buttons = document.querySelectorAll('button, a');
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', function () {
+                this.style.transform = 'scale(0.97)';
+            });
+
+            button.addEventListener('touchend', function () {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Apply shimmer to any dynamic content that might load later
+        document.addEventListener('DOMContentLoaded', function () {
+            applyShimmerToLoadingElements();
+        });
+    </script>
+
+    <!-- <script src="assets/js/search-modal.js"></script> -->
+    <script src="assets/js/global-search.js"></script>
+    <script src="assets/js/pwa-installer.js"></script>
+</body>
+
+</html>

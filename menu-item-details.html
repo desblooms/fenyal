@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Menu Item - Fenyal</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Theme configuration -->
+    <script src="assets/js/themecolor.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/app.css">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+        }
+        .app-container::-webkit-scrollbar {
+            display: none;
+        }
+        .special-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .bottom-safe-area {
+            padding-bottom: env(safe-area-inset-bottom, 16px);
+        }
+        .quantity-input::-webkit-inner-spin-button,
+        .quantity-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .item-img-container {
+            height: 340px;
+        }
+        @media (max-height: 700px) {
+            .item-img-container {
+                height: 180px;
+            }
+        }
+        .radio-container input[type="radio"] {
+            display: none;
+        }
+        .radio-container input[type="radio"] + label {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            display: inline-block;
+            color: #424242;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"] + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"]:checked + label:after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #c45230;
+            transition: all 0.2s ease;
+        }
+        .radio-container input[type="radio"]:checked + label:before {
+            border-color: #c45230;
+        }
+        .checkbox-container input[type="checkbox"] {
+            display: none;
+        }
+        .checkbox-container input[type="checkbox"] + label {
+            position: relative;
+            padding-left: 28px;
+            cursor: pointer;
+            display: inline-block;
+            color: #424242;
+            transition: all 0.2s ease;
+        }
+        .checkbox-container input[type="checkbox"] + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .checkbox-container input[type="checkbox"]:checked + label:after {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        .checkbox-container input[type="checkbox"]:checked + label:before {
+            background: #c45230;
+            border-color: #c45230;
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-dark">
+    <!-- Main app container -->
+    <div class="app-container h-full overflow-y-auto scroll-touch pb-24">
+        <!-- Item image (sticky at top) -->
+        <div class="relative item-img-container">
+            <div id="item-image" class="w-full h-full bg-gray-200 object-cover"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
+            
+            <!-- Back button -->
+            <a href="menu.html" class="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+                <i data-feather="arrow-left" class="h-5 w-5 text-white"></i>
+            </a>
+            
+            <!-- Share button -->
+            <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+                <i data-feather="share-2" class="h-5 w-5 text-white"></i>
+            </button>
+        </div>
+        
+        <!-- Item details -->
+        <div class="px-4 pt-4 pb-20">
+            <!-- Item title and category -->
+            <div class="mb-3">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 id="item-name" class="text-xl font-bold mb-1">Loading item...</h1>
+                        <p id="item-category" class="text-sm text-gray-500"></p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-medium">Popular</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Item description -->
+            <p id="item-description" class="text-gray-600 text-sm mb-6">Loading description...</p>
+            
+            <!-- Size options (if half/full available) -->
+            <div id="size-options-container" class="mb-6 hidden">
+                <h3 class="text-base font-semibold mb-3">Select Size</h3>
+                <div class="flex space-x-3 radio-container">
+                    <div>
+                        <input type="radio" name="size" id="size-half" value="half" checked>
+                        <label for="size-half" class="text-sm">
+                            Half
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" name="size" id="size-full" value="full">
+                        <label for="size-full" class="text-sm">
+                            Full
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Spice level -->
+            <div id="spice-level-container" class="mb-6 hidden">
+                <h3 class="text-base font-semibold mb-3">Spice Level</h3>
+                <div class="flex flex-wrap gap-3 radio-container" id="spice-options"></div>
+            </div>
+            
+            <!-- Add-ons -->
+            <div id="addons-container" class="mb-6 hidden">
+                <h3 class="text-base font-semibold mb-3">Add-ons</h3>
+                <div id="addons-list" class="space-y-3 checkbox-container"></div>
+            </div>
+            
+            <!-- Quantity counter -->
+            <div class="mb-8 hidden">
+                <h3 class="text-base font-semibold mb-3">Quantity</h3>
+                <div class="flex items-center">
+                    <button id="decrease-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                        <i data-feather="minus" class="h-5 w-5 text-gray-600"></i>
+                    </button>
+                    <input type="number" id="item-quantity" value="1" min="1" class="mx-3 w-12 h-10 text-center border-none quantity-input text-lg font-medium focus:outline-none" readonly>
+                    <button id="increase-qty" class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
+                        <i data-feather="plus" class="h-5 w-5 text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Special instructions -->
+            <div class="mb-8">
+                <div>
+                <p class="text-sm text-gray-500">Price</p>
+                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add to cart sticky footer -->
+    <!-- <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl py-3 px-4 z-40 bottom-safe-area">
+        <div class="flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-500">Price</p>
+                <p id="item-price" class="text-xl font-bold text-primary">QAR 0</p>
+            </div>
+            <button id="add-to-cart-btn" class="bg-primary text-white px-6 py-3 rounded-xl font-medium flex items-center transform transition-transform active:scale-95">
+                Add to Cart
+                <i data-feather="shopping-cart" class="h-5 w-5 ml-2"></i>
+            </button>
+        </div>
+    </div> -->
+    
+    <!-- Success notification (hidden by default) -->
+    <div id="success-toast" class="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+        <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center">
+            <i data-feather="check-circle" class="h-4 w-4 mr-2"></i>
+            <span>Added to cart!</span>
+        </div>
+    </div>
+    
+    <!-- Custom JavaScript -->
+    <script type="module">
+        import { pageTransition, toast } from './assets/js/app.js';
+        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Get item ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const itemId = params.get('id');
+        
+        if (!itemId) {
+            // No item ID provided, redirect to menu
+            window.location.href = 'menu.html';
+        }
+        
+        // Current selected add-ons and variants
+        const selectedAddons = [];
+        let selectedSize = 'half'; // Default to half if half/full is available
+        let selectedSpiceLevel = ''; // Will be set to first option if available
+        
+        // Load item details
+        async function loadItemDetails() {
+            await menuManager.loadMenuData();
+            const item = menuManager.getItemById(itemId);
+            
+            if (!item) {
+                // Item not found, redirect to menu
+                window.location.href = 'menu.html';
+                return;
+            }
+            
+            // Set item details
+            document.getElementById('item-name').textContent = item.name;
+            document.getElementById('item-category').textContent = item.category;
+            document.getElementById('item-description').textContent = item.description;
+            
+            // Set item image
+            const itemImage = document.getElementById('item-image');
+            itemImage.style.backgroundImage = `url('${item.image}')`;
+            itemImage.style.backgroundSize = 'cover';
+            itemImage.style.backgroundPosition = 'center';
+            
+            // Handle half/full pricing if available
+            if (item.isHalfFull) {
+                document.getElementById('size-options-container').classList.remove('hidden');
+                updatePrice(item);
+                
+                // Add event listeners for size selection
+                document.querySelectorAll('input[name="size"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        selectedSize = this.value;
+                        updatePrice(item);
+                    });
+                });
+            } else {
+                // Regular pricing
+                document.getElementById('item-price').textContent = formatPrice(item.price);
+            }
+            
+            // Handle spice level options if available
+            if (item.spiceLevelOptions && item.spiceLevelOptions.length > 0) {
+                const spiceLevelContainer = document.getElementById('spice-level-container');
+                const spiceOptions = document.getElementById('spice-options');
+                
+                spiceLevelContainer.classList.remove('hidden');
+                
+                item.spiceLevelOptions.forEach((level, index) => {
+                    const id = `spice-${level.toLowerCase().replace(' ', '-')}`;
+                    
+                    // Create radio input for each spice level
+                    const radioHtml = `
+                        <div>
+                            <input type="radio" name="spice-level" id="${id}" value="${level}" ${index === 0 ? 'checked' : ''}>
+                            <label for="${id}" class="text-sm">
+                                ${level}
+                            </label>
+                        </div>
+                    `;
+                    
+                    spiceOptions.insertAdjacentHTML('beforeend', radioHtml);
+                    
+                    // Set default selected spice level
+                    if (index === 0) {
+                        selectedSpiceLevel = level;
+                    }
+                });
+                
+                // Add event listeners for spice level selection
+                document.querySelectorAll('input[name="spice-level"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        selectedSpiceLevel = this.value;
+                    });
+                });
+            }
+            
+            // Handle add-ons if available
+            if (item.addons && item.addons.length > 0) {
+                const addonsContainer = document.getElementById('addons-container');
+                const addonsList = document.getElementById('addons-list');
+                
+                addonsContainer.classList.remove('hidden');
+                
+                item.addons.forEach(addon => {
+                    const id = `addon-${addon.name.toLowerCase().replace(/\s+/g, '-')}`;
+                    
+                    // Create checkbox for each add-on
+                    const checkboxHtml = `
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <input type="checkbox" id="${id}" name="addons" value="${addon.name}" data-price="${addon.price}">
+                                <label for="${id}" class="text-sm">
+                                    ${addon.name}
+                                </label>
+                            </div>
+                            <span class="text-sm text-gray-600">${formatPrice(addon.price)}</span>
+                        </div>
+                    `;
+                    
+                    addonsList.insertAdjacentHTML('beforeend', checkboxHtml);
+                });
+                
+                // Add event listeners for add-on selection
+                document.querySelectorAll('input[name="addons"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        if (this.checked) {
+                            selectedAddons.push({
+                                name: this.value,
+                                price: parseInt(this.dataset.price)
+                            });
+                        } else {
+                            const index = selectedAddons.findIndex(addon => addon.name === this.value);
+                            if (index !== -1) {
+                                selectedAddons.splice(index, 1);
+                            }
+                        }
+                        
+                        updatePrice(item);
+                    });
+                });
+            }
+            
+            // Set initial price
+            updatePrice(item);
+            
+            // Handle quantity buttons
+            const quantityInput = document.getElementById('item-quantity');
+            
+            document.getElementById('decrease-qty').addEventListener('click', function() {
+                const currentVal = parseInt(quantityInput.value);
+                if (currentVal > 1) {
+                    quantityInput.value = currentVal - 1;
+                    updatePrice(item);
+                }
+            });
+            
+            document.getElementById('increase-qty').addEventListener('click', function() {
+                const currentVal = parseInt(quantityInput.value);
+                quantityInput.value = currentVal + 1;
+                updatePrice(item);
+            });
+            
+            // Handle add to cart button
+            document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+                const quantity = parseInt(document.getElementById('item-quantity').value);
+                const specialInstructions = document.getElementById('special-instructions').value;
+                
+                // Prepare variants object
+                const variants = {
+                    addons: selectedAddons.length > 0 ? [...selectedAddons] : undefined,
+                    spiceLevel: selectedSpiceLevel || undefined,
+                    specialInstructions: specialInstructions || undefined
+                };
+                
+                // Add size if half/full is available
+                if (item.isHalfFull) {
+                    variants.size = selectedSize;
+                }
+                
+                // Add to cart
+                cartManager.addToCart(item, quantity, variants);
+                
+                // Show success toast
+                toast.show('Added to cart successfully!', 'success');
+                
+                // Optional: Redirect to cart after short delay
+                setTimeout(() => {
+                    pageTransition('cart.html');
+                }, 1000);
+            });
+        }
+        
+        // Update price based on selections
+        function updatePrice(item) {
+            let basePrice = 0;
+            
+            // Determine base price (regular or half/full)
+            if (item.isHalfFull) {
+                basePrice = selectedSize === 'half' ? item.halfPrice : item.fullPrice;
+            } else {
+                basePrice = item.price;
+            }
+            
+            // Add add-on prices
+            const addonsPrice = selectedAddons.reduce((total, addon) => total + addon.price, 0);
+            
+            // Calculate total price including quantity
+            const quantity = parseInt(document.getElementById('item-quantity').value);
+            const totalPrice = (basePrice + addonsPrice) * quantity;
+            
+            // Update price display
+            document.getElementById('item-price').textContent = formatPrice(totalPrice);
+        }
+        
+        // Load item details on page load
+        document.addEventListener('DOMContentLoaded', loadItemDetails);
+    </script>
+</body>
+</html>
