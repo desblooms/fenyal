@@ -20,7 +20,6 @@ const URLS_TO_CACHE = [
   '/assets/css/app.css',
   '/assets/js/app.js',
   '/assets/js/menu.js',
-  '/assets/js/global-search.js',
   '/data/menu.json',
   'https://cdn.tailwindcss.com',
   'https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js',
