@@ -1,14 +1,24 @@
 <?php
-// menu.php - Dynamic Bilingual Menu Page
+// menu.php - Complete Bilingual Menu Page
+session_start();
+
+// Include admin config for database connection
 require_once 'admin/config.php';
 
-// Get current language
-$language = $_GET['lang'] ?? $_SESSION['language'] ?? 'en';
-if (in_array($language, ['en', 'ar'])) {
-    $_SESSION['language'] = $language;
-} else {
-    $language = 'en';
+// Language Management
+$supportedLanguages = ['en', 'ar'];
+$defaultLanguage = 'en';
+
+// Get current language from URL parameter, session, or default
+$currentLang = $_GET['lang'] ?? $_SESSION['language'] ?? $defaultLanguage;
+
+// Validate and set language
+if (!in_array($currentLang, $supportedLanguages)) {
+    $currentLang = $defaultLanguage;
 }
+
+// Store in session
+$_SESSION['language'] = $currentLang;
 
 // Get filters
 $selectedCategory = $_GET['category'] ?? '';
@@ -84,7 +94,7 @@ $menuStmt = $pdo->prepare("
 $menuStmt->execute($params);
 $menuItems = $menuStmt->fetchAll();
 
-// Translations
+// Translation arrays
 $translations = [
     'en' => [
         'menu' => 'Menu',
@@ -98,7 +108,9 @@ $translations = [
         'home' => 'Home',
         'back' => 'Back',
         'search_results' => 'Search Results',
-        'category_results' => 'Category: '
+        'category_results' => 'Category: ',
+        'popular' => 'Popular',
+        'special' => 'Special'
     ],
     'ar' => [
         'menu' => 'القائمة',
@@ -112,46 +124,70 @@ $translations = [
         'home' => 'الرئيسية',
         'back' => 'رجوع',
         'search_results' => 'نتائج البحث',
-        'category_results' => 'الفئة: '
+        'category_results' => 'الفئة: ',
+        'popular' => 'شائع',
+        'special' => 'مميز'
     ]
 ];
 
-$t = $translations[$language];
-
 // Helper functions
-function getCategoryName($category, $categoryAr, $lang) {
-    return ($lang === 'ar' && !empty($categoryAr)) ? $categoryAr : $category;
+function __($key) {
+    global $translations, $currentLang;
+    return $translations[$currentLang][$key] ?? $translations['en'][$key] ?? $key;
 }
 
-function getItemName($item, $lang) {
-    return ($lang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
+function isRTL() {
+    global $currentLang;
+    return $currentLang === 'ar';
 }
 
-function getItemDescription($item, $lang) {
-    return ($lang === 'ar' && !empty($item['description_ar'])) ? $item['description_ar'] : $item['description'];
+function getCategoryName($category, $categoryAr) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($categoryAr)) ? $categoryAr : $category;
 }
 
-function formatPrice($price, $lang) {
-    return ($lang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+function getItemName($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
 }
+
+function getItemDescription($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['description_ar'])) ? $item['description_ar'] : $item['description'];
+}
+
+function formatPrice($price) {
+    global $currentLang;
+    return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+}
+
+function buildUrl($path, $params = []) {
+    global $currentLang;
+    $params['lang'] = $currentLang;
+    $queryString = http_build_query($params);
+    return $path . ($queryString ? '?' . $queryString : '');
+}
+
+$alternativeLang = $currentLang === 'ar' ? 'en' : 'ar';
+$direction = isRTL() ? 'rtl' : 'ltr';
 
 // Determine page title
-$pageTitle = $t['menu'];
+$pageTitle = __('menu');
 if (!empty($searchQuery)) {
-    $pageTitle = $t['search_results'];
+    $pageTitle = __('search_results');
 } elseif (!empty($selectedCategory)) {
     $categoryName = '';
     foreach ($categories as $cat) {
         if ($cat['category'] === $selectedCategory) {
-            $categoryName = getCategoryName($cat['category'], $cat['category_ar'], $language);
+            $categoryName = getCategoryName($cat['category'], $cat['category_ar']);
             break;
         }
     }
-    $pageTitle = $t['category_results'] . $categoryName;
+    $pageTitle = __('category_results') . $categoryName;
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $language; ?>" dir="<?php echo $language === 'ar' ? 'rtl' : 'ltr'; ?>">
+<html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
@@ -167,7 +203,9 @@ if (!empty($searchQuery)) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <?php if ($currentLang === 'ar'): ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <?php endif; ?>
     
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
@@ -218,45 +256,45 @@ if (!empty($searchQuery)) {
         <!-- Header -->
         <header class="sticky-header pt-4 px-4 pb-2">
             <div class="flex items-center justify-between mb-4">
-                <a href="index.php?lang=<?php echo $language; ?>" 
+                <a href="<?php echo buildUrl('index.php'); ?>" 
                    class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-                    <i data-feather="<?php echo $language === 'ar' ? 'arrow-right' : 'arrow-left'; ?>" 
+                    <i data-feather="<?php echo $direction === 'rtl' ? 'arrow-right' : 'arrow-left'; ?>" 
                        class="h-5 w-5 text-gray-600"></i>
                 </a>
                 <h1 class="text-xl font-semibold"><?php echo $pageTitle; ?></h1>
-                <a href="?lang=<?php echo $language === 'ar' ? 'en' : 'ar'; ?><?php echo $selectedCategory ? '&category=' . urlencode($selectedCategory) : ''; ?><?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" 
+                <a href="?lang=<?php echo $alternativeLang; ?><?php echo $selectedCategory ? '&category=' . urlencode($selectedCategory) : ''; ?><?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" 
                    class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
                     <span class="text-sm font-medium text-gray-700">
-                        <?php echo strtoupper($language === 'ar' ? 'EN' : 'AR'); ?>
+                        <?php echo strtoupper($alternativeLang); ?>
                     </span>
                 </a>
             </div>
             
             <!-- Search bar -->
             <form method="GET" class="relative mb-4">
-                <input type="hidden" name="lang" value="<?php echo $language; ?>">
+                <input type="hidden" name="lang" value="<?php echo $currentLang; ?>">
                 <?php if ($selectedCategory): ?>
                 <input type="hidden" name="category" value="<?php echo htmlspecialchars($selectedCategory); ?>">
                 <?php endif; ?>
                 <input type="text" name="search" value="<?php echo htmlspecialchars($searchQuery); ?>" 
-                       placeholder="<?php echo $t['search_placeholder']; ?>" 
-                       class="w-full bg-gray-200 rounded-xl py-3 <?php echo $language === 'ar' ? 'pr-10 pl-4' : 'pl-10 pr-4'; ?> text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                       placeholder="<?php echo __('search_placeholder'); ?>" 
+                       class="w-full bg-gray-200 rounded-xl py-3 <?php echo $direction === 'rtl' ? 'pr-10 pl-4' : 'pl-10 pr-4'; ?> text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
                 <i data-feather="search" 
-                   class="absolute <?php echo $language === 'ar' ? 'right-3' : 'left-3'; ?> top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 search-icon"></i>
+                   class="absolute <?php echo $direction === 'rtl' ? 'right-3' : 'left-3'; ?> top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 search-icon"></i>
             </form>
             
             <!-- Categories -->
             <div class="overflow-x-auto category-scroll">
-                <div class="flex space-x-2 py-1 <?php echo $language === 'ar' ? 'space-x-reverse' : ''; ?>" 
-                     style="direction: <?php echo $language === 'ar' ? 'rtl' : 'ltr'; ?>">
-                    <a href="menu.php?lang=<?php echo $language; ?><?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" 
+                <div class="flex space-x-2 py-1 <?php echo $direction === 'rtl' ? 'space-x-reverse' : ''; ?>" 
+                     style="direction: <?php echo $direction; ?>">
+                    <a href="<?php echo buildUrl('menu.php', ['search' => $searchQuery]); ?>" 
                        class="category-btn <?php echo empty($selectedCategory) ? 'active' : 'bg-gray-100 text-gray-700'; ?> px-4 py-1.5 rounded-full text-sm font-medium scale-button whitespace-nowrap">
-                        <?php echo $t['all']; ?>
+                        <?php echo __('all'); ?>
                     </a>
                     <?php foreach ($categories as $category): ?>
-                    <a href="menu.php?category=<?php echo urlencode($category['category']); ?>&lang=<?php echo $language; ?><?php echo $searchQuery ? '&search=' . urlencode($searchQuery) : ''; ?>" 
+                    <a href="<?php echo buildUrl('menu.php', ['category' => $category['category'], 'search' => $searchQuery]); ?>" 
                        class="category-btn <?php echo $selectedCategory === $category['category'] ? 'active' : 'bg-gray-100 text-gray-700'; ?> px-4 py-1.5 rounded-full text-sm font-medium scale-button whitespace-nowrap">
-                        <?php echo getCategoryName($category['category'], $category['category_ar'], $language); ?>
+                        <?php echo getCategoryName($category['category'], $category['category_ar']); ?>
                     </a>
                     <?php endforeach; ?>
                 </div>
@@ -268,14 +306,14 @@ if (!empty($searchQuery)) {
             <!-- Popular items section (only show when no filters) -->
             <?php if (!empty($popularItems)): ?>
             <div class="mb-6">
-                <h2 class="text-lg font-semibold mb-3"><?php echo $t['popular_items']; ?></h2>
+                <h2 class="text-lg font-semibold mb-3"><?php echo __('popular_items'); ?></h2>
                 <div class="grid grid-cols-1 gap-4">
                     <?php foreach ($popularItems as $item): ?>
                     <div class="menu-item bg-white rounded-xl shadow-sm overflow-hidden flex cursor-pointer"
-                         onclick="window.location.href='menu-item-details.php?id=<?php echo $item['id']; ?>&lang=<?php echo $language; ?>'">
+                         onclick="window.location.href='<?php echo buildUrl('menu-item-details.php', ['id' => $item['id']]); ?>'">
                         <div class="w-24 h-24 flex-shrink-0">
                             <img src="<?php echo htmlspecialchars($item['image']); ?>" 
-                                 alt="<?php echo htmlspecialchars(getItemName($item, $language)); ?>" 
+                                 alt="<?php echo htmlspecialchars(getItemName($item)); ?>" 
                                  class="w-full h-full object-cover" 
                                  loading="lazy"
                                  onerror="this.src='uploads/menu/placeholder.jpg'">
@@ -283,21 +321,21 @@ if (!empty($searchQuery)) {
                         <div class="p-3 flex-1 flex flex-col justify-between">
                             <div>
                                 <h3 class="font-medium text-sm mb-0.5">
-                                    <?php echo htmlspecialchars(getItemName($item, $language)); ?>
+                                    <?php echo htmlspecialchars(getItemName($item)); ?>
                                 </h3>
                                 <p class="text-gray-500 text-xs line-clamp-1">
-                                    <?php echo htmlspecialchars(getItemDescription($item, $language)); ?>
+                                    <?php echo htmlspecialchars(getItemDescription($item)); ?>
                                 </p>
                             </div>
                             <div class="flex justify-between items-center mt-1">
                                 <span class="text-primary font-semibold">
                                     <?php 
                                     $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
-                                    echo formatPrice($displayPrice, $language); 
+                                    echo formatPrice($displayPrice); 
                                     ?>
                                 </span>
                                 <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                    <?php echo $language === 'ar' ? 'شائع' : 'Popular'; ?>
+                                    <?php echo __('popular'); ?>
                                 </span>
                             </div>
                         </div>
@@ -312,18 +350,18 @@ if (!empty($searchQuery)) {
                 <h2 class="text-lg font-semibold mb-3">
                     <?php 
                     if (!empty($searchQuery)) {
-                        echo $t['search_results'] . ' (' . count($menuItems) . ')';
+                        echo __('search_results') . ' (' . count($menuItems) . ')';
                     } elseif (!empty($selectedCategory)) {
                         $categoryName = '';
                         foreach ($categories as $cat) {
                             if ($cat['category'] === $selectedCategory) {
-                                $categoryName = getCategoryName($cat['category'], $cat['category_ar'], $language);
+                                $categoryName = getCategoryName($cat['category'], $cat['category_ar']);
                                 break;
                             }
                         }
                         echo $categoryName;
                     } else {
-                        echo $t['all_menu'];
+                        echo __('all_menu');
                     }
                     ?>
                 </h2>
@@ -334,11 +372,11 @@ if (!empty($searchQuery)) {
                     <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                         <i data-feather="search" class="h-8 w-8 text-gray-400"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-gray-700 mb-1"><?php echo $t['no_items_found']; ?></h3>
-                    <p class="text-gray-500 text-sm text-center mb-4"><?php echo $t['try_different_search']; ?></p>
-                    <a href="menu.php?lang=<?php echo $language; ?>" 
+                    <h3 class="text-lg font-medium text-gray-700 mb-1"><?php echo __('no_items_found'); ?></h3>
+                    <p class="text-gray-500 text-sm text-center mb-4"><?php echo __('try_different_search'); ?></p>
+                    <a href="<?php echo buildUrl('menu.php'); ?>" 
                        class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium scale-button">
-                        <?php echo $t['reset_search']; ?>
+                        <?php echo __('reset_search'); ?>
                     </a>
                 </div>
                 <?php else: ?>
@@ -346,10 +384,10 @@ if (!empty($searchQuery)) {
                 <div class="grid grid-cols-1 gap-4">
                     <?php foreach ($menuItems as $item): ?>
                     <div class="menu-item bg-white rounded-xl shadow-sm overflow-hidden flex cursor-pointer"
-                         onclick="window.location.href='menu-item-details.php?id=<?php echo $item['id']; ?>&lang=<?php echo $language; ?>'">
+                         onclick="window.location.href='<?php echo buildUrl('menu-item-details.php', ['id' => $item['id']]); ?>'">
                         <div class="w-24 h-24 flex-shrink-0">
                             <img src="<?php echo htmlspecialchars($item['image']); ?>" 
-                                 alt="<?php echo htmlspecialchars(getItemName($item, $language)); ?>" 
+                                 alt="<?php echo htmlspecialchars(getItemName($item)); ?>" 
                                  class="w-full h-full object-cover" 
                                  loading="lazy"
                                  onerror="this.src='uploads/menu/placeholder.jpg'">
@@ -358,40 +396,40 @@ if (!empty($searchQuery)) {
                             <div>
                                 <div class="flex justify-between items-start mb-0.5">
                                     <h3 class="font-medium text-sm flex-1">
-                                        <?php echo htmlspecialchars(getItemName($item, $language)); ?>
+                                        <?php echo htmlspecialchars(getItemName($item)); ?>
                                     </h3>
                                     <?php if ($item['is_popular'] || $item['is_special']): ?>
                                     <div class="flex gap-1 ml-2">
                                         <?php if ($item['is_popular']): ?>
                                         <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                            <?php echo $language === 'ar' ? 'شائع' : 'Popular'; ?>
+                                            <?php echo __('popular'); ?>
                                         </span>
                                         <?php endif; ?>
                                         <?php if ($item['is_special']): ?>
                                         <span class="text-xs bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
-                                            <?php echo $language === 'ar' ? 'مميز' : 'Special'; ?>
+                                            <?php echo __('special'); ?>
                                         </span>
                                         <?php endif; ?>
                                     </div>
                                     <?php endif; ?>
                                 </div>
                                 <p class="text-gray-500 text-xs line-clamp-1">
-                                    <?php echo htmlspecialchars(getItemDescription($item, $language)); ?>
+                                    <?php echo htmlspecialchars(getItemDescription($item)); ?>
                                 </p>
                                 <p class="text-gray-400 text-xs mt-0.5">
-                                    <?php echo htmlspecialchars(getCategoryName($item['category'], $item['category_ar'], $language)); ?>
+                                    <?php echo htmlspecialchars(getCategoryName($item['category'], $item['category_ar'])); ?>
                                 </p>
                             </div>
                             <div class="flex justify-between items-center mt-2">
                                 <span class="text-primary font-semibold">
                                     <?php 
                                     $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
-                                    echo formatPrice($displayPrice, $language); 
+                                    echo formatPrice($displayPrice); 
                                     ?>
                                 </span>
                                 <?php if ($item['is_half_full']): ?>
                                 <span class="text-xs text-gray-500">
-                                    <?php echo $language === 'ar' ? 'نصف/كامل' : 'Half/Full'; ?>
+                                    <?php echo $currentLang === 'ar' ? 'نصف/كامل' : 'Half/Full'; ?>
                                 </span>
                                 <?php endif; ?>
                             </div>
@@ -408,10 +446,10 @@ if (!empty($searchQuery)) {
             <div class="px-4 py-0">
                 <div class="flex justify-around items-center">
                     <!-- Home -->
-                    <a href="index.php?lang=<?php echo $language; ?>" 
+                    <a href="<?php echo buildUrl('index.php'); ?>" 
                        class="nav-item ripple flex flex-col items-center justify-center" data-page="home">
                         <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
-                        <span class="nav-text"><?php echo $t['home']; ?></span>
+                        <span class="nav-text"><?php echo __('home'); ?></span>
                     </a>
                     
                     <!-- Center Logo -->
@@ -420,10 +458,10 @@ if (!empty($searchQuery)) {
                     </div>
                     
                     <!-- Menu -->
-                    <a href="menu.php?lang=<?php echo $language; ?>" 
+                    <a href="<?php echo buildUrl('menu.php'); ?>" 
                        class="nav-item active ripple flex flex-col items-center justify-center" data-page="menu-full">
                         <i data-feather="menu" class="nav-icon h-5 w-5 mb-1"></i>
-                        <span class="nav-text"><?php echo $t['menu']; ?></span>
+                        <span class="nav-text"><?php echo __('menu'); ?></span>
                     </a>
                 </div>
             </div>
