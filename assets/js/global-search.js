@@ -422,9 +422,7 @@ async function performSearch(query) {
             </div>
             <div class="flex justify-between items-center mt-1">
               <span class="text-primary font-semibold">${priceDisplay}</span>
-              <button class="search-add-to-cart w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center" data-id="${item.id}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              </button>
+              <span class="text-xs text-gray-500">${item.category}</span>
             </div>
           </div>
         </div>
@@ -436,9 +434,6 @@ async function performSearch(query) {
     // Update the results container
     searchResults.innerHTML = resultsHTML;
     
-    // Add "Add to cart" functionality
-    setupAddToCartButtons();
-    
   } catch (error) {
     console.error('Search error:', error);
     searchResults.innerHTML = `
@@ -447,49 +442,6 @@ async function performSearch(query) {
       </div>
     `;
   }
-}
-
-// Set up "Add to cart" buttons in search results
-function setupAddToCartButtons() {
-  const addToCartButtons = document.querySelectorAll('.search-add-to-cart');
-  
-  addToCartButtons.forEach(button => {
-    button.addEventListener('click', function(e) {
-      // Prevent propagation to parent (which would navigate to details)
-      e.stopPropagation();
-      
-      const itemId = this.getAttribute('data-id');
-      
-      // Add to cart using window.cartManager if available
-      if (window.menuManager && window.cartManager) {
-        const item = window.menuManager.getItemById(itemId);
-        
-        if (item) {
-          // For half/full items, default to half
-          let variants = {};
-          if (item.isHalfFull) {
-            variants.size = 'half';
-          }
-          
-          // Add to cart
-          window.cartManager.addToCart(item, 1, variants);
-          
-          // Show toast notification
-          if (window.toast && typeof window.toast.show === 'function') {
-            window.toast.show('Added to cart', 'success');
-          }
-          
-          // Update cart badge
-          if (typeof window.cartManager.updateCartBadge === 'function') {
-            window.cartManager.updateCartBadge();
-          }
-        }
-      } else {
-        // Fallback for when cartManager is not available
-        alert('Item added to cart!');
-      }
-    });
-  });
 }
 
 // Initialize when DOM is loaded

@@ -83,8 +83,7 @@
                 </a>
                 <h1 class="text-xl font-semibold">Menu</h1>
                 <a href="contact-us.html" class="relative w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-                    <!-- <i data-feather="phone" class="h-5 w-5 text-gray-600"></i> -->
-                    
+                    <i data-feather="phone" class="h-5 w-5 text-gray-600"></i>
                 </a>
             </div>
             
@@ -197,40 +196,29 @@
         <!-- Navigation bar -->
         <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
             <div class="h-16 flex justify-around items-center">
-                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400 ">
+                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
                     <i data-feather="home" class="h-5 w-5"></i>
                     <span class="text-xs mt-0.5">Home</span>
-                    <div class="nav-indicator"></div>
                 </a>
                 
                 <a target="_blank" href="https://wa.me/+1234567890" class="whatsapp-trigger">
-                    <div
-            class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
-            <img src="fenyal-logo-1.png" width="65px;">
-        </div>
+                    <div class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
+                        <img src="fenyal-logo-1.png" width="65px;">
+                    </div>
                 </a>
-                <a href="menu.html" class="flex flex-col items-center justify-center  text-primary relative">
+                
+                <a href="menu.html" class="flex flex-col items-center justify-center text-primary relative">
                     <i data-feather="menu" class="h-5 w-5"></i>
                     <span class="text-xs mt-0.5">Menu</span>
                 </a>
             </div>
         </nav>
-
-
-
-    </div>
-    
-    <!-- Add to cart success notification (hidden by default) -->
-    <div id="add-cart-toast" class="fixed bottom-20 left-0 right-0 flex justify-center items-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
-        <div class="bg-green-500 text-white px-4 py-3 rounded-lg shadow-lg">
-            <span>Item added to cart</span>
-        </div>
     </div>
     
     <!-- Custom JavaScript -->
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
-        import menuManager, { formatPrice, cartManager } from './assets/js/menu.js';
+        import menuManager, { formatPrice } from './assets/js/menu.js';
         
         // Initialize icons
         feather.replace();
@@ -263,10 +251,6 @@
                 
                 // Setup search functionality
                 setupSearch();
-                
-                // Update cart badge
-                cartManager.updateCartBadge();
-                updateCartNavBadge();
             } catch (error) {
                 console.error('Error initializing menu:', error);
                 toast.show('Failed to load menu data', 'error');
@@ -414,7 +398,6 @@
                         </div>
                         <div class="flex justify-between items-center mt-1">
                             <span class="text-primary font-semibold">${priceDisplay}</span>
-                          
                         </div>
                     </div>
                 `;
@@ -423,41 +406,6 @@
             });
             
             container.appendChild(itemsGrid);
-            
-            // Add event listeners to add-to-cart buttons
-            setupAddToCartButtons();
-        }
-        
-        // Setup add to cart buttons
-        function setupAddToCartButtons() {
-            const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
-            
-            addToCartButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    // Prevent propagation to parent (which navigates to details)
-                    e.stopPropagation();
-                    
-                    const itemId = this.getAttribute('data-id');
-                    const item = menuManager.getItemById(itemId);
-                    
-                    if (item) {
-                        // For half/full items, default to half
-                        let variants = {};
-                        if (item.isHalfFull) {
-                            variants.size = 'half';
-                        }
-                        
-                        // Add to cart
-                        cartManager.addToCart(item, 1, variants);
-                        
-                        // Show toast
-                        showAddToCartToast();
-                        
-                        // Update cart badges
-                        updateCartNavBadge();
-                    }
-                });
-            });
         }
         
         // Setup search functionality
@@ -532,29 +480,6 @@
             }
         }
         
-        // Show add to cart toast notification
-        function showAddToCartToast() {
-            const toast = document.getElementById('add-cart-toast');
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2000);
-        }
-        
-        // Update cart badge in nav
-        function updateCartNavBadge() {
-            const cartBadges = document.querySelectorAll('#cart-badge, .cart-nav-badge');
-            const itemCount = cartManager.getItemCount();
-            
-            cartBadges.forEach(badge => {
-                badge.textContent = itemCount;
-                badge.style.display = itemCount > 0 ? 'flex' : 'none';
-            });
-        }
-        
         // Debounce function for search input
         function debounce(func, wait) {
             let timeout;
@@ -583,6 +508,6 @@
             });
         });
     </script>
-    <script src="assets/js/global-search.js"></script>
+
 </body>
 </html>
