@@ -1,20 +1,30 @@
 <?php
-// menu-item-details.php - Dynamic Bilingual Menu Item Details
+// menu-item-details.php - Complete Bilingual Menu Item Details
+session_start();
+
+// Include admin config for database connection
 require_once 'admin/config.php';
 
-// Get current language
-$language = $_GET['lang'] ?? $_SESSION['language'] ?? 'en';
-if (in_array($language, ['en', 'ar'])) {
-    $_SESSION['language'] = $language;
-} else {
-    $language = 'en';
+// Language Management
+$supportedLanguages = ['en', 'ar'];
+$defaultLanguage = 'en';
+
+// Get current language from URL parameter, session, or default
+$currentLang = $_GET['lang'] ?? $_SESSION['language'] ?? $defaultLanguage;
+
+// Validate and set language
+if (!in_array($currentLang, $supportedLanguages)) {
+    $currentLang = $defaultLanguage;
 }
+
+// Store in session
+$_SESSION['language'] = $currentLang;
 
 // Get item ID
 $itemId = $_GET['id'] ?? null;
 
 if (!$itemId || !is_numeric($itemId)) {
-    header('Location: menu.php?lang=' . $language);
+    header('Location: menu.php?lang=' . $currentLang);
     exit;
 }
 
@@ -27,7 +37,7 @@ $itemStmt->execute([$itemId]);
 $item = $itemStmt->fetch();
 
 if (!$item) {
-    header('Location: menu.php?lang=' . $language);
+    header('Location: menu.php?lang=' . $currentLang);
     exit;
 }
 
@@ -41,7 +51,7 @@ $spiceLevelsStmt = $pdo->prepare("SELECT * FROM menu_spice_levels WHERE menu_ite
 $spiceLevelsStmt->execute([$itemId]);
 $spiceLevels = $spiceLevelsStmt->fetchAll();
 
-// Translations
+// Translation array
 $translations = [
     'en' => [
         'loading_item_details' => 'Loading item details...',
@@ -58,6 +68,8 @@ $translations = [
         'back_to_menu' => 'Back to Menu',
         'add_to_cart' => 'Add to Cart',
         'order_now' => 'Order Now',
+        'home' => 'Home',
+        'menu' => 'Menu',
         // Spice levels
         'mild' => 'Mild',
         'medium' => 'Medium',
@@ -79,6 +91,8 @@ $translations = [
         'back_to_menu' => 'العودة للقائمة',
         'add_to_cart' => 'أضف إلى السلة',
         'order_now' => 'اطلب الآن',
+        'home' => 'الرئيسية',
+        'menu' => 'القائمة',
         // Spice levels
         'mild' => 'خفيف',
         'medium' => 'متوسط',
@@ -87,42 +101,66 @@ $translations = [
     ]
 ];
 
-$t = $translations[$language];
-
 // Helper functions
-function getItemName($item, $lang) {
-    return ($lang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
+function __($key) {
+    global $translations, $currentLang;
+    return $translations[$currentLang][$key] ?? $translations['en'][$key] ?? $key;
 }
 
-function getItemDescription($item, $lang) {
-    return ($lang === 'ar' && !empty($item['description_ar'])) ? $item['description_ar'] : $item['description'];
+function isRTL() {
+    global $currentLang;
+    return $currentLang === 'ar';
 }
 
-function getCategoryName($item, $lang) {
-    return ($lang === 'ar' && !empty($item['category_ar'])) ? $item['category_ar'] : $item['category'];
+function getItemName($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
 }
 
-function getAddonName($addon, $lang) {
-    return ($lang === 'ar' && !empty($addon['name_ar'])) ? $addon['name_ar'] : $addon['name'];
+function getItemDescription($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['description_ar'])) ? $item['description_ar'] : $item['description'];
 }
 
-function getSpiceLevelName($spiceLevel, $lang) {
-    return ($lang === 'ar' && !empty($spiceLevel['name_ar'])) ? $spiceLevel['name_ar'] : $spiceLevel['name'];
+function getCategoryName($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['category_ar'])) ? $item['category_ar'] : $item['category'];
 }
 
-function formatPrice($price, $lang) {
-    return ($lang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+function getAddonName($addon) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($addon['name_ar'])) ? $addon['name_ar'] : $addon['name'];
 }
+
+function getSpiceLevelName($spiceLevel) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($spiceLevel['name_ar'])) ? $spiceLevel['name_ar'] : $spiceLevel['name'];
+}
+
+function formatPrice($price) {
+    global $currentLang;
+    return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+}
+
+function buildUrl($path, $params = []) {
+    global $currentLang;
+    $params['lang'] = $currentLang;
+    $queryString = http_build_query($params);
+    return $path . ($queryString ? '?' . $queryString : '');
+}
+
+$alternativeLang = $currentLang === 'ar' ? 'en' : 'ar';
+$direction = isRTL() ? 'rtl' : 'ltr';
 
 // Calculate default price
 $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $language; ?>" dir="<?php echo $language === 'ar' ? 'rtl' : 'ltr'; ?>">
+<html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title><?php echo htmlspecialchars(getItemName($item, $language)); ?> - Fenyal</title>
+    <title><?php echo htmlspecialchars(getItemName($item)); ?> - Fenyal</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -134,7 +172,9 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <?php if ($currentLang === 'ar'): ?>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <?php endif; ?>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
@@ -185,17 +225,17 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
             
             <!-- Back button -->
-            <a href="menu.php?lang=<?php echo $language; ?>" 
-               class="absolute top-4 <?php echo $language === 'ar' ? 'right-4' : 'left-4'; ?> w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
-                <i data-feather="<?php echo $language === 'ar' ? 'arrow-right' : 'arrow-left'; ?>" 
+            <a href="<?php echo buildUrl('menu.php'); ?>" 
+               class="absolute top-4 <?php echo $direction === 'rtl' ? 'right-4' : 'left-4'; ?> w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+                <i data-feather="<?php echo $direction === 'rtl' ? 'arrow-right' : 'arrow-left'; ?>" 
                    class="h-5 w-5 text-white"></i>
             </a>
             
             <!-- Language toggle button -->
-            <a href="?id=<?php echo $itemId; ?>&lang=<?php echo $language === 'ar' ? 'en' : 'ar'; ?>" 
-               class="absolute top-4 <?php echo $language === 'ar' ? 'left-4' : 'right-4'; ?> w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
+            <a href="?id=<?php echo $itemId; ?>&lang=<?php echo $alternativeLang; ?>" 
+               class="absolute top-4 <?php echo $direction === 'rtl' ? 'left-4' : 'right-4'; ?> w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center shadow-lg">
                 <span class="text-sm font-medium text-white">
-                    <?php echo strtoupper($language === 'ar' ? 'EN' : 'AR'); ?>
+                    <?php echo strtoupper($alternativeLang); ?>
                 </span>
             </a>
         </div>
@@ -206,18 +246,18 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
             <div class="mb-3">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
-                        <h1 class="text-xl font-bold mb-1"><?php echo htmlspecialchars(getItemName($item, $language)); ?></h1>
-                        <p class="text-sm text-gray-500"><?php echo htmlspecialchars(getCategoryName($item, $language)); ?></p>
+                        <h1 class="text-xl font-bold mb-1"><?php echo htmlspecialchars(getItemName($item)); ?></h1>
+                        <p class="text-sm text-gray-500"><?php echo htmlspecialchars(getCategoryName($item)); ?></p>
                     </div>
                     <div class="flex items-center gap-2 ml-3">
                         <?php if ($item['is_popular']): ?>
                         <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full font-medium">
-                            <?php echo $t['popular']; ?>
+                            <?php echo __('popular'); ?>
                         </span>
                         <?php endif; ?>
                         <?php if ($item['is_special']): ?>
                         <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">
-                            <?php echo $t['special']; ?>
+                            <?php echo __('special'); ?>
                         </span>
                         <?php endif; ?>
                     </div>
@@ -226,27 +266,27 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
             
             <!-- Item description -->
             <p class="text-gray-600 text-sm mb-6 leading-relaxed">
-                <?php echo htmlspecialchars(getItemDescription($item, $language)); ?>
+                <?php echo htmlspecialchars(getItemDescription($item)); ?>
             </p>
             
             <form id="item-form">
                 <!-- Size options (if half/full available) -->
                 <?php if ($item['is_half_full']): ?>
                 <div class="mb-6">
-                    <h3 class="text-base font-semibold mb-3"><?php echo $t['select_size']; ?></h3>
+                    <h3 class="text-base font-semibold mb-3"><?php echo __('select_size'); ?></h3>
                     <div class="flex space-x-4 radio-container">
                         <div>
                             <input type="radio" name="size" id="size-half" value="half" checked 
                                    data-price="<?php echo $item['half_price']; ?>">
                             <label for="size-half" class="text-sm">
-                                <?php echo $t['half']; ?> - <?php echo formatPrice($item['half_price'], $language); ?>
+                                <?php echo __('half'); ?> - <?php echo formatPrice($item['half_price']); ?>
                             </label>
                         </div>
                         <div>
                             <input type="radio" name="size" id="size-full" value="full"
                                    data-price="<?php echo $item['full_price']; ?>">
                             <label for="size-full" class="text-sm">
-                                <?php echo $t['full']; ?> - <?php echo formatPrice($item['full_price'], $language); ?>
+                                <?php echo __('full'); ?> - <?php echo formatPrice($item['full_price']); ?>
                             </label>
                         </div>
                     </div>
@@ -256,7 +296,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                 <!-- Spice level -->
                 <?php if (!empty($spiceLevels)): ?>
                 <div class="mb-6">
-                    <h3 class="text-base font-semibold mb-3"><?php echo $t['spice_level']; ?></h3>
+                    <h3 class="text-base font-semibold mb-3"><?php echo __('spice_level'); ?></h3>
                     <div class="flex flex-wrap gap-3 radio-container">
                         <?php foreach ($spiceLevels as $index => $spiceLevel): ?>
                         <div>
@@ -264,7 +304,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                                    value="<?php echo htmlspecialchars($spiceLevel['name']); ?>" 
                                    <?php echo $index === 0 ? 'checked' : ''; ?>>
                             <label for="spice-<?php echo $index; ?>" class="text-sm">
-                                <?php echo htmlspecialchars(getSpiceLevelName($spiceLevel, $language)); ?>
+                                <?php echo htmlspecialchars(getSpiceLevelName($spiceLevel)); ?>
                             </label>
                         </div>
                         <?php endforeach; ?>
@@ -275,7 +315,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                 <!-- Add-ons -->
                 <?php if (!empty($addons)): ?>
                 <div class="mb-6">
-                    <h3 class="text-base font-semibold mb-3"><?php echo $t['addons']; ?></h3>
+                    <h3 class="text-base font-semibold mb-3"><?php echo __('addons'); ?></h3>
                     <div class="space-y-3 checkbox-container">
                         <?php foreach ($addons as $addon): ?>
                         <div class="flex justify-between items-center">
@@ -284,11 +324,11 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                                        name="addons" value="<?php echo $addon['id']; ?>" 
                                        data-price="<?php echo $addon['price']; ?>">
                                 <label for="addon-<?php echo $addon['id']; ?>" class="text-sm">
-                                    <?php echo htmlspecialchars(getAddonName($addon, $language)); ?>
+                                    <?php echo htmlspecialchars(getAddonName($addon)); ?>
                                 </label>
                             </div>
                             <span class="text-sm text-gray-600">
-                                <?php echo formatPrice($addon['price'], $language); ?>
+                                <?php echo formatPrice($addon['price']); ?>
                             </span>
                         </div>
                         <?php endforeach; ?>
@@ -299,10 +339,10 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                 <!-- Price display -->
                 <div class="mb-8">
                     <div>
-                        <p class="text-sm text-gray-500"><?php echo $t['price']; ?></p>
+                        <p class="text-sm text-gray-500"><?php echo __('price'); ?></p>
                         <p id="total-price" class="text-xl font-bold text-primary price-update" 
                            data-base-price="<?php echo $defaultPrice; ?>">
-                            <?php echo formatPrice($defaultPrice, $language); ?>
+                            <?php echo formatPrice($defaultPrice); ?>
                         </p>
                     </div>
                 </div>
@@ -312,11 +352,11 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
             <div class="flex gap-3">
                 <button type="button" id="add-to-cart-btn" 
                         class="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-xl transition-colors hover:bg-gray-200">
-                    <?php echo $t['add_to_cart']; ?>
+                    <?php echo __('add_to_cart'); ?>
                 </button>
                 <button type="button" id="order-now-btn" 
                         class="flex-1 bg-primary text-white font-medium py-3 px-6 rounded-xl transition-colors hover:bg-primary/90">
-                    <?php echo $t['order_now']; ?>
+                    <?php echo __('order_now'); ?>
                 </button>
             </div>
         </div>
@@ -328,7 +368,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
         feather.replace();
         
         // Price calculation variables
-        const language = '<?php echo $language; ?>';
+        const language = '<?php echo $currentLang; ?>';
         const basePrice = <?php echo $defaultPrice; ?>;
         const halfPrice = <?php echo $item['half_price'] ?: $item['price']; ?>;
         const fullPrice = <?php echo $item['full_price'] ?: $item['price']; ?>;

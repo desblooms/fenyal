@@ -5,7 +5,7 @@ session_start();
 // Application Constants
 define('APP_NAME', 'Fenyal');
 define('APP_VERSION', '2.0.0');
-define('APP_URL', 'https://fenyal.com');
+define('APP_URL', 'https://fenya.desblooms.in');
 define('DEFAULT_LANGUAGE', 'en');
 define('SUPPORTED_LANGUAGES', ['en', 'ar']);
 
