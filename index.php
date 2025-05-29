@@ -386,18 +386,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             });
         }
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            addTouchFeedback();
-            
-            // Check if user is new and should see welcome page
-            if (!localStorage.getItem('hasVisited')) {
-                // Store current language preference
-                localStorage.setItem('preferredLanguage', '<?php echo $currentLang; ?>');
-                window.location.href = 'welcome.html';
-                return;
-            }
-        });
+      
 
         // Register service worker for PWA support
         if ('serviceWorker' in navigator) {
