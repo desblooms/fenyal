@@ -34,6 +34,10 @@ class MenuManager {
             this.categories = Array.from(categorySet);
             this.categoriesAr = Array.from(categoryArSet);
             
+            console.log('Menu loaded:', this.menuData.length, 'items');
+            console.log('Categories EN:', this.categories);
+            console.log('Categories AR:', this.categoriesAr);
+            
             return this.menuData;
         } catch (error) {
             console.error('Error loading menu data:', error);
@@ -43,6 +47,7 @@ class MenuManager {
     
     // Set current language
     setLanguage(language) {
+        console.log('Setting language to:', language);
         this.currentLanguage = language;
         localStorage.setItem('selectedLanguage', language);
     }
@@ -69,11 +74,7 @@ class MenuManager {
         
         // Handle both English and Arabic category names
         return this.menuData.filter(item => {
-            if (this.currentLanguage === 'ar') {
-                return item.categoryAr === category || item.category === category;
-            } else {
-                return item.category === category || item.categoryAr === category;
-            }
+            return item.category === category || item.categoryAr === category;
         });
     }
     
@@ -96,8 +97,14 @@ class MenuManager {
     }
     
     getAllCategories() {
+        // Return categories based on current language
         if (this.currentLanguage === 'ar') {
-            return this.categoriesAr;
+            // For Arabic, return a mapped array of Arabic category names
+            return this.categories.map(category => {
+                // Find an item with this category to get the Arabic equivalent
+                const item = this.menuData.find(item => item.category === category);
+                return item?.categoryAr || category;
+            });
         }
         return this.categories;
     }

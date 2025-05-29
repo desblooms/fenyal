@@ -22,16 +22,22 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Arabic Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
-   <link rel="stylesheet" href="assets/css/language.css">
+    <link rel="stylesheet" href="assets/css/language.css">
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
- 
+    <style>
+        /* Arabic font support */
+        [lang="ar"] {
+            font-family: 'Cairo', 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
 <body class="bg-background font-sans text-dark">
@@ -47,9 +53,9 @@
                 <div>
                  
                 </div>
-                          <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
-    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
-</button>
+                <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
+                </button>
             </div>
         </header>
 
@@ -57,42 +63,42 @@
         <main class="px-4">
             <!-- Categories -->
             <div class="mb-2">
-                <div class="flex space-x-4 overflow-x-auto py-1 special-scroll">
+                <div class="flex space-x-4 overflow-x-auto py-1 special-scroll" id="categories-container">
                     <a href="menu.html?category=Breakfast" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/1.png" alt="Breakfast" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Breakfast</span>
+                        <span class="text-xs font-medium category-label" data-category="Breakfast">Breakfast</span>
                     </a>
                     <a href="menu.html?category=Dishes" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/2.png" alt="Dishes" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Dishes</span>
+                        <span class="text-xs font-medium category-label" data-category="Dishes">Dishes</span>
                     </a>
                     <a href="menu.html?category=Bread" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/3.png" alt="Bread" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Bread</span>
+                        <span class="text-xs font-medium category-label" data-category="Bread">Bread</span>
                     </a>
                     <a href="menu.html?category=Desserts" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/4.png" alt="Desserts" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Desserts</span>
+                        <span class="text-xs font-medium category-label" data-category="Desserts">Desserts</span>
                     </a>
                     <a href="menu.html?category=Cold Drinks" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/5.png" alt="Cold Drinks" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Cold Drinks</span>
+                        <span class="text-xs font-medium category-label" data-category="Cold Drinks">Cold Drinks</span>
                     </a>
                     <a href="menu.html?category=Hot Drinks" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="uploads/menu/6.png" alt="Hot Drinks" class="h-14 w-14 object-cover rounded-full" />
                         </div>
-                        <span class="text-xs font-medium">Hot Drinks</span>
+                        <span class="text-xs font-medium category-label" data-category="Hot Drinks">Hot Drinks</span>
                     </a>
                 </div>
             </div>
@@ -100,8 +106,8 @@
             <!-- Popular Items -->
             <div class="mb-5">
                 <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-base font-semibold">Popular Items</h2>
-                    <a href="menu.html" class="text-primary text-xs">View all</a>
+                    <h2 class="text-base font-semibold" id="popular-title">Popular Items</h2>
+                    <a href="menu.html" class="text-primary text-xs" id="view-all-link">View all</a>
                 </div>
 
                 <div class="special-items-container" id="special-items-container">
@@ -122,14 +128,13 @@
         </main>
 
        <!-- Navigation bar -->
-<!-- Navigation bar -->
 <nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-90">
     <div class="px-4 py-0">
         <div class="flex justify-around items-center relative">
             <!-- Home -->
             <a href="index.html" class="nav-item ripple flex flex-col items-center justify-center active" data-page="home">
                 <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
-                <span class="nav-text">Home</span>
+                <span class="nav-text" id="nav-home">Home</span>
             </a>
             
             <!-- Center Logo -->
@@ -140,30 +145,110 @@
             <!-- Menu -->
             <a href="menu.html" class="nav-item ripple flex flex-col items-center justify-center " data-page="menu-full">
                 <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
-                <span class="nav-text">Menu</span>
-                <!-- Optional notification badge -->
-                <!-- <div class="notification-badge">3</div> -->
+                <span class="nav-text" id="nav-menu">Menu</span>
             </a>
         </div>
     </div>
 </nav>
-<!-- Navigation bar -->
     </div>
 
     <!-- Custom JavaScript -->
-       <script src="assets/js/language-toggle.js"></script>
     <script type="module">
         import { pageTransition, toast } from './assets/js/app.js';
-        import menuManager, { formatPrice } from './assets/js/menu.js';
+        import menuManager, { formatPrice, getTranslation } from './assets/js/menu.js';
+
+        // Language management
+        let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
 
         // Initialize icons
         feather.replace();
 
-        // Load special items from menu with shimmer effect
+        // Language toggle functionality
+        function setupLanguageToggle() {
+            const toggle = document.getElementById('language-toggle');
+            const currentLangSpan = document.getElementById('current-language');
+            
+            // Update display
+            currentLangSpan.textContent = currentLanguage.toUpperCase();
+            
+            toggle.addEventListener('click', () => {
+                currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+                localStorage.setItem('selectedLanguage', currentLanguage);
+                
+                // Update menu manager language
+                menuManager.setLanguage(currentLanguage);
+                
+                // Apply language changes
+                applyLanguage(currentLanguage);
+                
+                // Reload content
+                loadSpecialItems();
+                
+                if (toast && typeof toast.show === 'function') {
+                    const langName = currentLanguage === 'ar' ? 'العربية' : 'English';
+                    toast.show(`Language: ${langName}`, 'success');
+                }
+            });
+        }
+
+        // Apply language to the page
+        function applyLanguage(lang) {
+            // Set document attributes
+            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+            
+            // Update language display
+            document.getElementById('current-language').textContent = lang.toUpperCase();
+            
+            // Update static text
+            document.getElementById('popular-title').textContent = getTranslation('popular', lang);
+            document.getElementById('view-all-link').textContent = getTranslation('viewAll', lang);
+            document.getElementById('nav-home').textContent = getTranslation('home', lang);
+            document.getElementById('nav-menu').textContent = getTranslation('menu', lang);
+            
+            // Update category labels
+            updateCategoryLabels(lang);
+            
+            // Adjust spacing for RTL
+            const categoriesContainer = document.getElementById('categories-container');
+            if (lang === 'ar') {
+                categoriesContainer.classList.remove('space-x-4');
+                categoriesContainer.classList.add('space-x-reverse', 'space-x-4');
+                categoriesContainer.style.direction = 'rtl';
+            } else {
+                categoriesContainer.classList.remove('space-x-reverse');
+                categoriesContainer.classList.add('space-x-4');
+                categoriesContainer.style.direction = 'ltr';
+            }
+        }
+
+        // Update category labels based on language
+        function updateCategoryLabels(lang) {
+            const categoryMap = {
+                'Breakfast': { en: 'Breakfast', ar: 'فطور' },
+                'Dishes': { en: 'Dishes', ar: 'أطباق' },
+                'Bread': { en: 'Bread', ar: 'خبز' },
+                'Desserts': { en: 'Desserts', ar: 'حلويات' },
+                'Cold Drinks': { en: 'Cold Drinks', ar: 'مشروبات باردة' },
+                'Hot Drinks': { en: 'Hot Drinks', ar: 'مشروبات ساخنة' }
+            };
+
+            document.querySelectorAll('.category-label').forEach(label => {
+                const category = label.getAttribute('data-category');
+                if (categoryMap[category]) {
+                    label.textContent = categoryMap[category][lang];
+                }
+            });
+        }
+
+        // Load special items from menu with proper language support
         async function loadSpecialItems() {
             try {
                 console.log('Starting to load special items...');
                 const container = document.getElementById('special-items-container');
+
+                // Set language in menu manager
+                menuManager.setLanguage(currentLanguage);
 
                 // Load menu data first
                 await menuManager.loadMenuData();
@@ -202,21 +287,25 @@
                                 pageTransition(`menu-item-details.html?id=${item.id}`);
                             };
 
+                            // Get localized content
+                            const itemName = menuManager.getItemName(item);
+                            const itemCategory = menuManager.getItemCategory(item);
+
                             // Determine price display
                             let priceDisplay;
                             if (item.isHalfFull && item.halfPrice) {
-                                priceDisplay = formatPrice(item.halfPrice);
+                                priceDisplay = formatPrice(item.halfPrice, currentLanguage);
                             } else {
-                                priceDisplay = formatPrice(item.price);
+                                priceDisplay = formatPrice(item.price, currentLanguage);
                             }
 
                             specialItem.innerHTML = `
                                 <div class="h-24 overflow-hidden">
-                                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" onerror="this.src='uploads/menu/placeholder.jpg'">
+                                    <img src="${item.image}" alt="${itemName}" class="w-full h-full object-cover" onerror="this.src='uploads/menu/placeholder.jpg'">
                                 </div>
                                 <div class="p-2.5">
-                                    <h3 class="font-medium text-sm leading-tight line-clamp-1">${item.name}</h3>
-                                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">${item.category}</p>
+                                    <h3 class="font-medium text-sm leading-tight line-clamp-1">${itemName}</h3>
+                                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">${itemCategory}</p>
                                     <div class="flex justify-between items-center mt-2">
                                         <span class="text-primary font-semibold text-sm">${priceDisplay}</span>
                                     </div>
@@ -236,11 +325,10 @@
                             </div>
                         `;
                     }
-                }, 800); // Small delay to show shimmer effect
+                }, 800);
             } catch (error) {
                 console.error('Error loading special items:', error);
 
-                // If error, show error message in container
                 const container = document.getElementById('special-items-container');
                 container.innerHTML = `
                     <div class="p-4 text-center text-gray-500">
@@ -285,6 +373,12 @@
                 window.location.href = 'welcome.html';
                 return;
             }
+
+            // Set up language system
+            setupLanguageToggle();
+            
+            // Apply current language
+            applyLanguage(currentLanguage);
 
             // Apply shimmer effect to loading elements
             applyShimmerToLoadingElements();
