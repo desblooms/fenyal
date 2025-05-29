@@ -52,7 +52,7 @@ $sizes = [
 // Additional special icons
 $specialIcons = [
     'menu-icon' => 96,
-    'cart-icon' => 96
+   
 ];
 
 // Splash screen sizes for iOS
