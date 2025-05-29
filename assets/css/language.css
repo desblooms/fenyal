@@ -1,0 +1,20 @@
+/* RTL support */
+[dir="rtl"] {
+    text-align: right;
+}
+
+
+[dir="rtl"] .flex-col{
+ flex-direction: column !important;
+}
+
+[dir="rtl"] .space-x-3 > * {
+    margin-left: 0.75rem;
+    margin-right: 0;
+}
+
+[dir="rtl"] .space-x-4 > * {
+    margin-left: 1rem;
+    margin-right: 0;
+}
+

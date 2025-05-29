@@ -27,7 +27,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
-
+   <link rel="stylesheet" href="assets/css/language.css">
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
@@ -43,9 +43,13 @@
                 <div class="flex items-center">
                     <img src="fenyal-logo-1.png" width="100px" alt="Fenyal Logo">
                 </div>
+             
                 <div>
-                    <!-- Profile or additional actions can go here -->
+                 
                 </div>
+                          <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
+</button>
             </div>
         </header>
 
@@ -315,6 +319,7 @@
     </script>
 
     <script src="assets/js/pwa-installer.js"></script>
+    <script src="assets/js/language-toggle.js"></script>
 </body>
 
 </html>

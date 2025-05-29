@@ -18,7 +18,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/app.css">
-    
+    <link rel="stylesheet" href="assets/css/language.css">
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 
@@ -46,7 +46,9 @@
                     <i data-feather="arrow-left" class="h-5 w-5 text-gray-600"></i>
                 </a>
                 <h1 class="text-xl font-semibold">Menu</h1>
-               
+                <button id="language-toggle" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+    <span class="text-sm font-medium text-gray-700" id="current-language">EN</span>
+</button>
             </div>
             
             <!-- Search bar -->
@@ -476,6 +478,6 @@
             });
         });
     </script>
-
+<script src="assets/js/language-toggle.js"></script>
 </body>
 </html>
