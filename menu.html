@@ -194,25 +194,31 @@
         </main>
         
         <!-- Navigation bar -->
-        <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-xl bottom-safe-area z-40">
-            <div class="h-16 flex justify-around items-center">
-                <a href="index.html" class="flex flex-col items-center justify-center text-gray-400">
-                    <i data-feather="home" class="h-5 w-5"></i>
-                    <span class="text-xs mt-0.5">Home</span>
-                </a>
-                
-                <a target="_blank" href="https://wa.me/+1234567890" class="whatsapp-trigger">
-                    <div class="w-20 h-20 rounded-full bg-white backdrop-blur-md flex items-center justify-center mb-6 shadow-lg">
-                        <img src="fenyal-logo-1.png" width="65px;">
-                    </div>
-                </a>
-                
-                <a href="menu.html" class="flex flex-col items-center justify-center text-primary relative">
-                    <i data-feather="menu" class="h-5 w-5"></i>
-                    <span class="text-xs mt-0.5">Menu</span>
-                </a>
+       <!-- Navigation bar -->
+<nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-40">
+     <div class="px-4 py-0">
+        <div class="flex justify-around items-center ">
+            <!-- Home -->
+            <a href="index.html" class="nav-item  ripple flex flex-col items-center justify-center" data-page="home">
+                <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            
+            <!-- Center Logo -->
+            <div class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" onclick="centerLogoAction()">
+                <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
             </div>
-        </nav>
+            
+            <!-- Menu -->
+            <a href="menu.html" class="nav-item active ripple flex flex-col items-center justify-center" data-page="menu-full">
+                <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
+                <span class="nav-text ">Menu</span>
+                <!-- Optional notification badge -->
+                <!-- <div class="notification-badge">3</div> -->
+            </a>
+        </div>
+    </div>
+</nav>
     </div>
     
     <!-- Custom JavaScript -->

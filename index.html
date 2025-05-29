@@ -71,7 +71,7 @@
         }
 
         .bottom-safe-area {
-            padding-bottom: env(safe-area-inset-bottom, 16px);
+            padding-bottom: env(safe-area-inset-bottom, 40px);
         }
 
         .nav-indicator {
@@ -174,37 +174,37 @@
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll">
                     <a href="menu.html?category=Breakfast" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/1.png" alt="Breakfast" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/1.png" alt="Breakfast" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Breakfast</span>
                     </a>
                     <a href="menu.html?category=Dishes" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/2.png" alt="Dishes" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/2.png" alt="Dishes" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Dishes</span>
                     </a>
                     <a href="menu.html?category=Bread" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/3.png" alt="Bread" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/3.png" alt="Bread" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Bread</span>
                     </a>
                     <a href="menu.html?category=Desserts" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/4.png" alt="Desserts" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/4.png" alt="Desserts" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Desserts</span>
                     </a>
                     <a href="menu.html?category=Cold Drinks" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/5.png" alt="Cold Drinks" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/5.png" alt="Cold Drinks" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Cold Drinks</span>
                     </a>
                     <a href="menu.html?category=Hot Drinks" class="flex flex-col items-center flex-shrink-0">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                            <img src="uploads/menu/6.png" alt="Hot Drinks" class="h-10 w-10 object-cover rounded-full" />
+                            <img src="uploads/menu/6.png" alt="Hot Drinks" class="h-14 w-14 object-cover rounded-full" />
                         </div>
                         <span class="text-xs font-medium">Hot Drinks</span>
                     </a>
@@ -236,19 +236,14 @@
         </main>
 
        <!-- Navigation bar -->
-<nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-40">
-    <div class="px-6 py-4">
+<!-- Navigation bar -->
+<nav class="bottom-nav fixed bottom-0 left-0 right-0 shadow-lg bottom-safe-area z-90">
+    <div class="px-4 py-0">
         <div class="flex justify-around items-center relative">
             <!-- Home -->
-            <a href="index.html" class="nav-item active ripple flex flex-col items-center justify-center" data-page="home">
+            <a href="index.html" class="nav-item ripple flex flex-col items-center justify-center active" data-page="home">
                 <i data-feather="home" class="nav-icon h-5 w-5 mb-1"></i>
                 <span class="nav-text">Home</span>
-            </a>
-            
-            <!-- Search/Browse -->
-            <a href="menu.html" class="nav-item ripple flex flex-col items-center justify-center" data-page="menu">
-                <i data-feather="search" class="nav-icon h-5 w-5 mb-1 text-gray-500"></i>
-                <span class="nav-text text-gray-500">Browse</span>
             </a>
             
             <!-- Center Logo -->
@@ -257,21 +252,16 @@
             </div>
             
             <!-- Menu -->
-            <a href="menu.html" class="nav-item ripple flex flex-col items-center justify-center relative" data-page="menu-full">
-                <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 text-gray-500"></i>
-                <span class="nav-text text-gray-500">Menu</span>
+            <a href="menu.html" class="nav-item ripple flex flex-col items-center justify-center " data-page="menu-full">
+                <i data-feather="menu" class="nav-icon h-5 w-5 mb-1 "></i>
+                <span class="nav-text">Menu</span>
                 <!-- Optional notification badge -->
                 <!-- <div class="notification-badge">3</div> -->
-            </a>
-            
-            <!-- Contact -->
-            <a href="contact-us.html" class="nav-item ripple flex flex-col items-center justify-center" data-page="contact">
-                <i data-feather="phone" class="nav-icon h-5 w-5 mb-1 text-gray-500"></i>
-                <span class="nav-text text-gray-500">Contact</span>
             </a>
         </div>
     </div>
 </nav>
+<!-- Navigation bar -->
     </div>
 
     <!-- Custom JavaScript -->
