@@ -1,29 +1,15 @@
 <?php
-// index.php - Bilingual Home Page with Dynamic Categories
-session_start();
+// index.php - Optimized Bilingual Home Page with Dynamic Categories
+// Include the language configuration helper
+require_once 'config/language.php';
 
 // Include admin config for database connection
 require_once 'admin/config.php';
 
-// Language Management
-$supportedLanguages = ['en', 'ar'];
-$defaultLanguage = 'en';
-
-// Get current language from URL parameter, session, or default
-$currentLang = $_GET['lang'] ?? $_SESSION['language'] ?? $defaultLanguage;
-
-// Validate and set language
-if (!in_array($currentLang, $supportedLanguages)) {
-    $currentLang = $defaultLanguage;
-}
-
-// Store in session
-$_SESSION['language'] = $currentLang;
-
-// Get database connection
+// Get database connection and fetch data
 $pdo = getConnection();
 
-// Get categories with images
+// Get categories with caching consideration
 $categoriesStmt = $pdo->query("
     SELECT c.*, COUNT(m.id) as item_count
     FROM categories c
@@ -44,94 +30,10 @@ $popularStmt = $pdo->prepare("
 $popularStmt->execute();
 $popularItems = $popularStmt->fetchAll();
 
-// Translation arrays
-$translations = [
-    'en' => [
-        'home' => 'Home',
-        'menu' => 'Menu',
-        'popular_items' => 'Popular Items',
-        'view_all' => 'View all',
-        'categories' => 'Categories',
-        'no_items_found' => 'No items found',
-        'popular' => 'Popular',
-        'special' => 'Special'
-    ],
-    'ar' => [
-        'home' => 'الرئيسية',
-        'menu' => 'القائمة',
-        'popular_items' => 'الأصناف الشائعة',
-        'view_all' => 'عرض الكل',
-        'categories' => 'الفئات',
-        'no_items_found' => 'لم يتم العثور على أصناف',
-        'popular' => 'شائع',
-        'special' => 'مميز'
-    ]
-];
-
-// Helper functions
-function __($key) {
-    global $translations, $currentLang;
-    return $translations[$currentLang][$key] ?? $translations['en'][$key] ?? $key;
-}
-
-function isRTL() {
-    global $currentLang;
-    return $currentLang === 'ar';
-}
-
-function getCategoryName($category) {
-    global $currentLang;
-    return ($currentLang === 'ar' && !empty($category['name_ar'])) ? $category['name_ar'] : $category['name'];
-}
-
-function getItemName($item) {
-    global $currentLang;
-    return ($currentLang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
-}
-
-function getItemCategory($item) {
-    global $currentLang;
-    return ($currentLang === 'ar' && !empty($item['category_ar'])) ? $item['category_ar'] : $item['category'];
-}
-
-function formatPrice($price) {
-    global $currentLang;
-    return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
-}
-
-function buildUrl($path, $params = []) {
-    global $currentLang;
-    $params['lang'] = $currentLang;
-    $queryString = http_build_query($params);
-    return $path . ($queryString ? '?' . $queryString : '');
-}
-
-function getCategoryImage($category) {
-    // Check if category has custom image
-    if (!empty($category['image']) && file_exists($category['image'])) {
-        return $category['image'];
-    }
-    
-    // Fallback to default images based on category name
-    $defaultImages = [
-        'Breakfast' => 'uploads/menu/1.png',
-        'Dishes' => 'uploads/menu/2.png',
-        'Bread' => 'uploads/menu/3.png',
-        'Desserts' => 'uploads/menu/4.png',
-        'Cold Drinks' => 'uploads/menu/5.png',
-        'Hot Drinks' => 'uploads/menu/6.png'
-    ];
-    
-    if (isset($defaultImages[$category['name']])) {
-        return $defaultImages[$category['name']];
-    }
-    
-    // Final fallback
-    return 'uploads/menu/placeholder.jpg';
-}
-
-$alternativeLang = $currentLang === 'ar' ? 'en' : 'ar';
-$direction = isRTL() ? 'rtl' : 'ltr';
+// Current language and direction from language helper
+$currentLang = getCurrentLanguage();
+$direction = getDirection();
+$alternativeLang = getAlternativeLanguage();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
@@ -196,15 +98,6 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             transform: scale(0.98);
         }
         
-        /* Category image styling */
-        .category-image {
-            transition: transform 0.2s ease;
-        }
-        
-        .category-item:hover .category-image {
-            transform: scale(1.05);
-        }
-        
         /* Optimized loading animation */
         .loading-skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
@@ -226,16 +119,6 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        
-        /* Image loading placeholder */
-        .image-placeholder {
-            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 0.7rem;
-        }
     </style>
 </head>
 
@@ -252,7 +135,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                 
                 <!-- Language Toggle -->
                 <div class="absolute <?php echo isRTL() ? 'left-0' : 'right-0'; ?>">
-                    <a href="<?php echo buildUrl('index.php', ['lang' => $alternativeLang]); ?>" 
+                    <a href="<?php echo buildLangUrl('index.php', ['lang' => $alternativeLang]); ?>" 
                        class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button"
                        aria-label="Switch to <?php echo $alternativeLang === 'ar' ? 'Arabic' : 'English'; ?>">
                         <span class="text-sm font-medium text-gray-700">
@@ -267,47 +150,36 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         <main class="px-4">
             <!-- Categories -->
             <section class="mb-2" aria-label="<?php echo __('categories'); ?>">
-                <?php if (!empty($categories)): ?>
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll <?php echo isRTL() ? 'space-x-reverse' : ''; ?>" 
                      style="direction: <?php echo $direction; ?>">
-                    <?php foreach ($categories as $category): 
-                        $categoryName = getCategoryName($category);
-                        $categoryImage = getCategoryImage($category);
+                    <?php 
+                    foreach ($categories as $category): 
+                        $categoryName = getLocalizedText($category, 'name');
+                        $categoryImage = !empty($category['image']) ? $category['image'] : 'uploads/menu/placeholder.jpg';
                     ?>
-                    <a href="<?php echo buildUrl('menu.php', ['category' => $category['name']]); ?>" 
+                    <a href="<?php echo buildLangUrl('menu.php', ['category' => $category['name']]); ?>" 
                        class="category-item flex flex-col items-center flex-shrink-0"
                        aria-label="<?php echo $categoryName; ?> category">
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="<?php echo htmlspecialchars($categoryImage); ?>" 
                                  alt="<?php echo htmlspecialchars($categoryName); ?>" 
-                                 class="category-image h-14 w-14 object-cover rounded-full"
+                                 class="h-14 w-14 object-cover rounded-full"
                                  loading="lazy" 
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder h-14 w-14 rounded-full\'><?php echo substr($categoryName, 0, 2); ?></div>';" />
+                                 onerror="this.src='uploads/menu/placeholder.jpg'" />
                         </div>
-                        <span class="text-xs font-medium category-label text-center">
+                        <span class="text-xs font-medium category-label">
                             <?php echo htmlspecialchars($categoryName); ?>
                         </span>
-                        <?php if ($category['item_count'] > 0): ?>
-                        <span class="text-xs text-gray-400 mt-0.5">
-                            <?php echo $category['item_count']; ?> <?php echo $currentLang === 'ar' ? 'صنف' : 'items'; ?>
-                        </span>
-                        <?php endif; ?>
                     </a>
                     <?php endforeach; ?>
                 </div>
-                <?php else: ?>
-                <!-- No categories fallback -->
-                <div class="text-center py-4">
-                    <p class="text-gray-500 text-sm"><?php echo $currentLang === 'ar' ? 'لا توجد فئات متاحة' : 'No categories available'; ?></p>
-                </div>
-                <?php endif; ?>
             </section>
 
             <!-- Popular Items -->
             <section class="mb-5 pt-4" aria-label="<?php echo __('popular_items'); ?>">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="text-base font-semibold"><?php echo __('popular_items'); ?></h2>
-                    <a href="<?php echo buildUrl('menu.php'); ?>" class="text-primary text-xs">
+                    <a href="<?php echo buildLangUrl('menu.php'); ?>" class="text-primary text-xs">
                         <?php echo __('view_all'); ?>
                     </a>
                 </div>
@@ -316,28 +188,25 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     <?php if (empty($popularItems)): ?>
                     <div class="p-4 text-center text-gray-500">
                         <p><?php echo __('no_items_found'); ?></p>
-                        <a href="<?php echo buildUrl('menu.php'); ?>" class="text-primary text-sm mt-2 inline-block">
-                            <?php echo $currentLang === 'ar' ? 'استكشف القائمة' : 'Browse Menu'; ?>
-                        </a>
                     </div>
                     <?php else: ?>
                     <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
-                            $itemName = getItemName($item);
-                            $itemCategory = getItemCategory($item);
+                            $itemName = getLocalizedText($item, 'name');
+                            $itemCategory = getLocalizedText($item, 'category');
                             $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
                         ?>
                         <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
-                                 onclick="window.location.href='<?php echo buildUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
+                                 onclick="window.location.href='<?php echo buildLangUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
                                  role="button"
                                  tabindex="0"
                                  aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
-                            <div class="h-24 overflow-hidden bg-gray-100">
+                            <div class="h-24 overflow-hidden">
                                 <img src="<?php echo htmlspecialchars($item['image']); ?>" 
                                      alt="<?php echo htmlspecialchars($itemName); ?>" 
                                      class="w-full h-full object-cover" 
                                      loading="lazy"
-                                     onerror="this.onerror=null; this.src='uploads/menu/placeholder.jpg';">
+                                     onerror="this.src='uploads/menu/placeholder.jpg'">
                             </div>
                             <div class="p-2.5">
                                 <h3 class="font-medium text-sm leading-tight line-clamp-1">
@@ -350,18 +219,11 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                                     <span class="text-primary font-semibold text-sm">
                                         <?php echo formatPrice($displayPrice); ?>
                                     </span>
-                                    <div class="flex items-center gap-1">
-                                        <?php if ($item['is_popular']): ?>
-                                        <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                            <?php echo __('popular'); ?>
-                                        </span>
-                                        <?php endif; ?>
-                                        <?php if ($item['is_special']): ?>
-                                        <span class="text-xs bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
-                                            <?php echo __('special'); ?>
-                                        </span>
-                                        <?php endif; ?>
-                                    </div>
+                                    <?php if ($item['is_popular']): ?>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
+                                        <?php echo __('popular'); ?>
+                                    </span>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </article>
@@ -378,7 +240,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             <div class="px-4 py-0">
                 <div class="flex justify-around items-center relative">
                     <!-- Home -->
-                    <a href="<?php echo buildUrl('index.php'); ?>" 
+                    <a href="<?php echo buildLangUrl('index.php'); ?>" 
                        class="nav-item ripple flex flex-col items-center justify-center active" 
                        data-page="home"
                        aria-label="<?php echo __('home'); ?>"
@@ -395,7 +257,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     </button>
                     
                     <!-- Menu -->
-                    <a href="<?php echo buildUrl('menu.php'); ?>" 
+                    <a href="<?php echo buildLangUrl('menu.php'); ?>" 
                        class="nav-item ripple flex flex-col items-center justify-center" 
                        data-page="menu-full"
                        aria-label="<?php echo __('menu'); ?>">
@@ -413,8 +275,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         const APP_CONFIG = {
             language: '<?php echo $currentLang; ?>',
             isRTL: <?php echo isRTL() ? 'true' : 'false'; ?>,
-            apiBaseUrl: '/api/',
-            categories: <?php echo json_encode($categories); ?>
+            apiBaseUrl: '/api/'
         };
 
         // Initialize icons
@@ -432,7 +293,7 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         // Center logo action
         function centerLogoAction() {
             console.log('Center logo clicked');
-            // You can add custom actions here
+            // Custom action here
         }
 
         // Performance optimized touch feedback
@@ -467,11 +328,9 @@ $direction = isRTL() ? 'rtl' : 'ltr';
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             const img = entry.target;
-                            if (img.dataset.src) {
-                                img.src = img.dataset.src;
-                                img.classList.remove('loading-skeleton');
-                                observer.unobserve(img);
-                            }
+                            img.src = img.dataset.src || img.src;
+                            img.classList.remove('loading-skeleton');
+                            observer.unobserve(img);
                         }
                     });
                 });
@@ -487,15 +346,10 @@ $direction = isRTL() ? 'rtl' : 'ltr';
             addTouchFeedback();
             initLazyLoading();
             
-            // Debug: Log categories loaded
-            console.log('Categories loaded:', APP_CONFIG.categories);
-            
             // Check if user is new and should see welcome page
             if (!localStorage.getItem('hasVisited')) {
-                // Uncomment this line if you have a welcome page
-                // window.location.href = 'welcome.html';
-                // For now, just mark as visited
-                localStorage.setItem('hasVisited', 'true');
+                window.location.href = 'welcome.html';
+                return;
             }
         });
 
@@ -515,7 +369,8 @@ $direction = isRTL() ? 'rtl' : 'ltr';
         // Preload critical pages
         function preloadCriticalPages() {
             const criticalPages = [
-                '<?php echo buildUrl('menu.php'); ?>'
+                '<?php echo buildLangUrl('menu.php'); ?>',
+                '<?php echo buildLangUrl('api/menu.php', ['action' => 'categories']); ?>'
             ];
             
             criticalPages.forEach(url => {
@@ -528,22 +383,6 @@ $direction = isRTL() ? 'rtl' : 'ltr';
 
         // Preload after initial load
         setTimeout(preloadCriticalPages, 1000);
-
-        // Handle image loading errors gracefully
-        function handleImageError(img) {
-            const placeholder = document.createElement('div');
-            placeholder.className = 'image-placeholder h-14 w-14 rounded-full';
-            placeholder.textContent = '📷';
-            img.parentElement.replaceChild(placeholder, img);
-        }
-
-        // Add global error handling for images
-        document.addEventListener('error', function(e) {
-            if (e.target.tagName === 'IMG') {
-                console.log('Image failed to load:', e.target.src);
-                // The onerror handlers in HTML will handle the fallback
-            }
-        }, true);
     </script>
 
     <!-- PWA Installer -->
