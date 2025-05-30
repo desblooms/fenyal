@@ -1,36 +1,344 @@
-/* Enhanced RTL and bilingual support for Fenyal Food App */
+/* Enhanced mobile scrolling and RTL support for Fenyal Food App */
 
-/* Base RTL Support */
-[dir="rtl"] {
-    text-align: right;
+/* Base mobile optimizations */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-/* Flex direction fixes for RTL */
-[dir="rtl"] .flex-col {
-    flex-direction: column !important;
+/* Allow text selection for specific elements */
+h1, h2, h3, h4, h5, h6, p, span.selectable, .text-content {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
-/* Spacing fixes for RTL */
-[dir="rtl"] .space-x-2 > * + * {
+/* Enhanced scrolling containers */
+.mobile-scroll,
+.category-scroll-container,
+.popular-items-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    will-change: scroll-position;
+}
+
+.mobile-scroll::-webkit-scrollbar,
+.category-scroll-container::-webkit-scrollbar,
+.popular-items-scroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Prevent scroll bounce on iOS */
+.mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Category scroll specific styles */
+.category-scroll-container {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    gap: 16px;
+    padding: 4px 0 4px 4px;
+    margin: 0 -4px;
+}
+
+.category-item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    min-width: 64px;
+    touch-action: manipulation;
+}
+
+/* Popular items scroll specific styles */
+.popular-items-scroll {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding: 4px 0;
+    margin: 0 -4px;
+    padding-left: 4px;
+}
+
+.popular-item-card {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 144px;
+    touch-action: manipulation;
+}
+
+/* RTL specific adjustments */
+[dir="rtl"] .mobile-scroll,
+[dir="rtl"] .category-scroll-container,
+[dir="rtl"] .popular-items-scroll {
+    direction: rtl;
+}
+
+[dir="rtl"] .category-scroll-container {
+    padding: 4px 4px 4px 0;
+    margin: 0 -4px;
+}
+
+[dir="rtl"] .popular-items-scroll {
+    padding-right: 4px;
+    padding-left: 0;
+}
+
+/* Touch feedback improvements */
+.touch-item {
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+}
+
+.touch-item:active {
+    transform: scale(0.97);
+}
+
+.touch-friendly {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+
+/* Enhanced button states */
+.scale-button {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    touch-action: manipulation;
+}
+
+.scale-button:active {
+    transform: scale(0.95);
+}
+
+/* Prevent text selection during touch interactions */
+.touch-item:active,
+.scale-button:active,
+.category-item:active,
+.popular-item-card:active {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Improved scroll momentum */
+.category-scroll-container,
+.popular-items-scroll {
+    scroll-padding-left: 16px;
+    scroll-padding-right: 16px;
+}
+
+[dir="rtl"] .category-scroll-container,
+[dir="rtl"] .popular-items-scroll {
+    scroll-padding-right: 16px;
+    scroll-padding-left: 16px;
+}
+
+/* Scroll snap improvements */
+@supports (scroll-snap-type: x mandatory) {
+    .category-scroll-container {
+        scroll-snap-type: x mandatory;
+    }
+    
+    .popular-items-scroll {
+        scroll-snap-type: x mandatory;
+    }
+    
+    .category-item,
+    .popular-item-card {
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+    }
+}
+
+/* Performance optimizations */
+.category-item img,
+.popular-item-card img {
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Arabic font and RTL improvements */
+[lang="ar"] {
+    font-family: 'Cairo', 'Poppins', sans-serif;
+    line-height: 1.6;
+    font-feature-settings: "kern" 1, "liga" 1;
+}
+
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6 {
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+[lang="ar"] .text-sm {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+[lang="ar"] .text-xs {
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+/* RTL layout fixes */
+[dir="rtl"] .flex {
+    direction: rtl;
+}
+
+[dir="rtl"] .grid {
+    direction: rtl;
+}
+
+/* Navigation fixes for RTL */
+[dir="rtl"] .bottom-nav .flex {
+    direction: ltr; /* Keep navigation consistent */
+}
+
+/* Specific RTL positioning adjustments */
+[dir="rtl"] .absolute.left-0 {
+    left: auto;
+    right: 0;
+}
+
+[dir="rtl"] .absolute.right-0 {
+    right: auto;
+    left: 0;
+}
+
+[dir="rtl"] .absolute.left-3 {
+    left: auto;
+    right: 0.75rem;
+}
+
+[dir="rtl"] .absolute.right-3 {
+    right: auto;
+    left: 0.75rem;
+}
+
+[dir="rtl"] .absolute.left-4 {
+    left: auto;
+    right: 1rem;
+}
+
+[dir="rtl"] .absolute.right-4 {
+    right: auto;
+    left: 1rem;
+}
+
+/* Padding and margin RTL adjustments */
+[dir="rtl"] .pl-4 {
+    padding-left: 0;
+    padding-right: 1rem;
+}
+
+[dir="rtl"] .pr-4 {
+    padding-right: 0;
+    padding-left: 1rem;
+}
+
+[dir="rtl"] .ml-2 {
     margin-left: 0;
     margin-right: 0.5rem;
 }
 
-[dir="rtl"] .space-x-3 > * + * {
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+[dir="rtl"] .ml-3 {
     margin-left: 0;
     margin-right: 0.75rem;
 }
 
-[dir="rtl"] .space-x-4 > * + * {
-    margin-left: 0;
-    margin-right: 1rem;
+[dir="rtl"] .mr-3 {
+    margin-right: 0;
+    margin-left: 0.75rem;
 }
 
-[dir="rtl"] .space-x-reverse {
-    /* flex-direction: row-reverse; */
+/* Text alignment for RTL */
+[dir="rtl"] .text-left {
+    text-align: right;
 }
 
-/* RTL support for form elements in menu-item-details */
+[dir="rtl"] .text-right {
+    text-align: left;
+}
+
+/* Flexbox adjustments for RTL */
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* Icon adjustments for RTL */
+[dir="rtl"] .feather {
+    transform: scaleX(-1);
+}
+
+[dir="rtl"] [data-feather="arrow-left"],
+[dir="rtl"] [data-feather="arrow-right"] {
+    transform: scaleX(-1);
+}
+
+/* Keep certain icons normal in RTL */
+[dir="rtl"] [data-feather="search"],
+[dir="rtl"] [data-feather="menu"],
+[dir="rtl"] [data-feather="home"],
+[dir="rtl"] [data-feather="star"],
+[dir="rtl"] [data-feather="heart"] {
+    transform: none;
+}
+
+/* Input field RTL support */
+[dir="rtl"] input[type="text"],
+[dir="rtl"] input[type="search"],
+[dir="rtl"] textarea {
+    text-align: right;
+    direction: rtl;
+}
+
+[dir="rtl"] input::placeholder,
+[dir="rtl"] textarea::placeholder {
+    text-align: right;
+}
+
+/* Price display RTL */
+[dir="rtl"] .price,
+[dir="rtl"] .item-price,
+[dir="rtl"] .currency {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Form elements RTL */
 [dir="rtl"] .radio-container input[type="radio"] + label,
 [dir="rtl"] .checkbox-container input[type="checkbox"] + label {
     padding-left: 0;
@@ -54,267 +362,7 @@
     right: 0;
 }
 
-/* RTL support for positioned elements */
-[dir="rtl"] .absolute.left-3 {
-    left: auto;
-    right: 0.75rem;
-}
-
-[dir="rtl"] .absolute.right-3 {
-    right: auto;
-    left: 0.75rem;
-}
-
-[dir="rtl"] .absolute.left-4 {
-    left: auto;
-    right: 1rem;
-}
-
-[dir="rtl"] .absolute.right-4 {
-    right: auto;
-    left: 1rem;
-}
-
-/* Padding adjustments for RTL */
-[dir="rtl"] .pl-10 {
-    padding-left: 0;
-    padding-right: 2.5rem;
-}
-
-[dir="rtl"] .pr-4 {
-    padding-right: 0;
-    padding-left: 1rem;
-}
-
-[dir="rtl"] .pr-10 {
-    padding-right: 0;
-    padding-left: 2.5rem;
-}
-
-[dir="rtl"] .pl-4 {
-    padding-left: 0;
-    padding-right: 1rem;
-}
-
-/* Margin adjustments for RTL */
-[dir="rtl"] .ml-3 {
-    margin-left: 0;
-    margin-right: 0.75rem;
-}
-
-[dir="rtl"] .mr-3 {
-    margin-right: 0;
-    margin-left: 0.75rem;
-}
-
-[dir="rtl"] .ml-2 {
-    margin-left: 0;
-    margin-right: 0.5rem;
-}
-
-[dir="rtl"] .mr-2 {
-    margin-right: 0;
-    margin-left: 0.5rem;
-}
-
-/* Text alignment for RTL */
-[dir="rtl"] .text-left {
-    text-align: right;
-}
-
-[dir="rtl"] .text-right {
-    text-align: left;
-}
-
-/* Flex justify adjustments for RTL */
-[dir="rtl"] .justify-between {
-    /* flex-direction: row-reverse; */
-}
-
-[dir="rtl"] .justify-start {
-    justify-content: flex-end;
-}
-
-[dir="rtl"] .justify-end {
-    justify-content: flex-start;
-}
-
-/* Grid and layout fixes for RTL */
-[dir="rtl"] .grid {
-    direction: rtl;
-}
-
-[dir="rtl"] .flex {
-    direction: rtl;
-}
-
-/* Navigation fixes for RTL */
-[dir="rtl"] .bottom-nav .flex {
-    direction: ltr; /* Keep navigation LTR for consistency */
-}
-
-/* Category scroll container RTL */
-[dir="rtl"] .category-scroll {
-    direction: rtl;
-}
-
-[dir="rtl"] .category-scroll .flex {
-    direction: rtl;
-}
-
-/* Special handling for horizontal scrollable content */
-[dir="rtl"] .special-scroll {
-    direction: rtl;
-}
-
-[dir="rtl"] .overflow-x-auto {
-    direction: rtl;
-}
-
-/* Menu item cards RTL support */
-[dir="rtl"] .menu-item .flex {
-    /* flex-direction: row-reverse; */
-}
-
-[dir="rtl"] .special-item {
-    direction: ltr; /* Keep item cards consistent */
-}
-
-/* Price display RTL */
-[dir="rtl"] .price-display {
-    text-align: right;
-}
-
-/* Button content RTL */
-[dir="rtl"] button {
-    direction: rtl;
-}
-
-[dir="rtl"] .scale-button {
-    direction: rtl;
-}
-
-/* Input field RTL support */
-[dir="rtl"] input[type="text"],
-[dir="rtl"] input[type="search"] {
-    text-align: right;
-    direction: rtl;
-}
-
-[dir="rtl"] input::placeholder {
-    text-align: right;
-}
-
-/* Toast notifications RTL */
-[dir="rtl"] .toast {
-    text-align: right;
-}
-
-/* Loading states RTL */
-[dir="rtl"] .loading-overlay {
-    text-align: right;
-}
-
-/* Error states RTL */
-[dir="rtl"] .error-state {
-    text-align: right;
-}
-
-/* Arabic font improvements */
-[lang="ar"] {
-    font-family: 'Cairo', 'Poppins', sans-serif;
-    line-height: 1.6;
-}
-
-[lang="ar"] h1,
-[lang="ar"] h2,
-[lang="ar"] h3,
-[lang="ar"] h4,
-[lang="ar"] h5,
-[lang="ar"] h6 {
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-[lang="ar"] .text-sm {
-    font-size: 0.9rem;
-}
-
-[lang="ar"] .text-xs {
-    font-size: 0.8rem;
-}
-
-/* Improved spacing for Arabic text */
-[lang="ar"] p {
-    line-height: 1.7;
-}
-
-[lang="ar"] .leading-tight {
-    line-height: 1.4;
-}
-
-[lang="ar"] .leading-relaxed {
-    line-height: 1.8;
-}
-
-/* Better number rendering for Arabic */
-[lang="ar"] .price,
-[lang="ar"] .item-price {
-    font-family: 'Cairo', monospace;
-    font-variant-numeric: tabular-nums;
-}
-
-/* Icon adjustments for RTL */
-[dir="rtl"] .feather {
-    transform: scaleX(-1);
-}
-
-[dir="rtl"] [data-feather="arrow-left"],
-[dir="rtl"] [data-feather="arrow-right"] {
-    transform: scaleX(-1);
-}
-
-/* Search icon specific RTL handling */
-[dir="rtl"] .search-icon {
-    transform: none; /* Keep search icon normal */
-}
-
-/* Menu icon RTL */
-[dir="rtl"] [data-feather="menu"] {
-    transform: none;
-}
-
-/* Home icon RTL */
-[dir="rtl"] [data-feather="home"] {
-    transform: none;
-}
-
-/* Special RTL handling for specific layouts */
-[dir="rtl"] .category-container {
-    /* flex-direction: row-reverse; */
-}
-
-[dir="rtl"] .popular-items-container {
-    direction: rtl;
-}
-
-[dir="rtl"] .menu-items-container {
-    direction: rtl;
-}
-
-/* Responsive RTL adjustments */
-@media (max-width: 640px) {
-    [dir="rtl"] .px-4 {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    
-    [dir="rtl"] .space-x-3 > * + * {
-        margin-right: 0.5rem;
-    }
-}
-
-/* Animation adjustments for RTL */
+/* Animation improvements for RTL */
 [dir="rtl"] .slide-in {
     animation: slideInRTL 0.3s ease-out forwards;
 }
@@ -330,83 +378,416 @@
     }
 }
 
-/* Shimmer effect RTL */
+/* Loading states */
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
 [dir="rtl"] .shimmer {
-    background: linear-gradient(to left,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.5) 50%,
-        rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(-90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
     background-size: 200% 100%;
     animation: shimmerRTL 1.5s infinite;
 }
 
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
 @keyframes shimmerRTL {
-    0% {
-        background-position: 200% 0;
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+    .category-scroll-container {
+        gap: 12px;
+        padding-left: 16px;
+        margin: 0 -16px;
     }
-    100% {
-        background-position: -200% 0;
+    
+    [dir="rtl"] .category-scroll-container {
+        padding-right: 16px;
+        padding-left: 0;
+    }
+    
+    .popular-items-scroll {
+        gap: 8px;
+        padding-left: 16px;
+        margin: 0 -16px;
+    }
+    
+    [dir="rtl"] .popular-items-scroll {
+        padding-right: 16px;
+        padding-left: 0;
+    }
+    
+    .popular-item-card {
+        width: 136px;
     }
 }
 
-/* Center logo positioning fix for RTL */
-[dir="rtl"] .center-logo {
-    margin-top: -35px; /* Keep consistent */
+@media (max-width: 480px) {
+    .category-item {
+        min-width: 56px;
+    }
+    
+    .category-item img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .popular-item-card {
+        width: 128px;
+    }
 }
 
-/* Badge positioning for RTL */
-[dir="rtl"] .notification-badge {
-    left: -2px;
-    right: auto;
+/* High DPI optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .category-item img,
+    .popular-item-card img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
 }
 
-/* Fix for overlapping content in RTL */
-[dir="rtl"] .relative {
-    direction: ltr;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .touch-item,
+    .scale-button,
+    .category-item,
+    .popular-item-card {
+        transition: none;
+    }
+    
+    .mobile-scroll,
+    .category-scroll-container,
+    .popular-items-scroll {
+        scroll-behavior: auto;
+    }
+    
+    .shimmer {
+        animation: none;
+        background: #f0f0f0;
+    }
 }
 
-[dir="rtl"] .absolute {
-    direction: rtl;
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .shimmer {
+        background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    }
+    
+    [dir="rtl"] .shimmer {
+        background: linear-gradient(-90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    }
 }
 
-/* Specific fixes for menu item details page */
-[dir="rtl"] .item-img-container .absolute {
-    direction: ltr; /* Keep positioned elements consistent */
+/* Focus states for accessibility */
+.touch-item:focus,
+.scale-button:focus,
+.category-item:focus,
+.popular-item-card:focus {
+    outline: 2px solid #c45230;
+    outline-offset: 2px;
 }
 
-[dir="rtl"] .item-details {
-    text-align: right;
+/* Keyboard navigation support */
+.touch-item:focus-visible,
+.scale-button:focus-visible {
+    outline: 2px solid #c45230;
+    outline-offset: 2px;
 }
 
-[dir="rtl"] .flex-1 {
-    text-align: right;
+/* Improved contrast for accessibility */
+@media (prefers-contrast: high) {
+    .category-item,
+    .popular-item-card {
+        border: 1px solid #000;
+    }
+    
+    .touch-item:focus,
+    .scale-button:focus {
+        outline: 3px solid #000;
+        outline-offset: 2px;
+    }
 }
 
-/* Price and addon layout fixes */
-[dir="rtl"] .addon-item {
-  /* flex-direction: row-reverse; */
+/* Container optimizations */
+.app-container {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
 }
 
-[dir="rtl"] .size-options {
-    direction: rtl;
+/* Header optimizations */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-[dir="rtl"] .spice-options {
-    direction: rtl;
+/* Bottom navigation improvements */
+.bottom-nav {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Loading overlay text alignment */
-[dir="rtl"] .loading-overlay .flex-col {
-    text-align: center; /* Keep loading text centered */
+/* Language toggle improvements */
+.language-toggle {
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
-/* Error state text alignment */
-[dir="rtl"] .error-state .flex-col {
-    text-align: center; /* Keep error text centered */
+.language-toggle:hover {
+    transform: scale(1.05);
 }
 
-[dir="rtl"] .feather-arrow-left{
-  transform: scaleX(-1) !important;
-
+.language-toggle:active {
+    transform: scale(0.95);
 }
 
+/* Loading overlay */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #c45230;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error states */
+.error-state {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+[dir="rtl"] .error-state {
+    text-align: center;
+}
+
+/* Empty states */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    opacity: 0.5;
+}
+
+/* Utility classes for better mobile experience */
+.no-scroll {
+    overflow: hidden;
+    touch-action: none;
+}
+
+.enable-scroll {
+    overflow: auto;
+    touch-action: auto;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.allow-select {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Intersection observer loading states */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Better image loading */
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+img.loading {
+    background: #f0f0f0;
+    opacity: 0.7;
+}
+
+img.loaded {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Progressive enhancement */
+.no-js .category-scroll-container,
+.no-js .popular-items-scroll {
+    overflow-x: auto;
+    scroll-snap-type: none;
+}
+
+.no-js .touch-item,
+.no-js .scale-button {
+    transition: none;
+}
+
+/* Print styles */
+@media print {
+    .bottom-nav,
+    .language-toggle,
+    .touch-item,
+    .scale-button {
+        display: none !important;
+    }
+    
+    .app-container {
+        height: auto !important;
+        overflow: visible !important;
+    }
+}
+
+/* Additional mobile optimizations */
+@supports (-webkit-touch-callout: none) {
+    .touch-item,
+    .scale-button {
+        -webkit-touch-callout: none;
+    }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-appearance: none) {
+    .mobile-scroll,
+    .category-scroll-container,
+    .popular-items-scroll {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .touch-item:active,
+    .scale-button:active {
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Android specific fixes */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .category-scroll-container,
+    .popular-items-scroll {
+        scroll-snap-type: x mandatory;
+    }
+}
+
+/* Performance hints */
+.category-item img,
+.popular-item-card img,
+.app-container {
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+/* Safe area adjustments for notched devices */
+@supports (padding: max(0px)) {
+    .app-container {
+        padding-top: max(16px, env(safe-area-inset-top));
+    }
+    
+    .bottom-nav {
+        padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+    .category-item {
+        min-width: 48px;
+    }
+    
+    .category-item img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .popular-item-card {
+        width: 120px;
+    }
+    
+    .popular-item-card .h-24 {
+        height: 60px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+    .category-scroll-container {
+        gap: 8px;
+    }
+    
+    .popular-items-scroll {
+        gap: 6px;
+    }
+    
+    .popular-item-card {
+        width: 116px;
+    }
+    
+    .category-item {
+        min-width: 52px;
+    }
+}
