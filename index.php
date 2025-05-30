@@ -351,7 +351,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             
             // Check if user is new and should see welcome page
             if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.php';
+                window.location.href = 'welcome.html';
                 return;
             }
         });
