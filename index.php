@@ -44,7 +44,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title><?php echo __('home'); ?> - Fenyal</title>
+    <title><?php echo __('home'); ?> - Fenyal </title>
     
     <!-- PWA Icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
