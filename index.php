@@ -349,11 +349,8 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             addTouchFeedback();
             initLazyLoading();
             
-            // Check if user is new and should see welcome page
-            if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.html';
-                return;
-            }
+            // Remove welcome screen redirection - app starts directly
+            console.log('Fenyal app loaded successfully');
         });
 
         // Register service worker for PWA support
