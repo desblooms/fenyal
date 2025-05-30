@@ -5,82 +5,29 @@
     text-align: right;
 }
 
-/* Enhanced Scrolling Support for RTL */
-.scroll-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-behavior: smooth;
-}
-
-.scroll-container::-webkit-scrollbar {
-    display: none;
-}
-
-/* RTL Scroll Direction */
-[dir="rtl"] .scroll-container {
-    direction: rtl;
-}
-
-[dir="ltr"] .scroll-container {
-    direction: ltr;
-}
-
-/* Scroll Content Layout */
-.scroll-content {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-
-[dir="rtl"] .scroll-content {
-    direction: rtl;
-}
-
-[dir="ltr"] .scroll-content {
-    direction: ltr;
-}
-
-/* Special Items Wrapper */
-.special-items-wrapper {
-    gap: 0.75rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-[dir="rtl"] .special-items-wrapper {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-/* Categories Wrapper */
-.categories-wrapper {
-    gap: 1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-[dir="rtl"] .categories-wrapper {
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-/* Remove default spacing conflicts */
-[dir="rtl"] .space-x-reverse > * + * {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-[dir="ltr"] .space-x-3 > * + * {
-    margin-left: 0;
-    margin-right: 0;
-}
-
 /* Flex direction fixes for RTL */
 [dir="rtl"] .flex-col {
     flex-direction: column !important;
+}
+
+/* Spacing fixes for RTL */
+[dir="rtl"] .space-x-2 > * + * {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}
+
+[dir="rtl"] .space-x-3 > * + * {
+    margin-left: 0;
+    margin-right: 0.75rem;
+}
+
+[dir="rtl"] .space-x-4 > * + * {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+[dir="rtl"] .space-x-reverse {
+    /* flex-direction: row-reverse; */
 }
 
 /* RTL support for form elements in menu-item-details */
@@ -179,14 +126,63 @@
     text-align: left;
 }
 
+/* Flex justify adjustments for RTL */
+[dir="rtl"] .justify-between {
+    /* flex-direction: row-reverse; */
+}
+
+[dir="rtl"] .justify-start {
+    justify-content: flex-end;
+}
+
+[dir="rtl"] .justify-end {
+    justify-content: flex-start;
+}
+
+/* Grid and layout fixes for RTL */
+[dir="rtl"] .grid {
+    direction: rtl;
+}
+
+[dir="rtl"] .flex {
+    direction: rtl;
+}
+
 /* Navigation fixes for RTL */
 [dir="rtl"] .bottom-nav .flex {
     direction: ltr; /* Keep navigation LTR for consistency */
 }
 
+/* Category scroll container RTL */
+[dir="rtl"] .category-scroll {
+    direction: rtl;
+}
+
+[dir="rtl"] .category-scroll .flex {
+    direction: rtl;
+}
+
+/* Special handling for horizontal scrollable content */
+[dir="rtl"] .special-scroll {
+    direction: rtl;
+}
+
+[dir="rtl"] .overflow-x-auto {
+    direction: rtl;
+}
+
 /* Menu item cards RTL support */
 [dir="rtl"] .menu-item .flex {
-    flex-direction: row;
+    /* flex-direction: row-reverse; */
+}
+
+[dir="rtl"] .special-item {
+    direction: ltr; /* Keep item cards consistent */
+}
+
+/* Price display RTL */
+[dir="rtl"] .price-display {
+    text-align: right;
 }
 
 /* Button content RTL */
@@ -211,6 +207,16 @@
 
 /* Toast notifications RTL */
 [dir="rtl"] .toast {
+    text-align: right;
+}
+
+/* Loading states RTL */
+[dir="rtl"] .loading-overlay {
+    text-align: right;
+}
+
+/* Error states RTL */
+[dir="rtl"] .error-state {
     text-align: right;
 }
 
@@ -283,11 +289,28 @@
     transform: none;
 }
 
+/* Special RTL handling for specific layouts */
+[dir="rtl"] .category-container {
+    /* flex-direction: row-reverse; */
+}
+
+[dir="rtl"] .popular-items-container {
+    direction: rtl;
+}
+
+[dir="rtl"] .menu-items-container {
+    direction: rtl;
+}
+
 /* Responsive RTL adjustments */
 @media (max-width: 640px) {
     [dir="rtl"] .px-4 {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+    
+    [dir="rtl"] .space-x-3 > * + * {
+        margin-right: 0.5rem;
     }
 }
 
@@ -337,31 +360,53 @@
     right: auto;
 }
 
-/* Touch scroll improvements */
-.smooth-scroll {
-    scroll-behavior: smooth;
+/* Fix for overlapping content in RTL */
+[dir="rtl"] .relative {
+    direction: ltr;
 }
 
-/* Remove conflicting margins */
-[dir="rtl"] .special-item,
-[dir="ltr"] .special-item {
-    margin-left: 0;
-    margin-right: 0;
+[dir="rtl"] .absolute {
+    direction: rtl;
 }
 
-/* Category items spacing */
-[dir="rtl"] .category-item,
-[dir="ltr"] .category-item {
-    margin-left: 0;
-    margin-right: 0;
+/* Specific fixes for menu item details page */
+[dir="rtl"] .item-img-container .absolute {
+    direction: ltr; /* Keep positioned elements consistent */
 }
 
-/* Enhanced touch scrolling */
-.scroll-container {
-    touch-action: pan-x;
+[dir="rtl"] .item-details {
+    text-align: right;
 }
 
-/* Prevent vertical scroll during horizontal swipe */
-.scroll-content {
-    touch-action: pan-x;
+[dir="rtl"] .flex-1 {
+    text-align: right;
 }
+
+/* Price and addon layout fixes */
+[dir="rtl"] .addon-item {
+  /* flex-direction: row-reverse; */
+}
+
+[dir="rtl"] .size-options {
+    direction: rtl;
+}
+
+[dir="rtl"] .spice-options {
+    direction: rtl;
+}
+
+/* Loading overlay text alignment */
+[dir="rtl"] .loading-overlay .flex-col {
+    text-align: center; /* Keep loading text centered */
+}
+
+/* Error state text alignment */
+[dir="rtl"] .error-state .flex-col {
+    text-align: center; /* Keep error text centered */
+}
+
+[dir="rtl"] .feather-arrow-left{
+  transform: scaleX(-1) !important;
+
+}
+
