@@ -84,7 +84,7 @@ if (!defined('LANG_CONFIG_LOADED')) {
      */
     function formatPrice($price) {
         $currentLang = getCurrentLanguage();
-        return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+        return ($currentLang === 'ar') ? number_format($price, 0) . ' QAR ' : 'QAR ' . number_format($price, 0);
     }
     
     /**

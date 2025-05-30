@@ -1,15 +1,137 @@
 <?php
-// index.php - Optimized Bilingual Home Page with Dynamic Categories
-require_once 'config/app.php';
+// index.php - Bilingual Home Page with Dynamic Categories
+session_start();
 
-// Get menu data with caching
-$categories = $db->getCategories();
-$popularItems = $db->getMenuItems(['popular' => true, 'limit' => 6]);
+// Include admin config for database connection
+require_once 'admin/config.php';
 
-// Current language and direction
-$currentLang = getCurrentLanguage();
+// Language Management
+$supportedLanguages = ['en', 'ar'];
+$defaultLanguage = 'en';
+
+// Get current language from URL parameter, session, or default
+$currentLang = $_GET['lang'] ?? $_SESSION['language'] ?? $defaultLanguage;
+
+// Validate and set language
+if (!in_array($currentLang, $supportedLanguages)) {
+    $currentLang = $defaultLanguage;
+}
+
+// Store in session
+$_SESSION['language'] = $currentLang;
+
+// Get database connection
+$pdo = getConnection();
+
+// Get categories with images
+$categoriesStmt = $pdo->query("
+    SELECT c.*, COUNT(m.id) as item_count
+    FROM categories c
+    LEFT JOIN menu_items m ON c.name = m.category
+    WHERE c.is_active = 1
+    GROUP BY c.id
+    ORDER BY c.display_order, c.name
+");
+$categories = $categoriesStmt->fetchAll();
+
+// Get popular items
+$popularStmt = $pdo->prepare("
+    SELECT * FROM menu_items 
+    WHERE is_popular = 1 
+    ORDER BY id DESC 
+    LIMIT 6
+");
+$popularStmt->execute();
+$popularItems = $popularStmt->fetchAll();
+
+// Translation arrays
+$translations = [
+    'en' => [
+        'home' => 'Home',
+        'menu' => 'Menu',
+        'popular_items' => 'Popular Items',
+        'view_all' => 'View all',
+        'categories' => 'Categories',
+        'no_items_found' => 'No items found',
+        'popular' => 'Popular',
+        'special' => 'Special'
+    ],
+    'ar' => [
+        'home' => 'الرئيسية',
+        'menu' => 'القائمة',
+        'popular_items' => 'الأصناف الشائعة',
+        'view_all' => 'عرض الكل',
+        'categories' => 'الفئات',
+        'no_items_found' => 'لم يتم العثور على أصناف',
+        'popular' => 'شائع',
+        'special' => 'مميز'
+    ]
+];
+
+// Helper functions
+function __($key) {
+    global $translations, $currentLang;
+    return $translations[$currentLang][$key] ?? $translations['en'][$key] ?? $key;
+}
+
+function isRTL() {
+    global $currentLang;
+    return $currentLang === 'ar';
+}
+
+function getCategoryName($category) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($category['name_ar'])) ? $category['name_ar'] : $category['name'];
+}
+
+function getItemName($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['name_ar'])) ? $item['name_ar'] : $item['name'];
+}
+
+function getItemCategory($item) {
+    global $currentLang;
+    return ($currentLang === 'ar' && !empty($item['category_ar'])) ? $item['category_ar'] : $item['category'];
+}
+
+function formatPrice($price) {
+    global $currentLang;
+    return ($currentLang === 'ar') ? number_format($price, 0) . ' ريال قطري' : 'QAR ' . number_format($price, 0);
+}
+
+function buildUrl($path, $params = []) {
+    global $currentLang;
+    $params['lang'] = $currentLang;
+    $queryString = http_build_query($params);
+    return $path . ($queryString ? '?' . $queryString : '');
+}
+
+function getCategoryImage($category) {
+    // Check if category has custom image
+    if (!empty($category['image']) && file_exists($category['image'])) {
+        return $category['image'];
+    }
+    
+    // Fallback to default images based on category name
+    $defaultImages = [
+        'Breakfast' => 'uploads/menu/1.png',
+        'Dishes' => 'uploads/menu/2.png',
+        'Bread' => 'uploads/menu/3.png',
+        'Desserts' => 'uploads/menu/4.png',
+        'Cold Drinks' => 'uploads/menu/5.png',
+        'Hot Drinks' => 'uploads/menu/6.png'
+    ];
+    
+    if (isset($defaultImages[$category['name']])) {
+        return $defaultImages[$category['name']];
+    }
+    
+    // Final fallback
+    return 'uploads/menu/placeholder.jpg';
+}
+
+$alternativeLang = $currentLang === 'ar' ? 'en' : 'ar';
 $direction = isRTL() ? 'rtl' : 'ltr';
-$alternativeLang = getAlternativeLanguage();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
@@ -17,12 +139,12 @@ $alternativeLang = getAlternativeLanguage();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title><?php echo __('home'); ?> - <?php echo APP_NAME; ?></title>
+    <title><?php echo __('home'); ?> - Fenyal</title>
     
     <!-- PWA Icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="<?php echo APP_NAME; ?>">
+    <meta name="apple-mobile-web-app-title" content="Fenyal">
     <link rel="apple-touch-icon" href="assets/icons/apple-icon-180x180.png">
 
     <!-- Web App Manifest -->
@@ -74,6 +196,15 @@ $alternativeLang = getAlternativeLanguage();
             transform: scale(0.98);
         }
         
+        /* Category image styling */
+        .category-image {
+            transition: transform 0.2s ease;
+        }
+        
+        .category-item:hover .category-image {
+            transform: scale(1.05);
+        }
+        
         /* Optimized loading animation */
         .loading-skeleton {
             background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
@@ -95,6 +226,16 @@ $alternativeLang = getAlternativeLanguage();
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        
+        /* Image loading placeholder */
+        .image-placeholder {
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.7rem;
+        }
     </style>
 </head>
 
@@ -106,7 +247,7 @@ $alternativeLang = getAlternativeLanguage();
             <div class="flex items-center justify-center relative">
                 <!-- Centered Logo -->
                 <div class="flex items-center justify-center flex-1">
-                    <img src="fenyal-logo-1.png" width="100" height="48" alt="<?php echo APP_NAME; ?> Logo" class="h-12 object-contain">
+                    <img src="fenyal-logo-1.png" width="100" height="48" alt="Fenyal Logo" class="h-12 object-contain">
                 </div>
                 
                 <!-- Language Toggle -->
@@ -126,12 +267,12 @@ $alternativeLang = getAlternativeLanguage();
         <main class="px-4">
             <!-- Categories -->
             <section class="mb-2" aria-label="<?php echo __('categories'); ?>">
+                <?php if (!empty($categories)): ?>
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll <?php echo isRTL() ? 'space-x-reverse' : ''; ?>" 
                      style="direction: <?php echo $direction; ?>">
-                    <?php 
-                    foreach ($categories as $category): 
-                        $categoryName = getLocalizedText($category, 'name', $currentLang);
-                        $categoryImage = !empty($category['image']) ? $category['image'] : 'uploads/menu/placeholder.jpg';
+                    <?php foreach ($categories as $category): 
+                        $categoryName = getCategoryName($category);
+                        $categoryImage = getCategoryImage($category);
                     ?>
                     <a href="<?php echo buildUrl('menu.php', ['category' => $category['name']]); ?>" 
                        class="category-item flex flex-col items-center flex-shrink-0"
@@ -139,16 +280,27 @@ $alternativeLang = getAlternativeLanguage();
                         <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
                             <img src="<?php echo htmlspecialchars($categoryImage); ?>" 
                                  alt="<?php echo htmlspecialchars($categoryName); ?>" 
-                                 class="h-14 w-14 object-cover rounded-full"
+                                 class="category-image h-14 w-14 object-cover rounded-full"
                                  loading="lazy" 
-                                 onerror="this.src='uploads/menu/placeholder.jpg'" />
+                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'image-placeholder h-14 w-14 rounded-full\'><?php echo substr($categoryName, 0, 2); ?></div>';" />
                         </div>
-                        <span class="text-xs font-medium category-label">
+                        <span class="text-xs font-medium category-label text-center">
                             <?php echo htmlspecialchars($categoryName); ?>
                         </span>
+                        <?php if ($category['item_count'] > 0): ?>
+                        <span class="text-xs text-gray-400 mt-0.5">
+                            <?php echo $category['item_count']; ?> <?php echo $currentLang === 'ar' ? 'صنف' : 'items'; ?>
+                        </span>
+                        <?php endif; ?>
                     </a>
                     <?php endforeach; ?>
                 </div>
+                <?php else: ?>
+                <!-- No categories fallback -->
+                <div class="text-center py-4">
+                    <p class="text-gray-500 text-sm"><?php echo $currentLang === 'ar' ? 'لا توجد فئات متاحة' : 'No categories available'; ?></p>
+                </div>
+                <?php endif; ?>
             </section>
 
             <!-- Popular Items -->
@@ -164,25 +316,28 @@ $alternativeLang = getAlternativeLanguage();
                     <?php if (empty($popularItems)): ?>
                     <div class="p-4 text-center text-gray-500">
                         <p><?php echo __('no_items_found'); ?></p>
+                        <a href="<?php echo buildUrl('menu.php'); ?>" class="text-primary text-sm mt-2 inline-block">
+                            <?php echo $currentLang === 'ar' ? 'استكشف القائمة' : 'Browse Menu'; ?>
+                        </a>
                     </div>
                     <?php else: ?>
                     <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
-                            $itemName = getLocalizedText($item, 'name', $currentLang);
-                            $itemCategory = getLocalizedText($item, 'category', $currentLang);
+                            $itemName = getItemName($item);
+                            $itemCategory = getItemCategory($item);
                             $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
                         ?>
                         <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
                                  onclick="window.location.href='<?php echo buildUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
                                  role="button"
                                  tabindex="0"
-                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice, $currentLang); ?>">
-                            <div class="h-24 overflow-hidden">
+                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
+                            <div class="h-24 overflow-hidden bg-gray-100">
                                 <img src="<?php echo htmlspecialchars($item['image']); ?>" 
                                      alt="<?php echo htmlspecialchars($itemName); ?>" 
                                      class="w-full h-full object-cover" 
                                      loading="lazy"
-                                     onerror="this.src='uploads/menu/placeholder.jpg'">
+                                     onerror="this.onerror=null; this.src='uploads/menu/placeholder.jpg';">
                             </div>
                             <div class="p-2.5">
                                 <h3 class="font-medium text-sm leading-tight line-clamp-1">
@@ -193,13 +348,20 @@ $alternativeLang = getAlternativeLanguage();
                                 </p>
                                 <div class="flex justify-between items-center mt-2">
                                     <span class="text-primary font-semibold text-sm">
-                                        <?php echo formatPrice($displayPrice, $currentLang); ?>
+                                        <?php echo formatPrice($displayPrice); ?>
                                     </span>
-                                    <?php if ($item['is_popular']): ?>
-                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                        <?php echo __('popular'); ?>
-                                    </span>
-                                    <?php endif; ?>
+                                    <div class="flex items-center gap-1">
+                                        <?php if ($item['is_popular']): ?>
+                                        <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
+                                            <?php echo __('popular'); ?>
+                                        </span>
+                                        <?php endif; ?>
+                                        <?php if ($item['is_special']): ?>
+                                        <span class="text-xs bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
+                                            <?php echo __('special'); ?>
+                                        </span>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div>
                         </article>
@@ -228,8 +390,8 @@ $alternativeLang = getAlternativeLanguage();
                     <!-- Center Logo -->
                     <button class="center-logo w-16 h-16 rounded-full flex items-center justify-center ripple" 
                             onclick="centerLogoAction()"
-                            aria-label="<?php echo APP_NAME; ?> logo">
-                        <img src="fenyal-logo-1.png" alt="<?php echo APP_NAME; ?> Logo" class="w-10 h-10 rounded-full">
+                            aria-label="Fenyal logo">
+                        <img src="fenyal-logo-1.png" alt="Fenyal Logo" class="w-10 h-10 rounded-full">
                     </button>
                     
                     <!-- Menu -->
@@ -252,7 +414,7 @@ $alternativeLang = getAlternativeLanguage();
             language: '<?php echo $currentLang; ?>',
             isRTL: <?php echo isRTL() ? 'true' : 'false'; ?>,
             apiBaseUrl: '/api/',
-            enableCache: <?php echo ENABLE_CACHE ? 'true' : 'false'; ?>
+            categories: <?php echo json_encode($categories); ?>
         };
 
         // Initialize icons
@@ -270,7 +432,7 @@ $alternativeLang = getAlternativeLanguage();
         // Center logo action
         function centerLogoAction() {
             console.log('Center logo clicked');
-            // Custom action here
+            // You can add custom actions here
         }
 
         // Performance optimized touch feedback
@@ -305,9 +467,11 @@ $alternativeLang = getAlternativeLanguage();
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             const img = entry.target;
-                            img.src = img.dataset.src || img.src;
-                            img.classList.remove('loading-skeleton');
-                            observer.unobserve(img);
+                            if (img.dataset.src) {
+                                img.src = img.dataset.src;
+                                img.classList.remove('loading-skeleton');
+                                observer.unobserve(img);
+                            }
                         }
                     });
                 });
@@ -323,10 +487,15 @@ $alternativeLang = getAlternativeLanguage();
             addTouchFeedback();
             initLazyLoading();
             
+            // Debug: Log categories loaded
+            console.log('Categories loaded:', APP_CONFIG.categories);
+            
             // Check if user is new and should see welcome page
             if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.html';
-                return;
+                // Uncomment this line if you have a welcome page
+                // window.location.href = 'welcome.html';
+                // For now, just mark as visited
+                localStorage.setItem('hasVisited', 'true');
             }
         });
 
@@ -346,8 +515,7 @@ $alternativeLang = getAlternativeLanguage();
         // Preload critical pages
         function preloadCriticalPages() {
             const criticalPages = [
-                '<?php echo buildUrl('menu.php'); ?>',
-                '<?php echo buildUrl('api/menu.php', ['action' => 'categories']); ?>'
+                '<?php echo buildUrl('menu.php'); ?>'
             ];
             
             criticalPages.forEach(url => {
@@ -360,6 +528,22 @@ $alternativeLang = getAlternativeLanguage();
 
         // Preload after initial load
         setTimeout(preloadCriticalPages, 1000);
+
+        // Handle image loading errors gracefully
+        function handleImageError(img) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'image-placeholder h-14 w-14 rounded-full';
+            placeholder.textContent = '📷';
+            img.parentElement.replaceChild(placeholder, img);
+        }
+
+        // Add global error handling for images
+        document.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG') {
+                console.log('Image failed to load:', e.target.src);
+                // The onerror handlers in HTML will handle the fallback
+            }
+        }, true);
     </script>
 
     <!-- PWA Installer -->
