@@ -193,7 +193,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                         <p><?php echo __('no_items_found'); ?></p>
                     </div>
                     <?php else: ?>
-                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse ' : ''; ?>">
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
                             $itemName = getLocalizedText($item, 'name');
                             $itemCategory = getLocalizedText($item, 'category');
@@ -350,10 +350,10 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             initLazyLoading();
             
             // Check if user is new and should see welcome page
-            // if (!localStorage.getItem('hasVisited')) {
-            //     window.location.href = 'welcome.php';
-            //     return;
-            // }
+            if (!localStorage.getItem('hasVisited')) {
+                window.location.href = 'welcome.php';
+                return;
+            }
         });
 
         // Register service worker for PWA support
