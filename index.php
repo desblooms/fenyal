@@ -44,7 +44,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <title><?php echo __('home'); ?> - Fenyal </title>
+    <title><?php echo __('home'); ?> - Fenyal</title>
     
     <!-- PWA Icons -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -193,7 +193,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                         <p><?php echo __('no_items_found'); ?></p>
                     </div>
                     <?php else: ?>
-                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? '' : ''; ?>">
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
                             $itemName = getLocalizedText($item, 'name');
                             $itemCategory = getLocalizedText($item, 'category');
