@@ -350,10 +350,10 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             initLazyLoading();
             
             // Check if user is new and should see welcome page
-            if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.php';
-                return;
-            }
+            // if (!localStorage.getItem('hasVisited')) {
+            //     window.location.href = 'welcome.php';
+            //     return;
+            // }
         });
 
         // Register service worker for PWA support
