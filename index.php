@@ -1,5 +1,5 @@
 <?php
-// index.php - Optimized Bilingual Home Page with Fixed RTL Swiping
+// index.php - Optimized Bilingual Home Page with Dynamic Categories
 // Include the language configuration helper
 require_once 'config/language.php';
 
@@ -122,78 +122,6 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* Enhanced RTL Scrolling Support */
-        .scroll-container {
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .scroll-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* RTL specific scrolling fixes */
-        [dir="rtl"] .scroll-container {
-            direction: rtl;
-        }
-
-        [dir="rtl"] .scroll-content {
-            direction: rtl;
-            display: flex;
-            flex-direction: row;
-        }
-
-        [dir="ltr"] .scroll-content {
-            direction: ltr;
-            display: flex;
-            flex-direction: row;
-        }
-
-        /* Special items wrapper - fixed for RTL */
-        .special-items-wrapper {
-            gap: 0.75rem; /* 12px gap instead of space-x-3 */
-        }
-
-        [dir="rtl"] .special-items-wrapper {
-            padding-right: 1rem;
-        }
-
-        [dir="ltr"] .special-items-wrapper {
-            padding-left: 1rem;
-        }
-
-        /* Category scrolling fixes */
-        .categories-wrapper {
-            gap: 1rem; /* 16px gap instead of space-x-4 */
-        }
-
-        [dir="rtl"] .categories-wrapper {
-            padding-right: 1rem;
-        }
-
-        [dir="ltr"] .categories-wrapper {
-            padding-left: 1rem;
-        }
-
-        /* Touch scrolling improvements */
-        .smooth-scroll {
-            scroll-behavior: smooth;
-        }
-
-        /* Item spacing - remove default margins in RTL */
-        [dir="rtl"] .special-item {
-            margin-left: 0;
-            margin-right: 0;
-        }
-
-        [dir="ltr"] .special-item {
-            margin-left: 0;
-            margin-right: 0;
-        }
     </style>
 </head>
 
@@ -225,29 +153,28 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
         <main class="px-4">
             <!-- Categories -->
             <section class="mb-2" aria-label="<?php echo __('categories'); ?>">
-                <div class="scroll-container py-1">
-                    <div class="scroll-content categories-wrapper flex flex-nowrap">
-                        <?php 
-                        foreach ($categories as $category): 
-                            $categoryName = getLocalizedText($category, 'name');
-                            $categoryImage = !empty($category['image']) ? $category['image'] : 'uploads/menu/placeholder.jpg';
-                        ?>
-                        <a href="menu.php?lang=<?php echo $currentLang; ?>&category=<?php echo urlencode($category['name']); ?>" 
-                           class="category-item flex flex-col items-center flex-shrink-0"
-                           aria-label="<?php echo $categoryName; ?> category">
-                            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
-                                <img src="<?php echo htmlspecialchars($categoryImage); ?>" 
-                                     alt="<?php echo htmlspecialchars($categoryName); ?>" 
-                                     class="h-14 w-14 object-cover rounded-full"
-                                     loading="lazy" 
-                                     onerror="this.src='uploads/menu/placeholder.jpg'" />
-                            </div>
-                            <span class="text-xs font-medium category-label text-center">
-                                <?php echo htmlspecialchars($categoryName); ?>
-                            </span>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
+                <div class="flex space-x-4 overflow-x-auto py-1 special-scroll <?php echo isRTL() ? 'space-x-reverse' : ''; ?>" 
+                     style="direction: <?php echo $direction; ?>">
+                    <?php 
+                    foreach ($categories as $category): 
+                        $categoryName = getLocalizedText($category, 'name');
+                        $categoryImage = !empty($category['image']) ? $category['image'] : 'uploads/menu/placeholder.jpg';
+                    ?>
+                    <a href="<?php echo buildLangUrl('menu.php', ['category' => $category['name']]); ?>" 
+                       class="category-item flex flex-col items-center flex-shrink-0"
+                       aria-label="<?php echo $categoryName; ?> category">
+                        <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-1 overflow-hidden">
+                            <img src="<?php echo htmlspecialchars($categoryImage); ?>" 
+                                 alt="<?php echo htmlspecialchars($categoryName); ?>" 
+                                 class="h-14 w-14 object-cover rounded-full"
+                                 loading="lazy" 
+                                 onerror="this.src='uploads/menu/placeholder.jpg'" />
+                        </div>
+                        <span class="text-xs font-medium category-label">
+                            <?php echo htmlspecialchars($categoryName); ?>
+                        </span>
+                    </a>
+                    <?php endforeach; ?>
                 </div>
             </section>
 
@@ -255,7 +182,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             <section class="mb-5 pt-4" aria-label="<?php echo __('popular_items'); ?>">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="text-base font-semibold"><?php echo __('popular_items'); ?></h2>
-                    <a href="menu.php?lang=<?php echo $currentLang; ?>" class="text-primary text-xs">
+                    <a href="<?php echo buildLangUrl('menu.php'); ?>" class="text-primary text-xs">
                         <?php echo __('view_all'); ?>
                     </a>
                 </div>
@@ -266,46 +193,44 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                         <p><?php echo __('no_items_found'); ?></p>
                     </div>
                     <?php else: ?>
-                    <div class="scroll-container py-1">
-                        <div class="scroll-content special-items-wrapper flex flex-nowrap">
-                            <?php foreach ($popularItems as $item): 
-                                $itemName = getLocalizedText($item, 'name');
-                                $itemCategory = getLocalizedText($item, 'category');
-                                $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
-                            ?>
-                            <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
-                                     onclick="window.location.href='menu-item-details.php?lang=<?php echo $currentLang; ?>&id=<?php echo $item['id']; ?>'"
-                                     role="button"
-                                     tabindex="0"
-                                     aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
-                                <div class="h-24 overflow-hidden">
-                                    <img src="<?php echo htmlspecialchars($item['image']); ?>" 
-                                         alt="<?php echo htmlspecialchars($itemName); ?>" 
-                                         class="w-full h-full object-cover" 
-                                         loading="lazy"
-                                         onerror="this.src='uploads/menu/placeholder.jpg'">
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
+                        <?php foreach ($popularItems as $item): 
+                            $itemName = getLocalizedText($item, 'name');
+                            $itemCategory = getLocalizedText($item, 'category');
+                            $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
+                        ?>
+                        <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
+                                 onclick="window.location.href='<?php echo buildLangUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
+                                 role="button"
+                                 tabindex="0"
+                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
+                            <div class="h-24 overflow-hidden">
+                                <img src="<?php echo htmlspecialchars($item['image']); ?>" 
+                                     alt="<?php echo htmlspecialchars($itemName); ?>" 
+                                     class="w-full h-full object-cover" 
+                                     loading="lazy"
+                                     onerror="this.src='uploads/menu/placeholder.jpg'">
+                            </div>
+                            <div class="p-2.5">
+                                <h3 class="font-medium text-sm leading-tight line-clamp-1">
+                                    <?php echo htmlspecialchars($itemName); ?>
+                                </h3>
+                                <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">
+                                    <?php echo htmlspecialchars($itemCategory); ?>
+                                </p>
+                                <div class="flex justify-between items-center mt-2">
+                                    <span class="text-primary font-semibold text-sm">
+                                        <?php echo formatPrice($displayPrice); ?>
+                                    </span>
+                                    <?php if ($item['is_popular']): ?>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
+                                        <?php echo __('popular'); ?>
+                                    </span>
+                                    <?php endif; ?>
                                 </div>
-                                <div class="p-2.5">
-                                    <h3 class="font-medium text-sm leading-tight line-clamp-1">
-                                        <?php echo htmlspecialchars($itemName); ?>
-                                    </h3>
-                                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">
-                                        <?php echo htmlspecialchars($itemCategory); ?>
-                                    </p>
-                                    <div class="flex justify-between items-center mt-2">
-                                        <span class="text-primary font-semibold text-sm">
-                                            <?php echo formatPrice($displayPrice); ?>
-                                        </span>
-                                        <?php if ($item['is_popular']): ?>
-                                        <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                            <?php echo __('popular'); ?>
-                                        </span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </article>
-                            <?php endforeach; ?>
-                        </div>
+                            </div>
+                        </article>
+                        <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -318,7 +243,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             <div class="px-4 py-0">
                 <div class="flex justify-around items-center relative">
                     <!-- Home -->
-                    <a href="index.php?lang=<?php echo $currentLang; ?>" 
+                    <a href="<?php echo buildLangUrl('index.php'); ?>" 
                        class="nav-item ripple flex flex-col items-center justify-center active" 
                        data-page="home"
                        aria-label="<?php echo __('home'); ?>"
@@ -335,7 +260,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                     </button>
                     
                     <!-- Menu -->
-                    <a href="menu.php?lang=<?php echo $currentLang; ?>" 
+                    <a href="<?php echo buildLangUrl('menu.php'); ?>" 
                        class="nav-item ripple flex flex-col items-center justify-center" 
                        data-page="menu-full"
                        aria-label="<?php echo __('menu'); ?>">
@@ -374,49 +299,6 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             // Custom action here
         }
 
-        // Enhanced RTL scrolling support
-        function initRTLScrolling() {
-            const scrollContainers = document.querySelectorAll('.scroll-container');
-            
-            scrollContainers.forEach(container => {
-                // For RTL, start scroll position at the end
-                if (APP_CONFIG.isRTL) {
-                    // Set initial scroll position to the right end for RTL
-                    setTimeout(() => {
-                        container.scrollLeft = container.scrollWidth - container.clientWidth;
-                    }, 100);
-                }
-
-                // Add smooth scrolling behavior
-                container.classList.add('smooth-scroll');
-                
-                // Handle touch events for better mobile experience
-                let isScrolling = false;
-                let startX = 0;
-                let scrollLeft = 0;
-
-                container.addEventListener('touchstart', (e) => {
-                    isScrolling = true;
-                    startX = e.touches[0].pageX - container.offsetLeft;
-                    scrollLeft = container.scrollLeft;
-                    container.style.scrollBehavior = 'auto';
-                }, { passive: true });
-
-                container.addEventListener('touchmove', (e) => {
-                    if (!isScrolling) return;
-                    e.preventDefault();
-                    const x = e.touches[0].pageX - container.offsetLeft;
-                    const walk = (x - startX) * 2;
-                    container.scrollLeft = scrollLeft - walk;
-                }, { passive: false });
-
-                container.addEventListener('touchend', () => {
-                    isScrolling = false;
-                    container.style.scrollBehavior = 'smooth';
-                }, { passive: true });
-            });
-        }
-
         // Performance optimized touch feedback
         function addTouchFeedback() {
             const elements = document.querySelectorAll('button, a, .menu-item, .category-item');
@@ -425,10 +307,6 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                 let touchTimeout;
                 
                 element.addEventListener('touchstart', function(e) {
-                    // Don't apply transform if the element is inside a scroll container
-                    const isInScrollContainer = this.closest('.scroll-container');
-                    if (isInScrollContainer) return;
-                    
                     touchTimeout = setTimeout(() => {
                         this.style.transform = 'scale(0.97)';
                     }, 50);
@@ -470,11 +348,10 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
         document.addEventListener('DOMContentLoaded', function() {
             addTouchFeedback();
             initLazyLoading();
-            initRTLScrolling();
             
             // Check if user is new and should see welcome page
             if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.php?lang=' + APP_CONFIG.language;
+                window.location.href = 'welcome.php';
                 return;
             }
         });
@@ -495,8 +372,8 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
         // Preload critical pages
         function preloadCriticalPages() {
             const criticalPages = [
-                'menu.php?lang=' + APP_CONFIG.language,
-                'api/menu.php?action=categories&lang=' + APP_CONFIG.language
+                '<?php echo buildLangUrl('menu.php'); ?>',
+                '<?php echo buildLangUrl('api/menu.php', ['action' => 'categories']); ?>'
             ];
             
             criticalPages.forEach(url => {
