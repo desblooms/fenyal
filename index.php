@@ -193,7 +193,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
                         <p><?php echo __('no_items_found'); ?></p>
                     </div>
                     <?php else: ?>
-                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? 'flex-row-reverse space-x-reverse' : ''; ?>">
+                    <div class="flex space-x-3 overflow-x-auto py-1 special-scroll special-items-wrapper <?php echo isRTL() ? '' : ''; ?>">
                         <?php foreach ($popularItems as $item): 
                             $itemName = getLocalizedText($item, 'name');
                             $itemCategory = getLocalizedText($item, 'category');
