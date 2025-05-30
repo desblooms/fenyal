@@ -186,3 +186,86 @@ export function getUrlParams() {
 }
 
 
+// Enhanced Bottom Navigation Script
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    const centerLogo = document.querySelector('.center-logo');
+
+    // Handle nav item clicks
+    navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            // Don't prevent default for actual navigation
+            // Remove active class from all items
+            navItems.forEach(navItem => {
+                navItem.classList.remove('active');
+                const icon = navItem.querySelector('.nav-icon');
+                const text = navItem.querySelector('.nav-text');
+                if (icon) icon.classList.add('text-gray-500');
+                if (text) text.classList.add('text-gray-500');
+            });
+            
+            // Add active class to clicked item
+            this.classList.add('active');
+            const activeIcon = this.querySelector('.nav-icon');
+            const activeText = this.querySelector('.nav-text');
+            if (activeIcon) activeIcon.classList.remove('text-gray-500');
+            if (activeText) activeText.classList.remove('text-gray-500');
+        });
+    });
+
+    // Add touch feedback for mobile
+    const allInteractiveElements = [...navItems, centerLogo];
+    allInteractiveElements.forEach(element => {
+        element.addEventListener('touchstart', function() {
+            this.style.transform = this.classList.contains('center-logo') 
+                ? 'translateY(-6px) scale(1.05)' 
+                : 'translateY(-2px) scale(0.98)';
+        });
+
+        element.addEventListener('touchend', function() {
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    });
+
+    // Set active nav item based on current page
+    function setActiveNavItem() {
+        const currentPath = window.location.pathname;
+        const fileName = currentPath.split('/').pop() || 'index.html';
+        
+        navItems.forEach(item => {
+            const href = item.getAttribute('href');
+            if (href && href.includes(fileName)) {
+                item.classList.add('active');
+                const icon = item.querySelector('.nav-icon');
+                const text = item.querySelector('.nav-text');
+                if (icon) icon.classList.remove('text-gray-500');
+                if (text) text.classList.remove('text-gray-500');
+            }
+        });
+    }
+
+    // Initialize active state
+    setActiveNavItem();
+});
+
+// Center logo action
+function centerLogoAction() {
+    const centerLogo = document.querySelector('.center-logo');
+    
+    // Add special animation
+    centerLogo.style.transform = 'translateY(-8px) scale(1.1) rotate(360deg)';
+    setTimeout(() => {
+        centerLogo.style.transform = '';
+    }, 600);
+    
+    // You can add your custom action here
+    // For example: open WhatsApp, show special menu, etc.
+    if (typeof toast !== 'undefined') {
+        toast.show('Welcome to Fenyal! 🍽️', 'success');
+    }
+    
+    // Optional: Navigate to a special page or trigger an action
+    // window.open('https://wa.me/+1234567890', '_blank');
+}
