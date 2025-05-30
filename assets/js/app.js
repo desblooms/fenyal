@@ -186,31 +186,3 @@ export function getUrlParams() {
 }
 
 
-
-// Prevent click events during scroll gestures
-document.addEventListener('DOMContentLoaded', function() {
-    const scrollContainer = document.querySelector('.special-items-wrapper-flex');
-    let isScrolling = false;
-    let startX = 0;
-    
-    if (scrollContainer) {
-        scrollContainer.addEventListener('touchstart', function(e) {
-            isScrolling = false;
-            startX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        scrollContainer.addEventListener('touchmove', function(e) {
-            const currentX = e.touches[0].clientX;
-            if (Math.abs(currentX - startX) > 10) {
-                isScrolling = true;
-            }
-        }, { passive: true });
-        
-        scrollContainer.addEventListener('click', function(e) {
-            if (isScrolling) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }, true);
-    }
-});

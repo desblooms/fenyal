@@ -179,62 +179,66 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             </section>
 
             <!-- Popular Items -->
-            <section class="mb-5 pt-4" aria-label="<?php echo __('popular_items'); ?>">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-base font-semibold"><?php echo __('popular_items'); ?></h2>
-                    <a href="<?php echo buildLangUrl('menu.php'); ?>" class="text-primary text-xs">
-                        <?php echo __('view_all'); ?>
-                    </a>
-                </div>
+            <!-- Updated Popular Items Section with iOS Safari Scroll Fix -->
+<section class="mb-5 pt-4" aria-label="<?php echo __('popular_items'); ?>">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="text-base font-semibold"><?php echo __('popular_items'); ?></h2>
+        <a href="<?php echo buildLangUrl('menu.php'); ?>" class="text-primary text-xs">
+            <?php echo __('view_all'); ?>
+        </a>
+    </div>
 
-                <div class="special-items-container">
-                    <?php if (empty($popularItems)): ?>
-                    <div class="p-4 text-center text-gray-500">
-                        <p><?php echo __('no_items_found'); ?></p>
-                    </div>
-                    <?php else: ?>
-                   <div class="special-items-wrapper-flex <?php echo isRTL() ? 'rtl-scroll' : ''; ?>">
-                        <?php foreach ($popularItems as $item): 
-                            $itemName = getLocalizedText($item, 'name');
-                            $itemCategory = getLocalizedText($item, 'category');
-                            $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
-                        ?>
-                        <article class="flex-shrink-0 w-36 rounded-lg overflow-hidden special-item shadow-sm bg-white menu-item cursor-pointer"
-                                 onclick="window.location.href='<?php echo buildLangUrl('menu-item-details.php', ['id' => $item['id']]); ?>'"
-                                 role="button"
-                                 tabindex="0"
-                                 aria-label="<?php echo $itemName; ?> - <?php echo formatPrice($displayPrice); ?>">
-                            <div class="h-24 overflow-hidden">
-                                <img src="<?php echo htmlspecialchars($item['image']); ?>" 
-                                     alt="<?php echo htmlspecialchars($itemName); ?>" 
-                                     class="w-full h-full object-cover" 
-                                     loading="lazy"
-                                     onerror="this.src='uploads/menu/placeholder.jpg'">
-                            </div>
-                            <div class="p-2.5">
-                                <h3 class="font-medium text-sm leading-tight line-clamp-1">
-                                    <?php echo htmlspecialchars($itemName); ?>
-                                </h3>
-                                <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">
-                                    <?php echo htmlspecialchars($itemCategory); ?>
-                                </p>
-                                <div class="flex justify-between items-center mt-2">
-                                    <span class="text-primary font-semibold text-sm">
-                                        <?php echo formatPrice($displayPrice); ?>
-                                    </span>
-                                    <?php if ($item['is_popular']): ?>
-                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
-                                        <?php echo __('popular'); ?>
-                                    </span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </article>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php endif; ?>
+    <div class="special-items-container">
+        <?php if (empty($popularItems)): ?>
+        <div class="p-4 text-center text-gray-500">
+            <p><?php echo __('no_items_found'); ?></p>
+        </div>
+        <?php else: ?>
+        <!-- Updated wrapper with iOS Safari fixes -->
+        <div class="special-items-wrapper-flex <?php echo isRTL() ? 'rtl-scroll' : ''; ?>">
+            <?php foreach ($popularItems as $item): 
+                $itemName = getLocalizedText($item, 'name');
+                $itemCategory = getLocalizedText($item, 'category');
+                $displayPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price'] : $item['price'];
+            ?>
+            <article class="special-item rounded-lg overflow-hidden shadow-sm bg-white menu-item cursor-pointer"
+                     onclick="handleItemClick('<?php echo buildLangUrl('menu-item-details.php', ['id' => $item['id']]); ?>')"
+                     role="button"
+                     tabindex="0"
+                     aria-label="<?php echo htmlspecialchars($itemName); ?> - <?php echo formatPrice($displayPrice); ?>">
+                <div class="h-24 overflow-hidden">
+                    <img src="<?php echo htmlspecialchars($item['image']); ?>" 
+                         alt="<?php echo htmlspecialchars($itemName); ?>" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy"
+                         onerror="this.src='uploads/menu/placeholder.jpg'">
                 </div>
-            </section>
+                <div class="p-2.5">
+                    <h3 class="font-medium text-sm leading-tight line-clamp-1">
+                        <?php echo htmlspecialchars($itemName); ?>
+                    </h3>
+                    <p class="text-gray-500 text-xs mt-0.5 line-clamp-1">
+                        <?php echo htmlspecialchars($itemCategory); ?>
+                    </p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-primary font-semibold text-sm">
+                            <?php echo formatPrice($displayPrice); ?>
+                        </span>
+                        <?php if ($item['is_popular']): ?>
+                        <span class="text-xs bg-yellow-100 text-yellow-800 px-1.5 py-0.5 rounded-full">
+                            <?php echo __('popular'); ?>
+                        </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </article>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+</section>
+
+
         </main>
 
         <!-- Navigation bar -->
@@ -387,6 +391,47 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
         // Preload after initial load
         setTimeout(preloadCriticalPages, 1000);
     </script>
+    <script>
+// Improved click handler to prevent conflicts with scroll
+function handleItemClick(url) {
+    // Small delay to ensure it's not a scroll gesture
+    setTimeout(() => {
+        window.location.href = url;
+    }, 100);
+}
+
+// Enhanced touch handling for iOS Safari
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollContainers = document.querySelectorAll('.special-items-wrapper-flex, .category-scroll');
+    
+    scrollContainers.forEach(container => {
+        let isScrolling = false;
+        let startX = 0;
+        
+        container.addEventListener('touchstart', function(e) {
+            isScrolling = false;
+            startX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        container.addEventListener('touchmove', function(e) {
+            const currentX = e.touches[0].clientX;
+            const diffX = Math.abs(currentX - startX);
+            
+            if (diffX > 10) {
+                isScrolling = true;
+            }
+        }, { passive: true });
+        
+        // Prevent click events during scroll
+        container.addEventListener('click', function(e) {
+            if (isScrolling) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, true);
+    });
+});
+</script>
 
     <!-- PWA Installer -->
     <script src="assets/js/pwa-installer.js"></script>
