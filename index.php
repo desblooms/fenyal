@@ -344,17 +344,8 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             }
         }
 
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            addTouchFeedback();
-            initLazyLoading();
-            
-            // Check if user is new and should see welcome page
-            if (!localStorage.getItem('hasVisited')) {
-                window.location.href = 'welcome.html';
-                return;
-            }
-        });
+       
+     
 
         // Register service worker for PWA support
         if ('serviceWorker' in navigator) {
