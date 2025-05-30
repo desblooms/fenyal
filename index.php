@@ -34,6 +34,9 @@ $popularItems = $popularStmt->fetchAll();
 $currentLang = getCurrentLanguage();
 $direction = getDirection();
 $alternativeLang = getAlternativeLanguage();
+
+// Fix: Build proper language toggle URL
+$languageToggleUrl = 'index.php?lang=' . $alternativeLang;
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $currentLang; ?>" dir="<?php echo $direction; ?>">
@@ -135,7 +138,7 @@ $alternativeLang = getAlternativeLanguage();
                 
                 <!-- Language Toggle -->
                 <div class="absolute <?php echo isRTL() ? 'left-0' : 'right-0'; ?>">
-                    <a href="<?php echo buildLangUrl('index.php', ['lang' => $alternativeLang]); ?>" 
+                    <a href="<?php echo $languageToggleUrl; ?>" 
                        class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button"
                        aria-label="Switch to <?php echo $alternativeLang === 'ar' ? 'Arabic' : 'English'; ?>">
                         <span class="text-sm font-medium text-gray-700">
