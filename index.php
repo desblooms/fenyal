@@ -344,8 +344,13 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
             }
         }
 
-       
-     
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            addTouchFeedback();
+            initLazyLoading();
+            
+           
+        });
 
         // Register service worker for PWA support
         if ('serviceWorker' in navigator) {
