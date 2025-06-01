@@ -1,5 +1,5 @@
 <?php
-// index.php - Admin dashboard
+// admin/index.php - Mobile-First Admin Dashboard
 require_once 'config.php';
 checkAuth();
 
@@ -13,7 +13,7 @@ $categories = $pdo->query("SELECT COUNT(DISTINCT category) FROM menu_items")->fe
 
 // Get recent items
 $recentItems = $pdo->query("
-    SELECT name, name_ar, category, price, created_at 
+    SELECT name, name_ar, category, price, created_at, image, is_popular, is_special
     FROM menu_items 
     ORDER BY created_at DESC 
     LIMIT 5
@@ -57,8 +57,15 @@ if ($_POST) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Fenyal Admin Dashboard</title>
+    
+    <!-- PWA Icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fenyal Admin">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -67,234 +74,379 @@ if ($_POST) {
                     colors: {
                         primary: '#c45230',
                         accent: '#f96d43',
+                        background: '#f8f8f8',
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['"Poppins"', 'sans-serif']
+                    },
+                    borderRadius: {
+                        xl: '1.2rem'
                     }
                 }
             }
         }
     </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        body {
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.3;
+            font-family: 'Poppins', sans-serif;
+            touch-action: manipulation;
+            overscroll-behavior: none;
+        }
+
+        .app-container {
+            height: 100vh;
+            height: calc(var(--vh, 1vh) * 100);
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            padding-bottom: 100px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scale-button {
+            transition: transform 0.2s ease;
+        }
+
+        .scale-button:active {
+            transform: scale(0.97);
+        }
+
+        .card-hover {
+            transition: all 0.2s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--tw-gradient-stops));
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .mobile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .nav-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .recent-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .item-row {
+            transition: background-color 0.2s ease;
+        }
+
+        .item-row:hover {
+            background-color: rgba(196, 82, 48, 0.05);
+        }
+
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 50;
+            background: linear-gradient(135deg, #c45230 0%, #f96d43 100%);
+            box-shadow: 0 4px 15px rgba(196, 82, 48, 0.3);
+        }
+
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">F</span>
-                        </div>
+
+<body class="bg-background font-sans text-dark">
+    <!-- Main App Container -->
+    <div class="app-container fade-in">
+        <!-- Header -->
+        <header class="nav-header sticky top-0 z-30 px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo and Title -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">F</span>
                     </div>
-                    <div class="ml-4">
-                        <h1 class="text-xl font-semibold text-gray-900">Fenyal Admin</h1>
+                    <div>
+                        <h1 class="text-lg font-semibold text-gray-900">Admin Panel</h1>
+                        <p class="text-xs text-gray-500">Welcome, <?php echo $_SESSION['admin_username']; ?></p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-600">Welcome, <?php echo $_SESSION['admin_username']; ?></span>
-                    <a href="logout.php" class="bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium text-gray-700">
-                        Logout
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Quick Actions -->
-        <div class="mb-8">
-            <div class="flex flex-wrap gap-4">
-                <a href="menu_items.php" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
-                    Manage Menu Items
+                
+                <!-- Logout Button -->
+                <a href="logout.php" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center scale-button">
+                    <i data-feather="log-out" class="h-5 w-5 text-gray-600"></i>
                 </a>
-                <a href="categories.php" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Manage Categories
-                </a>
-                <button onclick="showImportModal()" class="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
-                    Import JSON
-                </button>
-                <form method="POST" class="inline">
-                    <input type="hidden" name="action" value="export_json">
-                    <button type="submit" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
-                        Export JSON
-                    </button>
-                </form>
             </div>
-        </div>
+        </header>
 
+        <!-- Success Message -->
         <?php if ($message): ?>
-        <div class="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
-            <?php echo htmlspecialchars($message); ?>
+        <div class="mx-4 mb-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div class="flex items-center space-x-2">
+                <i data-feather="check-circle" class="h-5 w-5 text-green-600"></i>
+                <span class="text-sm text-green-800"><?php echo htmlspecialchars($message); ?></span>
+            </div>
         </div>
         <?php endif; ?>
 
-        <!-- Statistics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
+        <!-- Main Content -->
+        <main class="px-4 pt-6 pb-8">
+            <!-- Quick Actions Grid -->
+            <section class="mb-8">
+                <h2 class="text-base font-semibold mb-4 text-gray-900">Quick Actions</h2>
+                <div class="mobile-grid">
+                    <a href="menu_items.php" 
+                       class="action-button from-primary to-accent text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2">
+                        <i data-feather="menu" class="h-6 w-6"></i>
+                        <span class="text-sm font-medium">Menu Items</span>
+                    </a>
+                    
+                    <a href="categories.php" 
+                       class="action-button from-blue-500 to-blue-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2">
+                        <i data-feather="grid" class="h-6 w-6"></i>
+                        <span class="text-sm font-medium">Categories</span>
+                    </a>
+                    
+                    <button onclick="showImportModal()" 
+                            class="action-button from-green-500 to-green-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2">
+                        <i data-feather="upload" class="h-6 w-6"></i>
+                        <span class="text-sm font-medium">Import JSON</span>
+                    </button>
+                    
+                    <form method="POST" class="inline">
+                        <input type="hidden" name="action" value="export_json">
+                        <button type="submit" 
+                                class="action-button from-purple-500 to-purple-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2 w-full">
+                            <i data-feather="download" class="h-6 w-6"></i>
+                            <span class="text-sm font-medium">Export JSON</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Statistics Cards -->
+            <section class="mb-8">
+                <h2 class="text-base font-semibold mb-4 text-gray-900">Statistics</h2>
+                <div class="mobile-grid">
+                    <div class="stat-card p-4 rounded-xl card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                                <i data-feather="file-text" class="h-5 w-5 text-primary"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900"><?php echo $totalItems; ?></p>
+                                <p class="text-xs text-gray-500">Total Items</p>
                             </div>
                         </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Items</dt>
-                                <dd class="text-lg font-medium text-gray-900"><?php echo $totalItems; ?></dd>
-                            </dl>
+                    </div>
+
+                    <div class="stat-card p-4 rounded-xl card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                                <i data-feather="star" class="h-5 w-5 text-yellow-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900"><?php echo $popularItems; ?></p>
+                                <p class="text-xs text-gray-500">Popular</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card p-4 rounded-xl card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <i data-feather="zap" class="h-5 w-5 text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900"><?php echo $specialItems; ?></p>
+                                <p class="text-xs text-gray-500">Special</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card p-4 rounded-xl card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i data-feather="folder" class="h-5 w-5 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-gray-900"><?php echo $categories; ?></p>
+                                <p class="text-xs text-gray-500">Categories</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Popular Items</dt>
-                                <dd class="text-lg font-medium text-gray-900"><?php echo $popularItems; ?></dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Special Items</dt>
-                                <dd class="text-lg font-medium text-gray-900"><?php echo $specialItems; ?></dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white overflow-hidden shadow rounded-lg">
-                <div class="p-5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-5 w-0 flex-1">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Categories</dt>
-                                <dd class="text-lg font-medium text-gray-900"><?php echo $categories; ?></dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Items -->
-        <div class="bg-white shadow rounded-lg">
-            <div class="px-4 py-5 sm:p-6">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Recent Menu Items</h3>
-                <div class="overflow-hidden">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name (Arabic)</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <?php foreach ($recentItems as $item): ?>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    <?php echo htmlspecialchars($item['name']); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo htmlspecialchars($item['name_ar'] ?? '-'); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo htmlspecialchars($item['category']); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    QAR <?php echo number_format($item['price'], 2); ?>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?php echo date('M j, Y', strtotime($item['created_at'])); ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-4">
-                    <a href="menu_items.php" class="text-primary hover:text-primary/80 font-medium text-sm">
-                        View all menu items →
+            <!-- Recent Items -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-semibold text-gray-900">Recent Items</h2>
+                    <a href="menu_items.php" class="text-primary text-sm font-medium">
+                        View All →
                     </a>
                 </div>
-            </div>
-        </div>
+                
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <?php if (empty($recentItems)): ?>
+                    <div class="p-8 text-center">
+                        <i data-feather="inbox" class="h-12 w-12 text-gray-300 mx-auto mb-3"></i>
+                        <p class="text-gray-500 text-sm">No items yet</p>
+                        <a href="edit_item.php" class="text-primary text-sm font-medium">Add your first item</a>
+                    </div>
+                    <?php else: ?>
+                    <div class="recent-items">
+                        <?php foreach ($recentItems as $item): ?>
+                        <div class="item-row p-4 border-b border-gray-50 flex items-center space-x-3 last:border-b-0">
+                            <div class="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                                <img src="<?php echo htmlspecialchars($item['image'] ?: 'uploads/menu/placeholder.jpg'); ?>" 
+                                     alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                     class="w-full h-full object-cover"
+                                     onerror="this.src='uploads/menu/placeholder.jpg'">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-medium text-sm text-gray-900 truncate"><?php echo htmlspecialchars($item['name']); ?></h3>
+                                <p class="text-xs text-gray-500"><?php echo htmlspecialchars($item['category']); ?> • QAR <?php echo number_format($item['price'], 0); ?></p>
+                                <p class="text-xs text-gray-400"><?php echo date('M j, Y', strtotime($item['created_at'])); ?></p>
+                            </div>
+                            <div class="flex flex-col items-end space-y-1">
+                                <?php if ($item['is_popular']): ?>
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Popular</span>
+                                <?php endif; ?>
+                                <?php if ($item['is_special']): ?>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Special</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </main>
+
+        <!-- Floating Action Button -->
+        <a href="edit_item.php" class="floating-button w-14 h-14 rounded-full flex items-center justify-center scale-button">
+            <i data-feather="plus" class="h-6 w-6 text-white"></i>
+        </a>
     </div>
 
     <!-- Import Modal -->
-    <div id="importModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
-            </div>
-
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+    <div id="importModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay fixed inset-0"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-sm transform transition-all">
                 <form method="POST" enctype="multipart/form-data">
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                </svg>
-                            </div>
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900">Import Menu Data</h3>
-                                <div class="mt-4">
-                                    <p class="text-sm text-gray-500 mb-4">
-                                        Select a JSON file to import menu items. This will replace all existing menu data.
-                                    </p>
-                                    <input type="file" name="json_file" accept=".json" required
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                                    <input type="hidden" name="action" value="import_json">
-                                </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Import Menu Data</h3>
+                            <button type="button" onclick="hideImportModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i data-feather="x" class="h-4 w-4 text-gray-600"></i>
+                            </button>
+                        </div>
+                        
+                        <p class="text-sm text-gray-600 mb-4">
+                            Select a JSON file to import menu items. This will replace all existing menu data.
+                        </p>
+                        
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                            <i data-feather="upload-cloud" class="h-8 w-8 text-gray-400 mx-auto mb-2"></i>
+                            <p class="text-sm text-gray-600 mb-2">Click to select file</p>
+                            <input type="file" name="json_file" accept=".json" required
+                                   class="hidden" id="fileInput" onchange="handleFileSelect(this)">
+                            <button type="button" onclick="document.getElementById('fileInput').click()"
+                                    class="text-primary text-sm font-medium">Browse Files</button>
+                        </div>
+                        
+                        <div id="selectedFile" class="hidden mt-3 p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center space-x-2">
+                                <i data-feather="file" class="h-4 w-4 text-green-600"></i>
+                                <span id="fileName" class="text-sm text-green-800"></span>
                             </div>
                         </div>
+                        
+                        <input type="hidden" name="action" value="import_json">
                     </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            Import
-                        </button>
-                        <button type="button" onclick="hideImportModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    
+                    <div class="px-6 pb-6 flex space-x-3">
+                        <button type="button" onclick="hideImportModal()" 
+                                class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium scale-button">
                             Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 py-3 px-4 bg-primary text-white rounded-xl font-medium scale-button">
+                            Import
                         </button>
                     </div>
                 </form>
@@ -303,17 +455,70 @@ if ($_POST) {
     </div>
 
     <script>
+        // Initialize icons
+        feather.replace();
+
+        // Set mobile viewport height
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+
+        // Modal functions
         function showImportModal() {
             document.getElementById('importModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function hideImportModal() {
             document.getElementById('importModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // Reset form
+            document.querySelector('#importModal form').reset();
+            document.getElementById('selectedFile').classList.add('hidden');
         }
 
-        // Close modal when clicking outside
+        // File handling
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('selectedFile').classList.remove('hidden');
+                feather.replace();
+            }
+        }
+
+        // Touch feedback for all interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const interactiveElements = document.querySelectorAll('.scale-button');
+            
+            interactiveElements.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.97)';
+                }, { passive: true });
+                
+                element.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                }, { passive: true });
+                
+                element.addEventListener('touchcancel', function() {
+                    this.style.transform = 'scale(1)';
+                }, { passive: true });
+            });
+        });
+
+        // Close modal on backdrop click
         document.getElementById('importModal').addEventListener('click', function(e) {
             if (e.target === this) {
+                hideImportModal();
+            }
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 hideImportModal();
             }
         });
