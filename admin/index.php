@@ -1,9 +1,15 @@
 <?php
-// admin/index.php - Mobile-First Admin Dashboard
+// admin/index.php - Mobile-First Admin Dashboard with File Upload Support
 require_once 'config.php';
 checkAuth();
 
 $pdo = getConnection();
+
+// Create uploads directory if it doesn't exist
+$uploadsDir = '../uploads/menu/';
+if (!is_dir($uploadsDir)) {
+    mkdir($uploadsDir, 0755, true);
+}
 
 // Get statistics
 $totalItems = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
@@ -11,7 +17,7 @@ $popularItems = $pdo->query("SELECT COUNT(*) FROM menu_items WHERE is_popular = 
 $specialItems = $pdo->query("SELECT COUNT(*) FROM menu_items WHERE is_special = 1")->fetchColumn();
 $categories = $pdo->query("SELECT COUNT(DISTINCT category) FROM menu_items")->fetchColumn();
 
-// Get recent items
+// Get recent items with better image handling
 $recentItems = $pdo->query("
     SELECT name, name_ar, category, price, created_at, image, is_popular, is_special
     FROM menu_items 
@@ -19,8 +25,45 @@ $recentItems = $pdo->query("
     LIMIT 5
 ")->fetchAll();
 
+// Handle file upload for images
+function handleImageUpload($file) {
+    global $uploadsDir;
+    
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new Exception('File upload failed');
+    }
+    
+    // Check if file is an image
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+    
+    if (!in_array($mimeType, $allowedTypes)) {
+        throw new Exception('Only image files (JPEG, PNG, GIF, WebP) are allowed');
+    }
+    
+    // Check file size (max 5MB)
+    if ($file['size'] > 5 * 1024 * 1024) {
+        throw new Exception('File size must be less than 5MB');
+    }
+    
+    // Generate unique filename
+    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+    $filename = 'item_' . uniqid() . '.' . $extension;
+    $targetPath = $uploadsDir . $filename;
+    
+    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+        throw new Exception('Failed to save uploaded file');
+    }
+    
+    return 'uploads/menu/' . $filename;
+}
+
 // Handle quick actions
 $message = '';
+$messageType = 'success';
+
 if ($_POST) {
     if (isset($_POST['action'])) {
         switch ($_POST['action']) {
@@ -30,11 +73,14 @@ if ($_POST) {
                         $tempFile = $_FILES['json_file']['tmp_name'];
                         importJSONData($tempFile);
                         $message = 'JSON data imported successfully!';
+                        $messageType = 'success';
                     } else {
                         $message = 'Please select a valid JSON file.';
+                        $messageType = 'error';
                     }
                 } catch (Exception $e) {
                     $message = 'Import failed: ' . $e->getMessage();
+                    $messageType = 'error';
                 }
                 break;
                 
@@ -47,10 +93,61 @@ if ($_POST) {
                     exit;
                 } catch (Exception $e) {
                     $message = 'Export failed: ' . $e->getMessage();
+                    $messageType = 'error';
+                }
+                break;
+                
+            case 'quick_add_item':
+                try {
+                    $name = trim($_POST['name']);
+                    $description = trim($_POST['description']);
+                    $price = floatval($_POST['price']);
+                    $category = trim($_POST['category']);
+                    
+                    if (empty($name) || empty($description) || $price <= 0 || empty($category)) {
+                        throw new Exception('Please fill in all required fields');
+                    }
+                    
+                    $image = null;
+                    if (isset($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
+                        $image = handleImageUpload($_FILES['image']);
+                    }
+                    
+                    $stmt = $pdo->prepare("
+                        INSERT INTO menu_items (name, description, price, category, image) 
+                        VALUES (?, ?, ?, ?, ?)
+                    ");
+                    $stmt->execute([$name, $description, $price, $category, $image]);
+                    
+                    $message = 'Item added successfully!';
+                    $messageType = 'success';
+                } catch (Exception $e) {
+                    $message = 'Failed to add item: ' . $e->getMessage();
+                    $messageType = 'error';
                 }
                 break;
         }
     }
+}
+
+// Helper function to get proper image URL
+function getImageUrl($imagePath) {
+    if (empty($imagePath)) {
+        return '../uploads/menu/placeholder.jpg';
+    }
+    
+    // If it's already a full path starting with uploads/, use as is
+    if (strpos($imagePath, 'uploads/') === 0) {
+        return '../' . $imagePath;
+    }
+    
+    // If it's an old external URL, use placeholder
+    if (strpos($imagePath, 'http') === 0) {
+        return '../uploads/menu/placeholder.jpg';
+    }
+    
+    // Otherwise, assume it's a filename in uploads/menu/
+    return '../uploads/menu/' . basename($imagePath);
 }
 ?>
 <!DOCTYPE html>
@@ -194,15 +291,6 @@ if ($_POST) {
             backdrop-filter: blur(5px);
         }
 
-        .pulse-ring {
-            animation: pulse-ring 2s infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.2); opacity: 0; }
-        }
-
         .floating-button {
             position: fixed;
             bottom: 90px;
@@ -212,16 +300,33 @@ if ($_POST) {
             box-shadow: 0 4px 15px rgba(196, 82, 48, 0.3);
         }
 
-        /* Loading skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
+        .image-preview {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #c45230;
+            background-color: rgba(196, 82, 48, 0.05);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
@@ -250,12 +355,15 @@ if ($_POST) {
             </div>
         </header>
 
-        <!-- Success Message -->
+        <!-- Success/Error Message -->
         <?php if ($message): ?>
-        <div class="mx-4 mb-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+        <div class="mx-4 mb-4 p-4 <?php echo $messageType === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'; ?> border rounded-xl">
             <div class="flex items-center space-x-2">
-                <i data-feather="check-circle" class="h-5 w-5 text-green-600"></i>
-                <span class="text-sm text-green-800"><?php echo htmlspecialchars($message); ?></span>
+                <i data-feather="<?php echo $messageType === 'success' ? 'check-circle' : 'alert-circle'; ?>" 
+                   class="h-5 w-5 <?php echo $messageType === 'success' ? 'text-green-600' : 'text-red-600'; ?>"></i>
+                <span class="text-sm <?php echo $messageType === 'success' ? 'text-green-800' : 'text-red-800'; ?>">
+                    <?php echo htmlspecialchars($message); ?>
+                </span>
             </div>
         </div>
         <?php endif; ?>
@@ -278,21 +386,28 @@ if ($_POST) {
                         <span class="text-sm font-medium">Categories</span>
                     </a>
                     
-                    <button onclick="showImportModal()" 
+                    <button onclick="showQuickAddModal()" 
                             class="action-button from-green-500 to-green-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2">
+                        <i data-feather="plus-circle" class="h-6 w-6"></i>
+                        <span class="text-sm font-medium">Quick Add</span>
+                    </button>
+                    
+                    <button onclick="showImportModal()" 
+                            class="action-button from-purple-500 to-purple-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2">
                         <i data-feather="upload" class="h-6 w-6"></i>
                         <span class="text-sm font-medium">Import JSON</span>
                     </button>
-                    
-                    <form method="POST" class="inline">
-                        <input type="hidden" name="action" value="export_json">
-                        <button type="submit" 
-                                class="action-button from-purple-500 to-purple-600 text-white p-4 rounded-xl scale-button flex flex-col items-center space-y-2 w-full">
-                            <i data-feather="download" class="h-6 w-6"></i>
-                            <span class="text-sm font-medium">Export JSON</span>
-                        </button>
-                    </form>
                 </div>
+                
+                <!-- Export Button (Full Width) -->
+                <form method="POST" class="mt-4">
+                    <input type="hidden" name="action" value="export_json">
+                    <button type="submit" 
+                            class="action-button from-orange-500 to-orange-600 text-white p-4 rounded-xl scale-button flex items-center justify-center space-x-2 w-full">
+                        <i data-feather="download" class="h-5 w-5"></i>
+                        <span class="text-sm font-medium">Export Menu Data (JSON)</span>
+                    </button>
+                </form>
             </section>
 
             <!-- Statistics Cards -->
@@ -362,21 +477,24 @@ if ($_POST) {
                     <?php if (empty($recentItems)): ?>
                     <div class="p-8 text-center">
                         <i data-feather="inbox" class="h-12 w-12 text-gray-300 mx-auto mb-3"></i>
-                        <p class="text-gray-500 text-sm">No items yet</p>
-                        <a href="edit_item.php" class="text-primary text-sm font-medium">Add your first item</a>
+                        <p class="text-gray-500 text-sm mb-2">No items yet</p>
+                        <button onclick="showQuickAddModal()" class="text-primary text-sm font-medium">Add your first item</button>
                     </div>
                     <?php else: ?>
                     <div class="recent-items">
                         <?php foreach ($recentItems as $item): ?>
                         <div class="item-row p-4 border-b border-gray-50 flex items-center space-x-3 last:border-b-0">
                             <div class="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                                <img src="<?php echo htmlspecialchars($item['image'] ?: 'uploads/menu/placeholder.jpg'); ?>" 
+                                <img src="<?php echo htmlspecialchars(getImageUrl($item['image'])); ?>" 
                                      alt="<?php echo htmlspecialchars($item['name']); ?>" 
                                      class="w-full h-full object-cover"
-                                     onerror="this.src='uploads/menu/placeholder.jpg'">
+                                     onerror="this.src='../uploads/menu/placeholder.jpg'">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h3 class="font-medium text-sm text-gray-900 truncate"><?php echo htmlspecialchars($item['name']); ?></h3>
+                                <?php if (!empty($item['name_ar'])): ?>
+                                <p class="text-xs text-gray-400 truncate" dir="rtl"><?php echo htmlspecialchars($item['name_ar']); ?></p>
+                                <?php endif; ?>
                                 <p class="text-xs text-gray-500"><?php echo htmlspecialchars($item['category']); ?> • QAR <?php echo number_format($item['price'], 0); ?></p>
                                 <p class="text-xs text-gray-400"><?php echo date('M j, Y', strtotime($item['created_at'])); ?></p>
                             </div>
@@ -402,11 +520,100 @@ if ($_POST) {
         </a>
     </div>
 
+    <!-- Quick Add Modal -->
+    <div id="quickAddModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-overlay fixed inset-0"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md max-h-full overflow-y-auto">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Quick Add Item</h3>
+                            <button type="button" onclick="hideQuickAddModal()" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                <i data-feather="x" class="h-4 w-4 text-gray-600"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Item Name *</label>
+                                <input type="text" name="name" required
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                                       placeholder="Enter item name">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                                <textarea name="description" required rows="3"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                                          placeholder="Enter item description"></textarea>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Price (QAR) *</label>
+                                    <input type="number" name="price" step="0.01" min="0" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
+                                           placeholder="0.00">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                                    <select name="category" required
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary">
+                                        <option value="">Select category</option>
+                                        <option value="Breakfast">Breakfast</option>
+                                        <option value="Dishes">Dishes</option>
+                                        <option value="Bread">Bread</option>
+                                        <option value="Desserts">Desserts</option>
+                                        <option value="Cold Drinks">Cold Drinks</option>
+                                        <option value="Hot Drinks">Hot Drinks</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Item Image</label>
+                                <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                                    <i data-feather="image" class="h-8 w-8 text-gray-400 mx-auto mb-2"></i>
+                                    <p class="text-sm text-gray-600 mb-2">Click to upload image</p>
+                                    <input type="file" name="image" accept="image/*"
+                                           class="hidden" id="quickAddFileInput" onchange="handleQuickAddFileSelect(this)">
+                                    <button type="button" onclick="document.getElementById('quickAddFileInput').click()"
+                                            class="text-primary text-sm font-medium">Browse Files</button>
+                                    <p class="text-xs text-gray-500 mt-1">JPEG, PNG, GIF, WebP (max 5MB)</p>
+                                </div>
+                                
+                                <div id="quickAddSelectedFile" class="hidden mt-3">
+                                    <img id="quickAddPreview" class="image-preview mx-auto" alt="Preview">
+                                    <p id="quickAddFileName" class="text-sm text-gray-600 text-center mt-2"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="action" value="quick_add_item">
+                    </div>
+                    
+                    <div class="px-6 pb-6 flex space-x-3">
+                        <button type="button" onclick="hideQuickAddModal()" 
+                                class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 rounded-xl font-medium scale-button">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                                class="flex-1 py-3 px-4 bg-primary text-white rounded-xl font-medium scale-button">
+                            Add Item
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Import Modal -->
     <div id="importModal" class="fixed inset-0 z-50 hidden">
         <div class="modal-overlay fixed inset-0"></div>
         <div class="fixed inset-0 flex items-center justify-center p-4">
-            <div class="bg-white rounded-xl shadow-xl w-full max-w-sm transform transition-all">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">
@@ -420,7 +627,7 @@ if ($_POST) {
                             Select a JSON file to import menu items. This will replace all existing menu data.
                         </p>
                         
-                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                        <div class="file-upload-area border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
                             <i data-feather="upload-cloud" class="h-8 w-8 text-gray-400 mx-auto mb-2"></i>
                             <p class="text-sm text-gray-600 mb-2">Click to select file</p>
                             <input type="file" name="json_file" accept=".json" required
@@ -466,7 +673,21 @@ if ($_POST) {
         setViewportHeight();
         window.addEventListener('resize', setViewportHeight);
 
-        // Modal functions
+        // Quick Add Modal functions
+        function showQuickAddModal() {
+            document.getElementById('quickAddModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideQuickAddModal() {
+            document.getElementById('quickAddModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // Reset form
+            document.querySelector('#quickAddModal form').reset();
+            document.getElementById('quickAddSelectedFile').classList.add('hidden');
+        }
+
+        // Import Modal functions
         function showImportModal() {
             document.getElementById('importModal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -480,7 +701,42 @@ if ($_POST) {
             document.getElementById('selectedFile').classList.add('hidden');
         }
 
-        // File handling
+        // Quick Add file handling
+        function handleQuickAddFileSelect(input) {
+            const file = input.files[0];
+            if (file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a valid image file (JPEG, PNG, GIF, WebP)');
+                    input.value = '';
+                    return;
+                }
+                
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    input.value = '';
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('quickAddPreview').src = e.target.result;
+                    document.getElementById('quickAddFileName').textContent = file.name;
+                    document.getElementById('quickAddSelectedFile').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+                
+                // Update upload area appearance
+                const uploadArea = input.closest('.file-upload-area');
+                uploadArea.classList.add('border-primary', 'bg-primary/5');
+                uploadArea.classList.remove('border-gray-300');
+            }
+        }
+
+        // Import file handling
         function handleFileSelect(input) {
             const file = input.files[0];
             if (file) {
@@ -490,8 +746,40 @@ if ($_POST) {
             }
         }
 
+        // Drag and drop for file uploads
+        function setupDragAndDrop() {
+            const uploadAreas = document.querySelectorAll('.file-upload-area');
+            
+            uploadAreas.forEach(area => {
+                area.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                area.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                });
+                
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const fileInput = this.querySelector('input[type="file"]');
+                        fileInput.files = files;
+                        
+                        // Trigger change event
+                        const event = new Event('change', { bubbles: true });
+                        fileInput.dispatchEvent(event);
+                    }
+                });
+            });
+        }
+
         // Touch feedback for all interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
+        function setupTouchFeedback() {
             const interactiveElements = document.querySelectorAll('.scale-button');
             
             interactiveElements.forEach(element => {
@@ -507,21 +795,95 @@ if ($_POST) {
                     this.style.transform = 'scale(1)';
                 }, { passive: true });
             });
-        });
+        }
 
-        // Close modal on backdrop click
-        document.getElementById('importModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                hideImportModal();
-            }
-        });
+        // Form validation
+        function setupFormValidation() {
+            const quickAddForm = document.querySelector('#quickAddModal form');
+            
+            quickAddForm.addEventListener('submit', function(e) {
+                const name = this.querySelector('input[name="name"]').value.trim();
+                const description = this.querySelector('textarea[name="description"]').value.trim();
+                const price = parseFloat(this.querySelector('input[name="price"]').value);
+                const category = this.querySelector('select[name="category"]').value;
+                
+                if (!name || !description || !price || price <= 0 || !category) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields with valid values');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = 'Adding Item...';
+                submitBtn.disabled = true;
+            });
+        }
 
-        // Escape key to close modal
+        // Close modals on backdrop click
+        function setupModalBackdropClose() {
+            document.getElementById('quickAddModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideQuickAddModal();
+                }
+            });
+            
+            document.getElementById('importModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideImportModal();
+                }
+            });
+        }
+
+        // Escape key to close modals
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
+                hideQuickAddModal();
                 hideImportModal();
             }
         });
+
+        // Initialize all functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTouchFeedback();
+            setupDragAndDrop();
+            setupFormValidation();
+            setupModalBackdropClose();
+            
+            // Auto-refresh stats every 30 seconds
+            setInterval(function() {
+                // Reload stats without refreshing page
+                fetch(window.location.href)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Update statistics
+                        const newStats = doc.querySelectorAll('.stat-card p:first-child');
+                        const currentStats = document.querySelectorAll('.stat-card p:first-child');
+                        
+                        newStats.forEach((stat, index) => {
+                            if (currentStats[index] && stat.textContent !== currentStats[index].textContent) {
+                                currentStats[index].textContent = stat.textContent;
+                                currentStats[index].closest('.stat-card').style.animation = 'pulse 0.5s ease';
+                            }
+                        });
+                    })
+                    .catch(error => console.log('Stats refresh failed:', error));
+            }, 30000);
+        });
+
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const message = document.querySelector('.mx-4.mb-4.p-4');
+            if (message) {
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-10px)';
+                message.style.transition = 'all 0.3s ease';
+                setTimeout(() => message.remove(), 300);
+            }
+        }, 5000);
     </script>
 </body>
 </html>

@@ -329,11 +329,11 @@ color: #c45230;
 
         
         .item-img-container {
-            height: 340px;
+            height: 360px;
         }
         @media (max-height: 700px) {
             .item-img-container {
-                height: 180px;
+                height: 340px;
             }
         }
         .radio-container input[type="radio"] {

@@ -141,12 +141,12 @@ RewriteRule ^.*$ index.php [NC,L,QSA]
 </Files>
 
 # Protect admin area (basic protection)
-<Directory "/admin">
+#<Directory "/admin">
     # Additional protection can be added here
-    <Files "*.php">
+ #   <Files "*.php">
         # Allow access to admin files
-    </Files>
-</Directory>
+  #  </Files>
+#</Directory>
 
 # Error Pages
 ErrorDocument 404 /404.php

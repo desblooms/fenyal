@@ -152,7 +152,7 @@ $languageToggleUrl = 'index.php?lang=' . $alternativeLang;
         <!-- Main content -->
         <main class="px-4">
             <!-- Categories -->
-            <section class="mb-2" aria-label="<?php echo __('categories'); ?>">
+          <section class="mb-2" aria-label="<?php echo __('categories'); ?>">
                 <div class="flex space-x-4 overflow-x-auto py-1 special-scroll <?php echo isRTL() ? 'space-x-reverse' : ''; ?>" 
                      style="direction: <?php echo $direction; ?>">
                     <?php 

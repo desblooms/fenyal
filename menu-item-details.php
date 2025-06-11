@@ -219,7 +219,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
     <div class="app-container h-full overflow-y-auto scroll-touch pb-8 fade-in">
         <!-- Item image (sticky at top) -->
         <div class="relative item-img-container">
-            <div class="w-full h-full bg-gray-200 object-cover" 
+            <div class="w-full h-full bg-gray-200 object-cover !bg-bottom" 
                  style="background-image: url('<?php echo htmlspecialchars($item['image']); ?>'); background-size: cover; background-position: center;">
             </div>
             <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
@@ -349,7 +349,7 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
             </form>
             
             <!-- Action buttons -->
-            <div class="flex gap-3">
+            <!-- <div class="flex gap-3">
                 <button type="button" id="add-to-cart-btn" 
                         class="flex-1 bg-gray-100 text-gray-700 font-medium py-3 px-6 rounded-xl transition-colors hover:bg-gray-200">
                     <?php echo __('add_to_cart'); ?>
@@ -358,11 +358,12 @@ $defaultPrice = $item['is_half_full'] && $item['half_price'] ? $item['half_price
                         class="flex-1 bg-primary text-white font-medium py-3 px-6 rounded-xl transition-colors hover:bg-primary/90">
                     <?php echo __('order_now'); ?>
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
     
     <!-- JavaScript -->
+     <script src="assets/js/improved-language-toggle.js"></script>
     <script>
         // Initialize icons
         feather.replace();

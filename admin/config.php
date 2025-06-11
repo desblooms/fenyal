@@ -3,9 +3,9 @@
 
 // Database configuration
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u345095192_fenyaldb');
-define('DB_USER', 'u345095192_fenyal');
-define('DB_PASS', 'Fenyal@2025');
+define('DB_NAME', 'qpzkdqupex');
+define('DB_USER', 'qpzkdqupex');
+define('DB_PASS', 'X9Vx6nyC9B');
 
 // Admin credentials (in production, use proper authentication)
 define('ADMIN_USERNAME', 'admin');
@@ -14,7 +14,8 @@ define('ADMIN_PASSWORD', 'fenyal2024'); // Change this!
 // Create database connection
 function getConnection() {
     try {
-        $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
+        //$pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";qpzkdqupex", qpzkdqupex, X9Vx6nyC9B);
+        $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS); 
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         return $pdo;
@@ -27,7 +28,8 @@ function getConnection() {
 function initializeDatabase() {
     try {
         // First, create database if it doesn't exist
-        $pdo = new PDO("mysql:host=" . DB_HOST . ";charset=utf8mb4", DB_USER, DB_PASS);
+        //$pdo = new PDO("mysql:host=" . DB_HOST . ";charset=utf8mb4", qpzkdqupex, X9Vx6nyC9B);
+        $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         
         $pdo->exec("CREATE DATABASE IF NOT EXISTS " . DB_NAME . " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");

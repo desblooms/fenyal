@@ -5,13 +5,13 @@ session_start();
 // Application Constants
 define('APP_NAME', 'Fenyal');
 define('APP_VERSION', '2.0.0');
-define('APP_URL', 'https://fenyal.com');
+define('APP_URL', 'https://fenyal.orderwithmenu.com/');
 define('DEFAULT_LANGUAGE', 'en');
 define('SUPPORTED_LANGUAGES', ['en', 'ar']);
 
 // Performance Settings
 define('ENABLE_CACHE', true);
-define('CACHE_DURATION', 3600); // 1 hour
+define('CACHE_DURATION', 10); // 1 hour
 define('ENABLE_COMPRESSION', true);
 
 // Database Configuration
